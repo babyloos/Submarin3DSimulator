@@ -19,11 +19,12 @@
   },
   "cordova": {
     "platforms": [
-      "ios",
-      "browser"
+      "browser",
+      "ios"
     ],
     "plugins": {
-      "cordova-plugin-browsersync-gen2": {}
+      "cordova-plugin-browsersync-gen2": {},
+      "cordova-plugin-console": {}
     }
   }
 }
