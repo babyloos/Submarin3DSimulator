@@ -9,4 +9,5 @@
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <preference name="AllowInlineMediaPlayback" value="true" />
+    <preference name="Orientation" value="landscape" />
 </widget>
