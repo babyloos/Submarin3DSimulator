@@ -23,4 +23,7 @@
       <preference name="allowFileAccessFromFileURLs" value="true" />
       <preference name="allowUniversalAccessFromFileURLs" value="true" />
     </platform>
+    <platform name="android">
+        <preference name="android-targetSdkVersion" value="31" />
+    </platform>
 </widget>
