@@ -14,6 +14,14 @@
     <preference name="Orientation" value="landscape" />
     <preference name="scheme" value="app" />
     <preference name="hostname" value="localhost" />
+    <platform name="android">
+      <icon src="res/icon/android/icon-96-xhdpi.png" />
+      <icon density="mdpi" src="res/icon/android/mipmap-mdpi/ic_subsim.png" />
+      <icon density="hdpi" src="res/icon/android/mipmap-hdpi/ic_subsim.png" />
+      <icon density="xhdpi" src="res/icon/android/mipmap-xhdpi/ic_subsim.png" />
+      <icon density="xxhdpi" src="res/icon/android/mipmap-xxhdpi/ic_subsim.png" />
+      <icon density="xxxhdpi" src="res/icon/android/mipmap-xxxhdpi/ic_subsim.png" />
+    </platform>
     <platform name="ios">
       <preference name="WKWebViewOnly" value="true" />
       <feature name="CDVWKWebViewEngine">
@@ -22,8 +30,28 @@
       <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
       <preference name="allowFileAccessFromFileURLs" value="true" />
       <preference name="allowUniversalAccessFromFileURLs" value="true" />
+      <edit-config file="*-Info.plist" mode="merge" target="CFBundleDisplayName">
+          <string>潜水艦3Dシミュレーター</string>
+      </edit-config>
     </platform>
     <platform name="android">
         <preference name="android-targetSdkVersion" value="31" />
     </platform>
+      <icon height="167" src="res/icon/ios/167.png" width="167"/>
+      <icon height="57" src="res/icon/ios/57.png" width="57" />
+      <icon height="114" src="res/icon/ios/114.png" width="114" />
+      <icon height="40" src="res/icon/ios/40.png" width="40" />
+      <icon height="80" src="res/icon/ios/80.png" width="80" />
+      <icon height="50" src="res/icon/ios/50.png" width="50" />
+      <icon height="100" src="res/icon/ios/100.png" width="100" />
+      <icon height="60" src="res/icon/ios/60.png" width="60" />
+      <icon height="120" src="res/icon/ios/120.png" width="120" />
+      <icon height="180" src="res/icon/ios/180.png" width="180" />
+      <icon height="72" src="res/icon/ios/72.png" width="72" />
+      <icon height="144" src="res/icon/ios/144.png" width="144" />
+      <icon height="76" src="res/icon/ios/76.png" width="76" />
+      <icon height="152" src="res/icon/ios/152.png" width="152" />
+      <icon height="29" src="res/icon/ios/29.png" width="29" />
+      <icon height="58" src="res/icon/ios/58.png" width="58" />
+      <icon height="87" src="res/icon/ios/87.png" width="87" />
 </widget>
