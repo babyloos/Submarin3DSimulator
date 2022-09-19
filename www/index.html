@@ -1,0 +1,390 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Submarine Simulator</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/index.css">
+      <!--meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; media-src *; img-src 'self' data: content:;">-->
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no, viewport-fit=cover">
+    <!-- iOS/Safari用 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Android/Chrome用 -->
+    <meta name="mobile-web-app-capable" content="yes">
+</head>
+<body>
+    <!-- トップ画面 -->
+    <div id="topPage" class="activePage">
+        <div class="video_wrapper">
+        <video src="./resources/movie/title_back_test.mp4" playsinline autoplay muted loop width="100%"></video>
+            <!-- タイトル画面 -->
+            <div id="titlePage" class="absolutePage vignette activePage">
+                <div class="menu text-center">
+                    <div>
+                        <div class="titleBackground">
+                            <h1>潜水艦3Dシミュレーター</h1>
+                        </div>
+                        <div class="menuButtonWrapper">
+                            <div class="row">
+                                <button id="newGameButton" class="btn btn-info">ニューゲーム</button>
+                            </div>
+                            <div class="row">
+                                <button id="continueButton" class="btn btn-info">コンティニュー</button>
+                            </div>
+                            <div class="row">
+                                <button id="manualButton" class="btn btn-info">マニュアル</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- マニュアル画面 -->
+            <div id="manualPage" class="vignette hiddenPage">
+                <div id="manualTitle" class="ms-10">
+                    <h1 class="">マニュアル</h1>
+                </div>
+                <div id="manualMessageBox" class="overflow-auto">
+                  <h5>ゲームの目的</h5>
+                  <p>第二次大戦時のナチスドイツでは敵国の経済へ損害を与えるべく無制限潜水艦作戦と呼ばれる潜水艦による作戦が行われていました。<br>
+本ゲームの目的は、第二次大戦中のドイツ潜水艦U-Boatの艦長として潜水艦を指揮し魚雷攻撃によって敵船団を撃沈することです。</p>
+                  <h5>難易度</h5>
+                  <p>難易度によって敵船の数、クリアに必要な撃沈トン数が変わります。</p>
+                  <table>
+                    <thead>
+                <tr><th>難易度</th><th>駆逐艦の数</th><th>商船の数</th><th>撃沈トン数</th><tr>
+                  </thead>
+                <tbody>
+                  <tr>
+                    <td>簡単</td><td>1</td><td>5</td><td>8000</td>
+                  </tr>
+                  <tr>
+                    <td>普通</td><td>2</td><td>4</td><td>12000</td>
+                  </tr>
+                  <tr>
+                    <td>難しい</td><td>4</td><td>3</td><td>20000</td>
+                  </tr>
+                </tbody>
+              </table>
+            <h5>操作説明</h5>
+            <h6>潜水艦の移動</h6>
+            <p>
+潜水艦を移動させるには左下のコントロールパネルから行います。
+コントロールパネルには"エンジンテレグラフ", "方位指示盤", "深度指示盤"があり、それぞれ操作することで潜水艦のエンジン出力、進行方向、深度を変更することができます。
+            </p>
+            <h6>見張り、聴音</h6>
+            <p>
+              右下の指示パネルから、周りの状況を確認することが出来ます。<br>
+                各ボタンをタップすることで左上のメッセージパネルに確認した敵船の情報が表示されます。<br>
+                左側の見張りボタンで目視での見張り、中央の聴音ボタンでハイドロフォンの聴音を行うことができます。<br>
+目視での見張りは潜水艦が浮上しているとき、ハイドロフォンでの聴音は潜水艦が潜航しているときにのみ利用できます。
+            </p>
+            <h6>潜望鏡画面</h6>
+            <p>
+              右下の指示パネル右側の潜望鏡ボタンをタップすることで潜望鏡画面を表示することができます。<br>
+潜望鏡画面では潜望鏡による敵船の確認、魚雷の諸元入力、魚雷の発射を行います。
+            </p>
+            <h6>倍速表示</h6>
+            <p>
+              右上のステータスパネル内の時間倍率ボタンでゲーム内時間の進行速度を変更することができます。<br>
+時間倍率は1~16倍まで変更することができます。
+            </p>
+            <h5>敵船の行動</h5>
+            <p>
+              敵の船団は通常は目的地に向かって一定速度で一定方向へ進み続けます。<br>
+                しかし、一度潜水艦を発見すると対潜航行に入り商船は魚雷を回避するように進み、駆逐艦は潜水艦に向かって攻撃を開始してきます。<br>
+駆逐艦の攻撃方法は2種類あり、潜水艦が浮上している場合は砲撃による攻撃、潜航中は爆雷攻撃を行います。
+            </p>
+            <h5>バッテリー、酸素残量</h5>
+            <p>
+              潜水艦はバッテリーでスクリューを回すため徐々にバッテリー残量が減っていきます。<br>
+                バッテリーがなくなると前進、後退が行えなくなりますが、潜航、浮上は可能です。<br>
+                潜航中は潜水艦内の酸素を消費するため徐々に酸素残量が減っていきいます。<br>
+酸素残量が0になるとゲームオーバーとなってしまうので浮上し回復してください。
+            </p>
+            <h5>セーブ機能</h5>
+            <p>
+              ゲーム中に右上の終了ボタンをタップすることによって状態を保存し、タイトル画面のコンティニューボタンからゲームを再開することができます。<br>
+また、ゲーム内時間での1分ごとに自動で状態の保存が行われます。
+            </p>
+                </div>
+                <div class="buttonContainer">
+                    <button type="button" id="manualBackButton" class=" btn btn-info btn-sm">戻る</button>
+                </div>
+            </div>
+            <!-- 難易度選択画面 -->
+            <div id="diffSelectPage" class="absolutePage vignette hiddenPage">
+                <div class="menu text-center">
+                    <div>
+                        <div class="titleBackground">
+                            <h1>潜水艦3Dシミュレーター</h1>
+                        </div>
+                        <div class="menuButtonWrapper">
+                            <p>
+                                <input type="radio" class="btn-check" name="diffSelect" id="diffEasy"
+                                    autocomplete="off">
+                                <label class="btn btn-info btn-sm" for="diffEasy">簡単</label>
+                            </p>
+                            <p>
+                                <input type="radio" class="btn-check" name="diffSelect" id="diffNormal"
+                                    autocomplete="off">
+                                <label class="btn btn-info btn-sm" for="diffNormal">普通</label>
+                            </p>
+                            <p>
+                                <input type="radio" class="btn-check" name="diffSelect" id="diffHard"
+                                    autocomplete="off">
+                                <label class="btn btn-info btn-sm" for="diffHard">難しい</label>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttonContainer">
+                    <button type="button" id="diffSelectBackbutton" class=" btn btn-info btn-sm">戻る</button>
+                    <button type="button" id="startButton" class=" btn btn-info btn-sm" disabled>スタート</button>
+                </div>
+            </div>
+            <!-- ロード画面 -->
+            <div id="loadPage" class="absolutePage vignette hiddenPage">
+                <div class="progress menu">
+                    <div id="loadProgressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3d page -->
+    <div id="threePage" class="hiddenPage">
+        <!-- 拡大ボタン -->
+        <div id="zoomButtonArea">
+            <button id="zoomButton" class=" btn btn-info">1.6x</button>
+        </div>
+        <!-- 3D画面 -->
+        <div id="canvasContainer">
+            <canvas id="threePageCanvas"></canvas>
+            <!-- コンパス -->
+            <div id="verticalLine" class="aimLine"></div>
+            <div id="horizontalLine" class="aimLine"></div>
+        </div>
+        <div id="inputBoad" class="container">
+            <div class="row">
+                <div id="bearingContainer" class="col-4 inputPartsContainer">
+                    <img id="bearingBack" class="inputPanel" src="resources/bearingBack.png">
+                    <img id="bearingAllow" class="inputFront" src="resources/bearingAllow.png">
+                    <img class="inputPlate" src="resources/bearingPlate.png">
+                </div>
+                <div id="speedContainer" class="col-4 inputPartsContainer">
+                    <img id="speedBack" class="inputPanel" src="resources/speedBack.png">
+                    <img id="speedAllow" class="inputFront" src="resources/speedAllow.png">
+                    <img class="inputPlate" src="resources/speedPlate.png">
+                </div>
+                <div id="gyroContainer" class="col-4 inputPartsContainer">
+                    <img id="gyroBack" class="inputPanel" src="resources/gyroBack.png">
+                    <img id="gyroAllow" class="inputFront" src="resources/gyroAllow.png">
+                    <img class="inputPlate" src="resources/gyroPlate.png">
+                </div>
+            </div>
+            <div class="row">
+                <div id="rangeContainer" class="col-4 inputPartsContainer">
+                    <img id="rangeBack" class="inputPanel" src="resources/rangeBack.png">
+                    <img id="rangeAllow" class="inputFront" src="resources/rangeAllow.png">
+                    <img class="inputPlate" src="resources/rangePlate.png">
+                </div>
+                <div id="aOnBowContainer" class="col-4 inputPartsContainer">
+                    <img id="aOnBowBack" class="inputPanel" src="resources/aOnBowBack.png">
+                    <img id="aOnBowAllow" class="inputFront" src="resources/aOnBowAllow.png">
+                    <img class="inputPlate" src="resources/aOnBowPlate.png">
+                </div>
+                <div id="fireContainer" class="col-4 inputPartsContainer">
+                    <img id="fireButton" class="inputPanel fireButton" src="resources/fireOff.png">
+                    <img class="inputPlate" class="fireButton" src="resources/firePlate.png">
+                </div>
+            </div>
+            <div class="row">
+                <div id="periscopeStatusContainer" class="col-8">
+                    <div class="row">
+                        <div class="col-6">
+                            到達時間
+                        </div>
+                        <div class="col-6">
+                            <span id="hitTime">000</span>秒
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            魚雷残数
+                        </div>
+                        <div class="col-6">
+                            <p><span id="torpedoCountPeriscope" class="torpedoCount"></span> / 14</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            現在時刻
+                        </div>
+                        <div class="col-6 time">
+                            <p>00:00:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Area -->
+    <div id="messageArea2" class="absolutePanel hiddenPage">
+        <div id="messageBox2" class="overflow-auto ms-3 mt-1"></div>
+        <img id="messageAreaCloseButton" class="panelCloseButton" src="resources/close_up.png" isClose="false">
+    </div>
+
+    <!-- Controll Area -->
+    <div id="controllArea2" class="absolutePanel hiddenPage">
+        <div class="row">
+            <div id="telegraphArea" class="col-4">
+                <img id="engineTelegraph" src="resources/telegraphBack.png">
+                <img id="telegraphAllow" class="frontImage" src="resources/telegraphAllow.png">
+                <img id="telegraphAllowShadow" class="frontImage shadowAllow" src="resources/telegraphAllow.png">
+                <p><span id="dispSpeed">000</span><span>kt</span></p>
+            </div>
+            <div id="compassArea" class="col-4">
+                <img id="compassBack" src="resources/compassBack.png">
+                <img id="compassFrame" src="resources/compassFrame.png">
+                <img id="compassFront" src="resources/compassCenter.png">
+                <img id="compassAllowShadow" src="resources/compassAllowShadow.png">
+                <p><span id="dispCourse">000</span><span>°</span></p>
+            </div>
+            <div id="depthMeterArea" class="col-4">
+                <button type="button" class="btn btn-info" id="periscopeDepthButton"><img
+                        src="./resources/periscope_256x256.png" /></button>
+                <img id="depthMater" src="resources/depthMater.png">
+                <img id="depthMaterAllow" class="frontImage" src="resources/depthAllow.png">
+                <img id="depthMaterAllowShadow" class="frontImage shadowAllow" noupdate="false"
+                    src="resources/depthAllow.png">
+                <p><span id="dispDepth">000</span><span>m</span></p>
+            </div>
+        </div>
+        <img id="controllAreaCloseButton" class="panelCloseButton" src="resources/close_down.png" isClose="false">
+    </div>
+
+    <!-- Status Area -->
+    <div id="statusArea2" class="absolutePanel hiddenPage">
+        <div class="row">
+            <div class="col-5">
+                <p>ダメージ</p>
+            </div>
+            <div class="col" id="damage">
+                <div class="progress" id="damageBar">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                <p>バッテリー</p>
+            </div>
+            <div class="col" id="battery">
+                <div class="progress">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                <p>酸素残量</p>
+            </div>
+            <div class="col" id="o2">
+                <div class="progress">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                <p>魚雷残数</p>
+            </div>
+            <div class="col" id="torpedo">
+                <p><span id="torpedoCountMain" class="torpedoCount"></span> / 14</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                <p>現在時刻</p>
+            </div>
+            <div class="col time">
+                <p>00:00:00</p>
+            </div>
+        </div>
+        <div id="timeSpeedRow" class="row mt-2">
+            <div id="timeSpeedLabel" class="col-4">
+                <p>時間倍率</p>
+            </div>
+            <div id="timeSpeedVal" class="col" id="timeSpeed">
+                <p>
+                    <button id="speedMinButton" class="btn btn-warning speedChangeButton">&lt;&lt;</button>
+                    <button id="speedReduceButton" class="btn btn-warning speedChangeButton">&lt;</button>
+                    <span id="dispTimeSpeed">0001</span>
+                    <span>倍</span>
+                    <button id="speedIncreaseButton" class="btn btn-warning speedChangeButton">&gt;</button>
+                    <button id="speedMaxButton" class="btn btn-warning speedChangeButton">&gt;&gt;</button>
+                </p>
+            </div>
+        </div>
+        <img id="statusAreaCloseButton" class="panelCloseButton" src="resources/close_up.png" isClose="false">
+        <img id="exitButton" src="resources/exit.png">
+    </div>
+
+    <!-- instruction Area -->
+    <div id="instructionArea" class="absolutePanel hiddenPage">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-danger" id="observeButton"><img
+                        src="./resources/binoculars_256x256.png" width="25" height="25" /></button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-success" id="hydrophoneButton" disabled><img
+                        src="./resources/hydrophone_256x256.png" width="25" height="25" /></button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-info" id="periscopeButton"><img
+                        src="./resources/target.png" width="25" height="25" /></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GameOver Dialog -->
+    <div class="modal fade" id="gameOverDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="gameOverDialogLabel" aria-hidden="true">
+        <div id="gameOverMenu" class="modal-dialog position-absolute">
+            <div class="modal-content">
+                <h1 id="gameOverMessage">撃沈…</h1>
+                <button class="backTitleButton btn btn-info" type="button" class=""
+                    data-bs-dismiss="modal">タイトル画面に戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GameClear Dialog -->
+    <div class="modal fade" id="gameClearDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="gameClearDialogLabel" aria-hidden="true">
+        <div id="gameClearMenu" class="modal-dialog position-absolute">
+            <div class="modal-content">
+                <h1 id="gameClearMessage">ゲームクリア</h1>
+                <button class="backTitleButton btn btn-info" type="button" class="btn btn-info"
+                    data-bs-dismiss="modal">タイトル画面に戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- scripts -->
+    <!-- <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script> -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./javascript/lib/three.module.js"
+            }
+        }
+    </script>
+    <script src="./javascript/lib/jquery-3.6.0.min.js" type="module"></script>
+    <script src="./javascript/lib/bootstrap.min.js" type="module"></script>
+    <script src="./javascript/lib/stats.min.js"></script>
+    <script src="./javascript/main.js" type="module"></script>
+</body>
+</html>
