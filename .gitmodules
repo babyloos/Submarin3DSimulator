@@ -1,3 +1,0 @@
-[submodule "www"]
-	path = www
-	url = git@bitbucket.org:babyloos/submarine_sim_src.git
