@@ -163,5 +163,12 @@ export class LoadProgress {
     }
 }
 
+window.addEventListener('DOMContentLoaded', function(){
+  var glot = new Glottologist();
+  glot.import("resources/words.json").then(() => {
+    glot.render()
+  })
+})
+
 const main = new Main();
 main.main();
