@@ -1,10 +1,286 @@
 {
-	"title": {
-		"en": "Submarine 3D Simulator",
+	"RES_Title": {
+		"en": "Submarine 3D simulator",
 		"ja": "潜水艦3Dシミュレータ"
 	},
-	"newGame": {
-		"en": "NEW GAME",
+	"RES_NewGame": {
+		"en": "New game",
 		"ja": "ニューゲーム"
+	},
+	"RES_Continue": {
+		"en": "Continue",
+		"ja": "コンティニュー"
+	},
+	"RES_Manual": {
+		"en": "Manual",
+		"ja": "マニュアル"
+	},
+	"RES_Easy": {
+		"en": "Easy",
+		"ja": "簡単"
+	},
+	"RES_Normal": {
+		"en": "Normal",
+		"ja": "普通"
+	},
+	"RES_Difficult": {
+		"en": "Hard",
+		"ja": "難しい"
+	},
+	"RES_Back": {
+		"en": "BACK",
+		"ja": "戻る"
+	},
+	"RES_Start": {
+		"en": "START",
+		"ja": "スタート"
+	},
+	"RES_Purpose": {
+		"en": "Game purpose",
+		"ja": "ゲームの目的"
+	},
+	"RES_ManualOverview": {
+		"en": "In Nazi Germany during World War II, submarines called unlimited submarines were being operated to cause damage to the enemy economy. <br>\nThe purpose of this game is to lead a submarine as captain of the German submarine U-BOAT during World War II and sink the enemy ship by torpedo attack.",
+		"ja": "二次大戦時のナチスドイツでは敵国の経済へ損害を与えるべく無制限潜水艦作戦と呼ばれる潜水艦による作戦が行われていました。<br>\n本ゲームの目的は、第二次大戦中のドイツ潜水艦U-Boatの艦長として潜水艦を指揮し魚雷攻撃によって敵船団を撃沈することです。"
+	},
+	"RES_Difficulty": {
+		"en": "Difficulty",
+		"ja": "難易度"
+	},
+	"RES_DifficultyOverview": {
+		"en": "Depending on the difficulty, the number of enemy ships and the number of sinking tons required for clearing will change.",
+		"ja": "難易度によって敵船の数、クリアに必要な撃沈トン数が変わります。"
+	},
+	"RES_EnemyCount": {
+		"en": "Number of destroyers",
+		"ja": "駆逐艦の数"
+	},
+	"RES_MerchantCount": {
+		"en": "Number of merchant ships",
+		"ja": "商船の数"
+	},
+	"RES_SunkTonnage": {
+		"en": "Number of sinking tons",
+		"ja": "撃沈トン数"
+	},
+	"RES_OperationExplanation": {
+		"en": "Operation explanation",
+		"ja": "操作説明"
+	},
+	"RES_SubmarineMove": {
+		"en": "Submarine movement",
+		"ja": "潜水艦の移動"
+	},
+	"RES_Manual1": {
+		"en": "To move the submarine, do it from the controlled panel at the lower left.\n The control panels include \"engine telegraph\", \"direction instructor\", and \"depth indicator\", and you can change the engine output, travel direction, and depth of the submarine by operating each.",
+		"ja": "潜水艦を移動させるには左下のコントロールパネルから行います。\n コントロールパネルには\"エンジンテレグラフ\", \"方位指示盤\", \"深度指示盤\"があり、それぞれ操作することで潜水艦のエンジン出力、進行方向、深度を変更することができます。"
+	},
+	"RES_ManualDetail2": {
+		"en": "Watching, hearing sound",
+		"ja": "見張り、聴音"
+	},
+	"RES_ManualDetail3": {
+		"en": "You can check the surrounding status from the instruction panel at the bottom right. <br>\nBy tapping each button, the information of the enemy ship confirmed in the upper left message panel is displayed. <br>\nYou can visually watch the look -imized buttons on the left, and to hear the hydropone with the central listening button. <br>\nVisually lookouts can only be used when submarines are emerging and hyprophones are diving.",
+		"ja": "右下の指示パネルから、周りの状況を確認することが出来ます。<br>\n各ボタンをタップすることで左上のメッセージパネルに確認した敵船の情報が表示されます。<br>\n左側の見張りボタンで目視での見張り、中央の聴音ボタンでハイドロフォンの聴音を行うことができます。<br>\n目視での見張りは潜水艦が浮上しているとき、ハイドロフォンでの聴音は潜水艦が潜航しているときにのみ利用できます。"
+	},
+	"RES_ManualDetail4": {
+		"en": "Periscope screen",
+		"ja": "潜望鏡画面"
+	},
+	"RES_ManualDetail5": {
+		"en": "You can display the periscope screen by tapping the periscope button on the right side of the instruction panel on the lower right. <br>\nOn the deterrent mirror screen, you will check the enemy ship with the periscope, input torpedo specifications, and launch torpedoes.",
+		"ja": "右下の指示パネル右側の潜望鏡ボタンをタップすることで潜望鏡画面を表示することができます。<br>\n潜望鏡画面では潜望鏡による敵船の確認、魚雷の諸元入力、魚雷の発射を行います。"
+	},
+	"RES_ManualDetail6": {
+		"en": "Double -speed display",
+		"ja": "倍速表示"
+	},
+	"RES_ManualDetail7": {
+		"en": "You can change the progress of the in -game time with the time -ratio button in the upper right status panel. <br>\nThe time magnification can be changed to 1 to 16 times.",
+		"ja": "右上のステータスパネル内の時間倍率ボタンでゲーム内時間の進行速度を変更することができます。<br>\n時間倍率は1~16倍まで変更することができます。"
+	},
+	"RES_ManualDetail8": {
+		"en": "Action of enemy ships",
+		"ja": "敵船の行動"
+	},
+	"RES_ManualDetail9": {
+		"en": "The enemy fleet usually continues to move towards the destination at a constant speed. <br>\nHowever, once a submarine is found, the anti -submarine sailing is entered, merchant ships proceed to avoid torpedoes, and the destroyer starts attacking the submarine. <br>\nThere are two types of destroyers attacking, and if the submarine is emerging, a bombardment will be attacked, and a striking attack will be performed during submarine.",
+		"ja": "敵の船団は通常は目的地に向かって一定速度で一定方向へ進み続けます。<br>\nしかし、一度潜水艦を発見すると対潜航行に入り商船は魚雷を回避するように進み、駆逐艦は潜水艦に向かって攻撃を開始してきます。<br>\n駆逐艦の攻撃方法は2種類あり、潜水艦が浮上している場合は砲撃による攻撃、潜航中は爆雷攻撃を行います。"
+	},
+	"RES_ManualDetail10": {
+		"en": "Battery, oxygen remaining",
+		"ja": "バッテリー、酸素残量"
+	},
+	"RES_ManualDetail11": {
+		"en": "Submarines gradually decrease the battery level to turn the screw with the battery. <br>\nIf the battery runs out, you will not be able to move forward and retreat, but you can dive and rise. <br>\nDuring the voyage, the amount of oxygen remains gradually decreases due to consuming oxygen in the submarine. <br>\nIf the amount of oxygen is 0, the game will be over, so please come up and recover.",
+		"ja": "潜水艦はバッテリーでスクリューを回すため徐々にバッテリー残量が減っていきます。<br>\nバッテリーがなくなると前進、後退が行えなくなりますが、潜航、浮上は可能です。<br>\n潜航中は潜水艦内の酸素を消費するため徐々に酸素残量が減っていきいます。<br>\n酸素残量が0になるとゲームオーバーとなってしまうので浮上し回復してください。"
+	},
+	"RES_ManualDetail12": {
+		"en": "Save function",
+		"ja": "セーブ機能"
+	},
+	"RES_ManualDetail13": {
+		"en": "You can save the state by tapping the end button at the top right during the game, and the game can be resumed from the continuation button on the title screen. <br>\nIn addition, the state is automatically saved every minute in the game time.",
+		"ja": "ゲーム中に右上の終了ボタンをタップすることによって状態を保存し、タイトル画面のコンティニューボタンからゲームを再開することができます。<br>\nまた、ゲーム内時間での1分ごとに自動で状態の保存が行われます。"
+	},
+	"RES_back": {
+		"en": "BACK",
+		"ja": "戻る"
+	},
+	"RES_Damage": {
+		"en": "Damage",
+		"ja": "ダメージ"
+	},
+	"RES_Battery": {
+		"en": "Battery",
+		"ja": "バッテリー"
+	},
+	"RES_RemaningO2": {
+		"en": "O2",
+		"ja": "酸素残量"
+	},
+	"RES_RemaningTorpedo": {
+		"en": "Torpedos",
+		"ja": "魚雷残数"
+	},
+	"RES_NowTime": {
+		"en": "Current time",
+		"ja": "現在時刻"
+	},
+	"RES_TimeMag": {
+		"en": "Time Mag",
+		"ja": "時間倍率"
+	},
+	"RES_Observer": {
+		"en": "Monitor",
+		"ja": "監視員"
+	},
+	"RES_ObserverDiscover": {
+		"en": "Check the ship's shadow ○!",
+		"ja": "船影を○隻確認！"
+	},
+	"RES_EnemyNum": {
+		"en": "Enemy ship",
+		"ja": "敵船○"
+	},
+	"RES_Direction": {
+		"en": "Direction",
+		"ja": "方位"
+	},
+	"RES_Range": {
+		"en": "Distance",
+		"ja": "距離"
+	},
+	"RES_Course": {
+		"en": "Course",
+		"ja": "針路"
+	},
+	"RES_ShipSpeed": {
+		"en": "Ship speed",
+		"ja": "船速"
+	},
+	"RES_NoShips": {
+		"en": "No ship!",
+		"ja": "船影無し！"
+	},
+	"RES_Hydrophone": {
+		"en": "Sound listener",
+		"ja": "聴音員"
+	},
+	"RES_HydrophoneDiscover": {
+		"en": "Check the ship's ship ○!",
+		"ja": "船音を○隻確認！"
+	},
+	"RES_EnemyShip": {
+		"en": "Enemy ship",
+		"ja": "敵船"
+	},
+	"RES_NoSounds": {
+		"en": "No shipon!",
+		"ja": "船音無し！"
+	},
+	"RES_LowSounds": {
+		"en": "Small volume",
+		"ja": "音量微小"
+	},
+	"RES_MiddleSounds": {
+		"en": "In the middle of the volume",
+		"ja": "音量中"
+	},
+	"RES_SomewhatLargeSounds": {
+		"en": "Slightly loud volume",
+		"ja": "音量やや大きい"
+	},
+	"RES_LargeSounds": {
+		"en": "Loud volume",
+		"ja": "音量大"
+	},
+	"RES_AheadFull": {
+		"en": "Full speed forward",
+		"ja": "全速前進"
+	},
+	"RES_AheadHalf": {
+		"en": "Half -speed forward",
+		"ja": "半速前進"
+	},
+	"RES_AheadSlow": {
+		"en": "Short -speed forward",
+		"ja": "微速前進"
+	},
+	"RES_AllStop": {
+		"en": "Institution suspension",
+		"ja": "機関停止"
+	},
+	"RES_AsternSlow": {
+		"en": "Short -speed backward",
+		"ja": "微速後進"
+	},
+	"RES_AsternHalf": {
+		"en": "Half -speed",
+		"ja": "半速後進"
+	},
+	"RES_AsternFull": {
+		"en": "Full speed",
+		"ja": "全速後進"
+	},
+	"RES_ChiefEngineer": {
+		"en": "Head of institution",
+		"ja": "機関長"
+	},
+	"RES_Navigator": {
+		"en": "Voyage",
+		"ja": "航海長"
+	},
+	"RES_ChangeCourse": {
+		"en": "Change the course to",
+		"ja": "針路を○に変更"
+	},
+	"RES_ChangeDepth": {
+		"en": "Change the depth to",
+		"ja": "深度を○に変更"
+	},
+	"RES_ArrivalTime": {
+		"en": "Arrival time",
+		"ja": "到達時間"
+	},
+	"RES_Seconds": {
+		"en": "sec",
+		"ja": "秒"
+	},
+	"RES_Times": {
+		"en": "times",
+		"ja": "倍"
+	},
+	"RES_Sinking": {
+		"en": "Sinking ...",
+		"ja": "撃沈…"
+	},
+	"RES_Clear": {
+		"en": "Clear the game",
+		"ja": "ゲームクリア"
+	},
+	"RES_BackToTitle": {
+		"en": "Return to the title screen",
+		"ja": "タイトル画面に戻る"
 	}
 }

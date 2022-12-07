@@ -22,17 +22,17 @@
                 <div class="menu text-center">
                     <div>
                         <div class="titleBackground">
-                            <h1 glot-model='title'>潜水艦3Dシミュレータ</h1>
+                            <h1 glot-model='RES_Title'>潜水艦3Dシミュレータ</h1>
                         </div>
                         <div class="menuButtonWrapper">
                             <div class="row">
-                                <button id="newGameButton" class="btn btn-info" glot-model='newGame'>ニューゲーム</button>
+                                <button id="newGameButton" class="btn btn-info" glot-model='RES_NewGame'>ニューゲーム</button>
                             </div>
                             <div class="row">
-                                <button id="continueButton" class="btn btn-info">コンティニュー</button>
+                                <button id="continueButton" class="btn btn-info" glot-model='RES_Continue'>コンティニュー</button>
                             </div>
                             <div class="row">
-                                <button id="manualButton" class="btn btn-info">マニュアル</button>
+                                <button id="manualButton" class="btn btn-info" glot-model='RES_Manual'>マニュアル</button>
                             </div>
                         </div>
                     </div>
@@ -41,74 +41,74 @@
             <!-- マニュアル画面 -->
             <div id="manualPage" class="vignette hiddenPage">
                 <div id="manualTitle" class="ms-10">
-                    <h1 class="">マニュアル</h1>
+                    <h1 class="" glot-model='RES_Manual'>マニュアル</h1>
                 </div>
                 <div id="manualMessageBox" class="overflow-auto">
-                  <h5>ゲームの目的</h5>
-                  <p>第二次大戦時のナチスドイツでは敵国の経済へ損害を与えるべく無制限潜水艦作戦と呼ばれる潜水艦による作戦が行われていました。<br>
+                  <h5 glot-model='RES_Purpose'>ゲームの目的</h5>
+                  <p glot-model='RES_ManualOverview'>第二次大戦時のナチスドイツでは敵国の経済へ損害を与えるべく無制限潜水艦作戦と呼ばれる潜水艦による作戦が行われていました。<br>
 本ゲームの目的は、第二次大戦中のドイツ潜水艦U-Boatの艦長として潜水艦を指揮し魚雷攻撃によって敵船団を撃沈することです。</p>
-                  <h5>難易度</h5>
-                  <p>難易度によって敵船の数、クリアに必要な撃沈トン数が変わります。</p>
+                  <h5 glot-model='RES_Difficulty'>難易度</h5>
+                  <p glot-model='RES_DifficultyOverview'>難易度によって敵船の数、クリアに必要な撃沈トン数が変わります。</p>
                   <table>
                     <thead>
-                <tr><th>難易度</th><th>駆逐艦の数</th><th>商船の数</th><th>撃沈トン数</th><tr>
-                  </thead>
-                <tbody>
-                  <tr>
-                    <td>簡単</td><td>1</td><td>5</td><td>8000</td>
-                  </tr>
-                  <tr>
-                    <td>普通</td><td>2</td><td>4</td><td>12000</td>
-                  </tr>
-                  <tr>
-                    <td>難しい</td><td>4</td><td>3</td><td>20000</td>
-                  </tr>
+                    <tr><th glot-model='RES_Difficulty'>難易度</th><th glot-model='RES_EnemyCount'>駆逐艦の数</th><th glot-model='RES_MerchantCount'>商船の数</th><th glot-model='RES_SunkTonnage'>撃沈トン数</th><tr>
+                    </thead>
+                  <tbody>
+                    <tr>
+                      <td glot-model='RES_Easy'>簡単</td><td>1</td><td>5</td><td>8000</td>
+                    </tr>
+                    <tr>
+                      <td glot-model='RES_Normal'>普通</td><td>2</td><td>4</td><td>12000</td>
+                    </tr>
+                    <tr>
+                      <td glot-model='RES_Difficult'>難しい</td><td>4</td><td>3</td><td>20000</td>
+                    </tr>
                 </tbody>
               </table>
-            <h5>操作説明</h5>
-            <h6>潜水艦の移動</h6>
-            <p>
+            <h5 glot-model='RES_OperationExplanation'>操作説明</h5>
+            <h6 glot-model='RES_SubmarineMove'>潜水艦の移動</h6>
+            <p glot-model='RES_Manual1'>
 潜水艦を移動させるには左下のコントロールパネルから行います。
 コントロールパネルには"エンジンテレグラフ", "方位指示盤", "深度指示盤"があり、それぞれ操作することで潜水艦のエンジン出力、進行方向、深度を変更することができます。
             </p>
-            <h6>見張り、聴音</h6>
-            <p>
+            <h6 glot-model='RES_ManualDetail2'>見張り、聴音</h6>
+            <p glot-model='RES_ManualDetail3'>
               右下の指示パネルから、周りの状況を確認することが出来ます。<br>
                 各ボタンをタップすることで左上のメッセージパネルに確認した敵船の情報が表示されます。<br>
                 左側の見張りボタンで目視での見張り、中央の聴音ボタンでハイドロフォンの聴音を行うことができます。<br>
 目視での見張りは潜水艦が浮上しているとき、ハイドロフォンでの聴音は潜水艦が潜航しているときにのみ利用できます。
             </p>
-            <h6>潜望鏡画面</h6>
-            <p>
+            <h6 glot-model='RES_ManualDetail4'>潜望鏡画面</h6>
+            <p glot-model='RES_ManualDetail5'>
               右下の指示パネル右側の潜望鏡ボタンをタップすることで潜望鏡画面を表示することができます。<br>
 潜望鏡画面では潜望鏡による敵船の確認、魚雷の諸元入力、魚雷の発射を行います。
             </p>
-            <h6>倍速表示</h6>
-            <p>
+            <h6 glot-model='RES_ManualDetail6'>倍速表示</h6>
+            <p glot-model='RES_ManualDetail7'>
               右上のステータスパネル内の時間倍率ボタンでゲーム内時間の進行速度を変更することができます。<br>
 時間倍率は1~16倍まで変更することができます。
             </p>
-            <h5>敵船の行動</h5>
-            <p>
+            <h5 glot-model='RES_ManualDetail8'>敵船の行動</h5>
+            <p glot-model='RES_ManualDetail9'>
               敵の船団は通常は目的地に向かって一定速度で一定方向へ進み続けます。<br>
                 しかし、一度潜水艦を発見すると対潜航行に入り商船は魚雷を回避するように進み、駆逐艦は潜水艦に向かって攻撃を開始してきます。<br>
 駆逐艦の攻撃方法は2種類あり、潜水艦が浮上している場合は砲撃による攻撃、潜航中は爆雷攻撃を行います。
             </p>
-            <h5>バッテリー、酸素残量</h5>
-            <p>
+            <h5 glot-model='RES_ManualDetail10'>バッテリー、酸素残量</h5>
+            <p glot-model='RES_ManualDetail11'>
               潜水艦はバッテリーでスクリューを回すため徐々にバッテリー残量が減っていきます。<br>
                 バッテリーがなくなると前進、後退が行えなくなりますが、潜航、浮上は可能です。<br>
                 潜航中は潜水艦内の酸素を消費するため徐々に酸素残量が減っていきいます。<br>
 酸素残量が0になるとゲームオーバーとなってしまうので浮上し回復してください。
             </p>
-            <h5>セーブ機能</h5>
-            <p>
+            <h5 glot-model='RES_ManualDetail12'>セーブ機能</h5>
+            <p glot-model='RES_ManualDetail13'>
               ゲーム中に右上の終了ボタンをタップすることによって状態を保存し、タイトル画面のコンティニューボタンからゲームを再開することができます。<br>
 また、ゲーム内時間での1分ごとに自動で状態の保存が行われます。
             </p>
                 </div>
                 <div class="buttonContainer">
-                    <button type="button" id="manualBackButton" class=" btn btn-info btn-sm">戻る</button>
+                    <button type="button" id="manualBackButton" class=" btn btn-info btn-sm" glot-model='RES_back'>戻る</button>
                 </div>
             </div>
             <!-- 難易度選択画面 -->
@@ -116,30 +116,30 @@
                 <div class="menu text-center">
                     <div>
                         <div class="titleBackground">
-                            <h1>潜水艦3Dシミュレーター</h1>
+                            <h1 glot-model='RES_Title'>潜水艦3Dシミュレーター</h1>
                         </div>
                         <div class="menuButtonWrapper">
                             <p>
                                 <input type="radio" class="btn-check" name="diffSelect" id="diffEasy"
                                     autocomplete="off">
-                                <label class="btn btn-info btn-sm" for="diffEasy">簡単</label>
+                                <label class="btn btn-info btn-sm" for="diffEasy" glot-model='RES_Easy'>簡単</label>
                             </p>
                             <p>
                                 <input type="radio" class="btn-check" name="diffSelect" id="diffNormal"
                                     autocomplete="off">
-                                <label class="btn btn-info btn-sm" for="diffNormal">普通</label>
+                                <label class="btn btn-info btn-sm" for="diffNormal" glot-model='RES_Normal'>普通</label>
                             </p>
                             <p>
                                 <input type="radio" class="btn-check" name="diffSelect" id="diffHard"
                                     autocomplete="off">
-                                <label class="btn btn-info btn-sm" for="diffHard">難しい</label>
+                                <label class="btn btn-info btn-sm" for="diffHard" glot-model='RES_Difficult'>難しい</label>
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="buttonContainer">
-                    <button type="button" id="diffSelectBackbutton" class=" btn btn-info btn-sm">戻る</button>
-                    <button type="button" id="startButton" class=" btn btn-info btn-sm" disabled>スタート</button>
+                    <button type="button" id="diffSelectBackbutton" class=" btn btn-info btn-sm" glot-model='RES_Back'>戻る</button>
+                    <button type="button" id="startButton" class=" btn btn-info btn-sm" glot-model='RES_Start' disabled>スタート</button>
                 </div>
             </div>
             <!-- ロード画面 -->
@@ -201,15 +201,15 @@
             <div class="row">
                 <div id="periscopeStatusContainer" class="col-8">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-6" glot-model='RES_ArrivalTime'>
                             到達時間
                         </div>
                         <div class="col-6">
-                            <span id="hitTime">000</span>秒
+                          <span id="hitTime">000</span><span glot-model='RES_Seconds' style='margin-left: 10px'>秒</span>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-6" glot-model='RES_RemaningTorpedo'>
                             魚雷残数
                         </div>
                         <div class="col-6">
@@ -217,7 +217,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-6" glot-model='RES_NowTime'>
                             現在時刻
                         </div>
                         <div class="col-6 time">
@@ -268,7 +268,7 @@
     <div id="statusArea2" class="absolutePanel hiddenPage">
         <div class="row">
             <div class="col-5">
-                <p>ダメージ</p>
+                <p glot-model='RES_Damage'>ダメージ</p>
             </div>
             <div class="col" id="damage">
                 <div class="progress" id="damageBar">
@@ -278,7 +278,7 @@
         </div>
         <div class="row">
             <div class="col-5">
-                <p>バッテリー</p>
+                <p glot-model='RES_Battery'>バッテリー</p>
             </div>
             <div class="col" id="battery">
                 <div class="progress">
@@ -288,7 +288,7 @@
         </div>
         <div class="row">
             <div class="col-5">
-                <p>酸素残量</p>
+                <p glot-model='RES_RemaningO2'>酸素残量</p>
             </div>
             <div class="col" id="o2">
                 <div class="progress">
@@ -298,7 +298,7 @@
         </div>
         <div class="row">
             <div class="col-5">
-                <p>魚雷残数</p>
+                <p glot-model='RES_RemaningTorpedo'>魚雷残数</p>
             </div>
             <div class="col" id="torpedo">
                 <p><span id="torpedoCountMain" class="torpedoCount"></span> / 14</p>
@@ -306,7 +306,7 @@
         </div>
         <div class="row">
             <div class="col-5">
-                <p>現在時刻</p>
+                <p glot-model='RES_NowTime'>現在時刻</p>
             </div>
             <div class="col time">
                 <p>00:00:00</p>
@@ -314,14 +314,14 @@
         </div>
         <div id="timeSpeedRow" class="row mt-2">
             <div id="timeSpeedLabel" class="col-4">
-                <p>時間倍率</p>
+                <p glot-model='RES_TimeMag'>時間倍率</p>
             </div>
             <div id="timeSpeedVal" class="col" id="timeSpeed">
                 <p>
                     <button id="speedMinButton" class="btn btn-warning speedChangeButton">&lt;&lt;</button>
                     <button id="speedReduceButton" class="btn btn-warning speedChangeButton">&lt;</button>
                     <span id="dispTimeSpeed">0001</span>
-                    <span>倍</span>
+                    <span glot-model='RES_Times'>倍</span>
                     <button id="speedIncreaseButton" class="btn btn-warning speedChangeButton">&gt;</button>
                     <button id="speedMaxButton" class="btn btn-warning speedChangeButton">&gt;&gt;</button>
                 </p>
@@ -354,7 +354,7 @@
         aria-labelledby="gameOverDialogLabel" aria-hidden="true">
         <div id="gameOverMenu" class="modal-dialog position-absolute">
             <div class="modal-content">
-                <h1 id="gameOverMessage">撃沈…</h1>
+                <h1 id="gameOverMessage" glot-model='RES_Sinking'>撃沈…</h1>
                 <button class="backTitleButton btn btn-info" type="button" class=""
                     data-bs-dismiss="modal">タイトル画面に戻る</button>
             </div>
@@ -366,9 +366,9 @@
         aria-labelledby="gameClearDialogLabel" aria-hidden="true">
         <div id="gameClearMenu" class="modal-dialog position-absolute">
             <div class="modal-content">
-                <h1 id="gameClearMessage">ゲームクリア</h1>
+                <h1 id="gameClearMessage" glot-model='RES_Clear'>ゲームクリア</h1>
                 <button class="backTitleButton btn btn-info" type="button" class="btn btn-info"
-                    data-bs-dismiss="modal">タイトル画面に戻る</button>
+                    data-bs-dismiss="modal" glot-model='RES_BackToTitle'>タイトル画面に戻る</button>
             </div>
         </div>
     </div>
