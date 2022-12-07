@@ -48,21 +48,25 @@ export class HydrophoneController extends InstructionController {
      * @param {Array} foundShips 監視の結果見つけた船
      */
     #showResultMessage(foundShips) {
-        const sender = "聴音員";
+        const sender = $('#RES_Hydrophone').html()
         if (foundShips.length != 0) {
-            this.messageController.showMessage(sender, "船音を" + foundShips.length + "隻確認！");
+            var foundShipsMessage = $('#RES_HydrophoneDiscover').html().replace('xxx', foundShips.length)
+            this.messageController.showMessage(sender, foundShipsMessage);
             foundShips.forEach(function (foundShip, index) {
                 const soundVolume = this.#soundLoudness(foundShip.range);
                 const volumeMessage = this.#soundVolumeMessage(soundVolume);
-                var message = "敵船" + (index + 1) + " ";
-                message += "方位" + Util.numbToNDigitsStr(foundShip.direction, 3) + "、";
+                const enemyShipText = $('#RES_EnemyShip').html()
+                var message = enemyShipText + (index + 1) + " ";
+                const directionText = $('#RES_Direction').html()
+                message += directionText + Util.numbToNDigitsStr(foundShip.direction, 3) + "、";
                 message += volumeMessage + "!";
                 this.messageController.showMessage(sender, message);
             }.bind(this));
         }
         else {
             // 見つからなかった
-            this.messageController.showMessage(sender, "船音無し！");
+            const noSoundsText = $('#RES_NoSounds').html()
+            this.messageController.showMessage(sender, noSoundsText);
         }
     }
 
@@ -105,16 +109,16 @@ export class HydrophoneController extends InstructionController {
         var message = "";
         switch (volume) {
             case 0:
-                message = "音量微小";
+                message = $('#RES_LowSounds').html()
                 break;
             case 1:
-                message = "音量中";
+                message = $('#RES_MiddleSounds').html()
                 break;
             case 2:
-                message = "音量やや大きい"
+                message = $('#RES_SomewhatLargeSounds').html()
                 break;
             case 3:
-                message = "音量大";
+                message = $('#RES_LargeSounds').html()
                 break;
             default:
                 break;

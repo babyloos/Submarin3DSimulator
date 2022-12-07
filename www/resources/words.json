@@ -188,8 +188,8 @@
 		"ja": "聴音員"
 	},
 	"RES_HydrophoneDiscover": {
-		"en": "Check the ship's ship ○!",
-		"ja": "船音を○隻確認！"
+		"en": "Check xxx ships!",
+		"ja": "船音をxxx隻確認！"
 	},
 	"RES_EnemyShip": {
 		"en": "Enemy ship",
