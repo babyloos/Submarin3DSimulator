@@ -73,29 +73,30 @@ export class Uboat extends GameObject {
         let engineOutStr = "";
         switch (engineOut) {
             case EngineOut.aheadFull:
-                engineOutStr = "全速前進";
+                engineOutStr = $('#RES_AheadFull').html()
                 break;
             case EngineOut.aheadHalf:
-                engineOutStr = "半速前進";
+                engineOutStr = $('#RES_AheadHalf').html()
                 break;
             case EngineOut.aheadSlow:
-                engineOutStr = "微速前進";
+                engineOutStr = $('#RES_AheadSlow').html()
                 break;
             case EngineOut.stop:
-                engineOutStr = "機関停止";
+                engineOutStr = $('#RES_AllStop').html()
                 break;
             case EngineOut.asternSlow:
-                engineOutStr = "微速後進";
+                engineOutStr = $('#RES_AsternSlow').html()
                 break;
             case EngineOut.asternHalf:
-                engineOutStr = "半速後進";
+                engineOutStr = $('#RES_AsternHalf').html()
                 break;
             case EngineOut.asternFull:
-                engineOutStr = "全速後進";
+                engineOutStr = $('#RES_AsternFull').html()
                 break;
         }
 
-        this.messageController.showMessage("機関長", engineOutStr);
+        const engineerText = $('#RES_ChiefEngineer').html()
+        this.messageController.showMessage(engineerText, engineOutStr);
         this.beforeEngineOut = engineOut;
         this.beforeDistSpeed = this.distSpeed;
     }
@@ -106,8 +107,10 @@ export class Uboat extends GameObject {
      */
     updateDistCourse(distCourse) {
         super.updateDistCourse(distCourse);
+        const navigatorText = $('#RES_Navigator').html()  
         let distCourseStr = Util.numbToNDigitsStr(distCourse, 3);
-        this.messageController.showMessage("航海長", "針路を " + distCourseStr + " に変更");
+        const distCourseText = $('#RES_ChangeCourse').html().replace('xxx', distCourseStr)
+        this.messageController.showMessage(navigatorText, distCourseText);
     }
 
     /**
@@ -117,7 +120,9 @@ export class Uboat extends GameObject {
     updateDistDepth(distDepth) {
         this.distDepth = distDepth;
         let distDepthStr = Util.numbToNDigitsStr(distDepth, 3);
-        this.messageController.showMessage("航海長", "深度を " + distDepthStr + " に変更");
+        const navigatorText = $('#RES_Navigator').html()
+        const distDepthText = $('#RES_ChangeDepth').html().replace('xxx', distDepthStr)
+        this.messageController.showMessage(navigatorText, distDepthText);
     }
 
     /**

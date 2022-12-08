@@ -216,48 +216,48 @@
 		"ja": "音量大"
 	},
 	"RES_AheadFull": {
-		"en": "Full speed forward",
+		"en": "Ahead full",
 		"ja": "全速前進"
 	},
 	"RES_AheadHalf": {
-		"en": "Half -speed forward",
+		"en": "Ahead half",
 		"ja": "半速前進"
 	},
 	"RES_AheadSlow": {
-		"en": "Short -speed forward",
+		"en": "Ahead slow",
 		"ja": "微速前進"
 	},
 	"RES_AllStop": {
-		"en": "Institution suspension",
+		"en": "Engine stop",
 		"ja": "機関停止"
 	},
 	"RES_AsternSlow": {
-		"en": "Short -speed backward",
+		"en": "Astern slow",
 		"ja": "微速後進"
 	},
 	"RES_AsternHalf": {
-		"en": "Half -speed",
+		"en": "Astern half",
 		"ja": "半速後進"
 	},
 	"RES_AsternFull": {
-		"en": "Full speed",
+		"en": "Astern full",
 		"ja": "全速後進"
 	},
 	"RES_ChiefEngineer": {
-		"en": "Head of institution",
+		"en": "Chief engineer",
 		"ja": "機関長"
 	},
 	"RES_Navigator": {
-		"en": "Voyage",
+		"en": "Navigator",
 		"ja": "航海長"
 	},
 	"RES_ChangeCourse": {
-		"en": "Change the course to",
-		"ja": "針路を○に変更"
+		"en": "Change the course to xxx",
+		"ja": "針路をxxxに変更"
 	},
 	"RES_ChangeDepth": {
-		"en": "Change the depth to",
-		"ja": "深度を○に変更"
+		"en": "Change the depth to xxx",
+		"ja": "深度をxxxに変更"
 	},
 	"RES_ArrivalTime": {
 		"en": "Arrival time",
