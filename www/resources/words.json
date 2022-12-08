@@ -156,8 +156,8 @@
 		"ja": "監視員"
 	},
 	"RES_ObserverDiscover": {
-		"en": "Check the ship's shadow ○!",
-		"ja": "船影を○隻確認！"
+		"en": "Check the ship's shadow xxx!",
+		"ja": "船影をxxx隻確認！"
 	},
 	"RES_EnemyNum": {
 		"en": "Enemy ship",

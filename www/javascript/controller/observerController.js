@@ -49,21 +49,28 @@ export class ObserverController extends InstructionController {
      * @param {Array} foundShips 監視の結果見つけた船
      */
     #showResultMessage(foundShips) {
-        const sender = "監視員";
+        const sender = $('#RES_Observer').html()
         if (foundShips.length != 0) {
-            this.messageController.showMessage(sender, "船影を" + foundShips.length + "隻確認！");
+            var foundShipsMessage = $('#RES_ObserverDiscover').html().replace('xxx', foundShips.length)
+            this.messageController.showMessage(sender, foundShipsMessage);
             foundShips.forEach(function (foundShip, index) {
-                var message = "敵船" + (index + 1) + " ";
-                message += "方位" + Util.numbToNDigitsStr(foundShip.direction, 3) + "、";
-                message += "距離" + foundShip.range + "m、";
-                message += "針路" + Util.numbToNDigitsStr(foundShip.course, 3) + "、";
-                message += "船速" + foundShip.speed + "！";
+                const enemyShipText = $('#RES_EnemyShip').html()
+                var message = enemyShipText + (index + 1) + " ";
+                const directionText = $('#RES_Direction').html()
+                const rangeText = $('#RES_Range').html()
+                const courseText = $('#RES_Course').html()
+                const speedText = $('#RES_ShipSpeed').html()
+                message += directionText + ' ' + Util.numbToNDigitsStr(foundShip.direction, 3) + ", ";
+                message += rangeText + ' ' + foundShip.range + "m, ";
+                message += courseText + ' ' + Util.numbToNDigitsStr(foundShip.course, 3) + ", ";
+                message += speedText + ' ' + foundShip.speed + "!";
                 this.messageController.showMessage(sender, message);
             }.bind(this));
         }
         else {
             // 見つからなかった
-            this.messageController.showMessage(sender, "船影無し！");
+            const noShipsText = $('#RES_NoShips').html()
+            this.messageController.showMessage(sender, noShipsText);
         }
     }
 
