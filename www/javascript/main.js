@@ -10,8 +10,15 @@ export class Main {
     main() {
         let game;   // ゲームインスタンス
 
-        // 音声のロード
-        const audioManager = new AudioManager('resources/audio/enterButton.mp3');
+        let firstPlay = true;
+        const audioManager = new AudioManager();
+        audioManager.load('resources/audio/titleBGM.mp3');
+        $('body').on('click', function () {
+            if (firstPlay) {
+                audioManager.play();
+                firstPlay = false;
+            }
+        });
 
         // スクロール禁止
         Util.no_scroll();
@@ -52,7 +59,8 @@ export class Main {
         diffSelectBackbutton.on('click', function () {
             PageController.pageTransition('titlePage');
         });
-        startButton.on('click', function () {
+        startButton.on('click', () => {
+            audioManager.stop();
             transitionThreePage(true, selectedDiff);
         });
         diffSelector.on('change', function () {
@@ -75,12 +83,13 @@ export class Main {
 
         // コンティニュー
         continueButton.on('click', function () {
+            firstPlay = false;
+            audioManager.stop();
             transitionThreePage(false, selectedDiff);
         });
 
         // マニュアル
         manualButton.on('click', function () {
-            audioManager.play();
             PageController.pageTransition('manualPage');
         });
         manualBackButton.on('click', function () {
@@ -168,11 +177,11 @@ export class LoadProgress {
     }
 }
 
-window.addEventListener('DOMContentLoaded', function(){
-  var glot = new Glottologist();
-  glot.import("resources/words.json").then(() => {
-    glot.render()
-  })
+window.addEventListener('DOMContentLoaded', function () {
+    var glot = new Glottologist();
+    glot.import("resources/words.json").then(() => {
+        glot.render()
+    })
 })
 
 const main = new Main();
