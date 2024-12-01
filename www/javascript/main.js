@@ -2,12 +2,16 @@ import { GameDifficulty } from "./constants.js";
 import { PageController } from "./controller/pageController.js";
 import { Game } from "./game.js";
 import { Util } from "./util.js";
+import { AudioManager } from "./controller/audioManager.js";
 
 export class Main {
 
     // entry point
     main() {
         let game;   // ゲームインスタンス
+
+        // 音声のロード
+        const audioManager = new AudioManager('resources/audio/enterButton.mp3');
 
         // スクロール禁止
         Util.no_scroll();
@@ -76,6 +80,7 @@ export class Main {
 
         // マニュアル
         manualButton.on('click', function () {
+            audioManager.play();
             PageController.pageTransition('manualPage');
         });
         manualBackButton.on('click', function () {
