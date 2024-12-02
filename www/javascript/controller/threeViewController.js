@@ -180,6 +180,18 @@ export class ThreeViewController {
         this.camera.lookAt(this.cameraLookAt);
         this.scene.add(this.camera);
 
+        // 音声
+        const listener = new THREE.AudioListener();
+        this.camera.add(listener);
+        const sound = new THREE.Audio(listener);
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load('resources/audio/titleBGM.mp3', (buffer) => {
+            sound.setBuffer(buffer);
+            sound.setLoop(true); // ループ再生
+            sound.setVolume(0.5); // ボリューム調整
+            sound.play(); // 再生開始
+        });
+
         // ライト
         const pointLight = new THREE.PointLight(0xffffff, 3.0);
         this.camera.add(pointLight);
@@ -480,7 +492,7 @@ export class ThreeViewController {
         */
 
         // モデルのロード
-        
+
         /*
         THREE.DefaultLoadingManager.onLoad = function () {
             // ロード完了後にゲーム開始
@@ -718,7 +730,7 @@ export class ThreeViewController {
         // playerBoat
         const playerBoatObj = this.#getObjectByName("playerBoat");
         if (playerBoatObj === null) {
-          return;
+            return;
         }
         playerBoatObj.position.set(this.playerBoat.pointX, -this.playerBoat.depth, this.playerBoat.pointY);
         playerBoatObj.rotation.set(0, -Util.degreeToRadian(this.playerBoat.course), 0);
@@ -760,7 +772,7 @@ export class ThreeViewController {
         for (var i = 0; i < this.otherShips.length; i++) {
             const otherShipObj = this.#getObjectByName("otherShip" + i);
             if (otherShipObj === null) {
-              break;
+                break;
             }
             const otherShip = this.otherShips[i];
             otherShipObj.position.set(otherShip.pointX, -otherShip.depth, otherShip.pointY);
