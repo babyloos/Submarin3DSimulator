@@ -44,6 +44,7 @@ export class ThreeViewController {
     scene;
     camera;
     renderer;
+    sound;
 
     // コントローラ
     controls;
@@ -183,13 +184,17 @@ export class ThreeViewController {
         // 音声
         const listener = new THREE.AudioListener();
         this.camera.add(listener);
-        const sound = new THREE.Audio(listener);
+        this.sound = new THREE.PositionalAudio(listener);
         const audioLoader = new THREE.AudioLoader();
+
+        let isAudioReady = false;
         audioLoader.load('resources/audio/titleBGM.mp3', (buffer) => {
-            sound.setBuffer(buffer);
-            sound.setLoop(true); // ループ再生
-            sound.setVolume(0.5); // ボリューム調整
-            sound.play(); // 再生開始
+            this.sound.setBuffer(buffer);
+            this.sound.setRefDistance(20);
+            this.sound.setLoop(true); // ループ再生
+            // this.sound.setVolume(0.5); // ボリューム調整
+            isAudioReady = true;
+            this.sound.play(); // 再生開始
         });
 
         // ライト
@@ -542,6 +547,7 @@ export class ThreeViewController {
                 otherShipObj.name = "otherShip" + i;
                 otherShipObj.position.set(10000, 10000, 10000);
                 this.gameObjects.push(otherShipObj);
+                otherShipObj.add(this.sound);
                 this.scene.add(otherShipObj);
                 // const animations = obj.animations;
                 // if (animations && animations.length) {
