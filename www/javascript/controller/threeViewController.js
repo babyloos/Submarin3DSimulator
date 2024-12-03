@@ -46,6 +46,8 @@ export class ThreeViewController {
     renderer;
 
     // 音声
+    listener;
+    audioObjects = [];
     sampleSound;
     seaWave;
     underSeaSound;
@@ -186,15 +188,14 @@ export class ThreeViewController {
         this.scene.add(this.camera);
 
         // 音声
-        const listener = new THREE.AudioListener();
-        this.camera.add(listener);
-        this.underSeaSound = new THREE.Audio(listener);
+        this.listener = new THREE.AudioListener();
+        this.camera.add(this.listener);
         const audioLoader = new THREE.AudioLoader();
-
         let isAudioReady = false;
 
         // 環境音
-        this.sampleSound = new THREE.PositionalAudio(listener);
+        this.sampleSound = new THREE.PositionalAudio(this.listener);
+        this.audioObjects.push(this.sampleSound);
         audioLoader.load('resources/audio/titleBGM.mp3', (buffer) => {
             this.sampleSound.setBuffer(buffer);
             this.sampleSound.setRefDistance(20);
@@ -205,7 +206,8 @@ export class ThreeViewController {
         });
 
         // 水中音
-        this.underSeaSound = new THREE.Audio(listener);
+        this.underSeaSound = new THREE.Audio(this.listener);
+        this.audioObjects.push(this.underSeaSound);
         audioLoader.load('resources/audio/submarineInternal.mp3', (buffer) => {
             this.underSeaSound.setBuffer(buffer);
             this.underSeaSound.setVolume(0.5);
@@ -214,7 +216,8 @@ export class ThreeViewController {
         });
 
         // 水上音
-        this.seaWave = new THREE.Audio(listener);
+        this.seaWave = new THREE.Audio(this.listener);
+        this.audioObjects.push(this.seaWave);
         audioLoader.load('resources/audio/seaWave.mp3', (buffer) => {
             this.seaWave.setBuffer(buffer);
             this.seaWave.setVolume(0.5);
@@ -651,6 +654,17 @@ export class ThreeViewController {
         this.renderer = null;
         this.camera = null;
         this.controls = null;
+
+        this.cleanupAudio();
+    }
+
+    cleanupAudio() {
+        this.audioObjects.forEach((audio) => {
+            if (audio.isPlaying) {
+                audio.stop();
+            }
+            audio.setBuffer(null); // バッファを解放
+        });
     }
 
     /**
