@@ -44,7 +44,10 @@ export class ThreeViewController {
     scene;
     camera;
     renderer;
+
+    // 音声
     sampleSound;
+    seaWaveSound;
 
     // コントローラ
     controls;
@@ -185,6 +188,7 @@ export class ThreeViewController {
         const listener = new THREE.AudioListener();
         this.camera.add(listener);
         this.sampleSound = new THREE.PositionalAudio(listener);
+        this.seaWaveSound = new THREE.Audio(listener);
         const audioLoader = new THREE.AudioLoader();
 
         let isAudioReady = false;
@@ -195,6 +199,13 @@ export class ThreeViewController {
             // this.sound.setVolume(0.5); // ボリューム調整
             isAudioReady = true;
             // this.sampleSound.play(); // 再生開始
+        });
+
+        audioLoader.load('resources/audio/seaWave.mp3', (buffer) => {
+            this.seaWaveSound.setBuffer(buffer);
+            this.seaWaveSound.setVolume(0.5);
+            this.seaWaveSound.setLoop(true);
+            this.seaWaveSound.play();
         });
 
         // ライト
