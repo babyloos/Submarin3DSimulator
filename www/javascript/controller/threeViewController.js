@@ -228,7 +228,7 @@ export class ThreeViewController {
 
         // uBoat
         // エンジン音
-        this.uboatEngineSound= new THREE.PositionalAudio(this.listener);
+        this.uboatEngineSound = new THREE.PositionalAudio(this.listener);
         this.audioObjects.push(this.uboatEngineSound);
         audioLoader.load('resources/audio/uboatEngine.mp3', (buffer) => {
             this.uboatEngineSound.setBuffer(buffer);
@@ -805,33 +805,43 @@ export class ThreeViewController {
         }
         playerBoatObj.position.set(this.playerBoat.pointX, -this.playerBoat.depth, this.playerBoat.pointY);
         playerBoatObj.rotation.set(0, -Util.degreeToRadian(this.playerBoat.course), 0);
+        // エンジン出力に対応する変更
         //Animation Mixerを実行
         if (this.playerBoatMixer) {
             var timeMag = 1;
+            var engineSound = 0;
             switch (this.playerBoat.engineOut) {
                 case EngineOut.aheadFull:
                     timeMag = 3;
+                    engineSound = 2;
                     break;
                 case EngineOut.aheadHalf:
                     timeMag = 2;
+                    engineSound = 1;
                     break;
                 case EngineOut.aheadSlow:
                     timeMag = 1;
+                    engineSound = 0.5;
                     break;
                 case EngineOut.stop:
                     timeMag = 0;
+                    engineSound = 0;
                     break;
                 case EngineOut.asternSlow:
                     timeMag = -1;
+                    engineSound = 0.5;
                     break;
                 case EngineOut.asternHalf:
                     timeMag = -2;
+                    engineSound = 1;
                     break;
                 case EngineOut.asternFull:
                     timeMag = -3;
+                    engineSound = 2;
                     break;
             }
             this.playerBoatMixer.update(this.elapsedTime * timeMag);
+            this.#fadeVolume(this.uboatEngineSound, engineSound, 3);
         }
         // waterWall
         this.wallN.position.z = this.playerBoat.pointY - this.wallRange;
@@ -983,6 +993,16 @@ export class ThreeViewController {
             }
         }
 
+    }
+
+    #fadeVolume(audio, targetVolume, duration) {
+        const gainNode = audio.gain; // GainNodeを取得
+        const currentTime = audio.context.currentTime; // 現在のAudioContextの時間を取得
+
+        // 音量を徐々に変更
+        gainNode.gain.cancelScheduledValues(currentTime); // 既存の操作をキャンセル
+        gainNode.gain.setValueAtTime(gainNode.gain.value, currentTime); // 現在の音量を基準にする
+        gainNode.gain.linearRampToValueAtTime(targetVolume, currentTime + duration);
     }
 
     /**
