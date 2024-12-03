@@ -15,7 +15,7 @@ export class Main {
         audioManager.load('resources/audio/titleBGM.mp3');
         $('body').on('click', function () {
             if (firstPlay) {
-                audioManager.play();
+                // audioManager.play();
                 firstPlay = false;
             }
         });
