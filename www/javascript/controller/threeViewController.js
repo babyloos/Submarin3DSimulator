@@ -51,6 +51,7 @@ export class ThreeViewController {
     sampleSound;
     seaWave;
     underSeaSound;
+    uboatEngineSound;
 
     // コントローラ
     controls;
@@ -224,6 +225,19 @@ export class ThreeViewController {
             this.seaWave.setLoop(true);
             this.seaWave.play();
         });
+
+        // uBoat
+        // エンジン音
+        this.uboatEngineSound= new THREE.PositionalAudio(this.listener);
+        this.audioObjects.push(this.uboatEngineSound);
+        audioLoader.load('resources/audio/uboatEngine.mp3', (buffer) => {
+            this.uboatEngineSound.setBuffer(buffer);
+            this.uboatEngineSound.setRefDistance(20);
+            this.uboatEngineSound.setVolume(0.5);
+            this.uboatEngineSound.setLoop(true);
+            this.uboatEngineSound.play();
+        });
+
 
         // ライト
         const pointLight = new THREE.PointLight(0xffffff, 3.0);
@@ -545,6 +559,7 @@ export class ThreeViewController {
             obj.scene.name = "playerBoat";
             this.gameObjects.push(obj.scene);
             this.scene.add(obj.scene);
+            obj.scene.add(this.uboatEngineSound);
             const animations = obj.animations;
             if (animations && animations.length) {
                 this.playerBoatMixer = new THREE.AnimationMixer(obj.scene);
