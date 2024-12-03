@@ -47,6 +47,7 @@ export class ThreeViewController {
 
     // 音声
     sampleSound;
+    seaWave;
     underSeaSound;
 
     // コントローラ
@@ -187,11 +188,13 @@ export class ThreeViewController {
         // 音声
         const listener = new THREE.AudioListener();
         this.camera.add(listener);
-        this.sampleSound = new THREE.PositionalAudio(listener);
         this.underSeaSound = new THREE.Audio(listener);
         const audioLoader = new THREE.AudioLoader();
 
         let isAudioReady = false;
+
+        // 環境音
+        this.sampleSound = new THREE.PositionalAudio(listener);
         audioLoader.load('resources/audio/titleBGM.mp3', (buffer) => {
             this.sampleSound.setBuffer(buffer);
             this.sampleSound.setRefDistance(20);
@@ -201,11 +204,22 @@ export class ThreeViewController {
             // this.sampleSound.play(); // 再生開始
         });
 
+        // 水中音
+        this.underSeaSound = new THREE.Audio(listener);
         audioLoader.load('resources/audio/submarineInternal.mp3', (buffer) => {
             this.underSeaSound.setBuffer(buffer);
             this.underSeaSound.setVolume(0.5);
             this.underSeaSound.setLoop(true);
-            this.underSeaSound.play();
+            // this.underSeaSound.play();
+        });
+
+        // 水上音
+        this.seaWave = new THREE.Audio(listener);
+        audioLoader.load('resources/audio/seaWave.mp3', (buffer) => {
+            this.seaWave.setBuffer(buffer);
+            this.seaWave.setVolume(0.5);
+            this.seaWave.setLoop(true);
+            this.seaWave.play();
         });
 
         // ライト
@@ -727,16 +741,26 @@ export class ThreeViewController {
             this.camera.rotation.x = 0;
         }
 
-        // update fog
+        // カメラが水中か否かで切り替える処理
         if (this.camera.position.y < 0) {
+            // 水中
             if (!this.isUnderwaterCamera) {
                 this.isUnderwaterCamera = true;
                 this.scene.fog.far = this.fogFar;
+                if (!this.underSeaSound.isPlaying) {
+                    this.seaWave.pause();
+                    this.underSeaSound.play();
+                }
             }
         } else {
+            // 水上
             if (this.isUnderwaterCamera) {
                 this.isUnderwaterCamera = false;
                 this.scene.fog.far = 1000000;
+                if (!this.seaWave.isPlaying) {
+                    this.underSeaSound.pause();
+                    this.seaWave.play();
+                }
             }
         }
     }
