@@ -9,9 +9,11 @@ export class AudioManager {
 
     load(audioPath) {
         this.audioElement = new Audio(audioPath);
+        this.audioElement.volume = 0.2;
     }
 
     play() {
+        if (!this.audioElement.paused) { this.stop(); }
         this.audioElement.play().then(() => {
         }).catch((error) => {
             console.log(error);

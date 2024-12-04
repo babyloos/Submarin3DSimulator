@@ -3,6 +3,7 @@ import { Point } from "../model/point.js";
 import { Uboat } from "../model/uBoat.js";
 import { Util } from "../util.js";
 import { TimeManager } from "./timeManger.js";
+import { AudioManager } from "./audioManager.js";
 
 /**
  * ユーザ入力可能なパネル用コントローラ
@@ -41,10 +42,15 @@ export class ControllController {
     // STATUSパネル用
     torpedoCount;        // 魚雷残数表示欄
 
+    // 音声
+    audioManager;
+
     /**
      * コンストラクタ
      */
     constructor() {
+        this.audioManager = new AudioManager();
+        this.audioManager.load('resources/audio/enter.mp3');
     }
 
     /**
@@ -53,6 +59,7 @@ export class ControllController {
      * @param {TimeManager} timeManager 参照先のtimeManagerクラス
      */
     initialize(uBoat, timeManager) {
+
         this.timeManager = timeManager;
         this.uBoat = uBoat;
 
@@ -502,7 +509,9 @@ export class ControllController {
         // 活性非活性設定
         updateDisabled(timeManager);
 
-        $('.speedChangeButton').on('click', function () {
+        const parent = this;
+        $('.speedChangeButton').on('click', function() {
+            parent.audioManager.play();
             // 押下時動作
             switch (this.getAttribute('id')) {
                 case speedMinButton.attr('id'):
