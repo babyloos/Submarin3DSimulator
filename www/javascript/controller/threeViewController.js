@@ -559,6 +559,7 @@ export class ThreeViewController {
             obj.scene.name = "playerBoat";
             this.gameObjects.push(obj.scene);
             this.scene.add(obj.scene);
+            this.uboatEngineSound.position.set(0, 0, 10);
             obj.scene.add(this.uboatEngineSound);
             const animations = obj.animations;
             if (animations && animations.length) {
