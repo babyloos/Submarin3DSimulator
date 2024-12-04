@@ -10,15 +10,8 @@ export class Main {
     main() {
         let game;   // ゲームインスタンス
 
-        let firstPlay = true;
         const audioManager = new AudioManager();
-        audioManager.load('resources/audio/titleBGM.mp3');
-        $('body').on('click', function () {
-            if (firstPlay) {
-                // audioManager.play();
-                firstPlay = false;
-            }
-        });
+        audioManager.load('resources/audio/enter.mp3');
 
         // スクロール禁止
         Util.no_scroll();
@@ -52,18 +45,21 @@ export class Main {
 
         // ニューゲーム
         newGameButton.on('click', function () {
+            audioManager.play();
             PageController.pageTransition('diffSelectPage');
         });
 
         // 難易度選択画面
         diffSelectBackbutton.on('click', function () {
+            audioManager.play();
             PageController.pageTransition('titlePage');
         });
         startButton.on('click', () => {
-            audioManager.stop();
+            audioManager.play();
             transitionThreePage(true, selectedDiff);
         });
         diffSelector.on('change', function () {
+            audioManager.play();
             let val = $(this).attr('id');
             switch (val) {
                 case "diffEasy":
@@ -83,21 +79,23 @@ export class Main {
 
         // コンティニュー
         continueButton.on('click', function () {
-            firstPlay = false;
-            audioManager.stop();
+            audioManager.play();
             transitionThreePage(false, selectedDiff);
         });
 
         // マニュアル
         manualButton.on('click', function () {
+            audioManager.play();
             PageController.pageTransition('manualPage');
         });
         manualBackButton.on('click', function () {
+            audioManager.play();
             PageController.pageTransition('titlePage');
         });
 
         // ゲームオーバー/ゲームクリアダイアログ
         backTitleButton.on('click', function () {
+            audioManager.play();
             exitGame();
         });
 

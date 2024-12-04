@@ -2,10 +2,7 @@
  * 音声管理用クラス
  */
 export class AudioManager {
-    audioContext;
-    audioElement;
     audioSource;
-    isFirstPlay = true;
 
     constructor() {
     }
@@ -15,11 +12,7 @@ export class AudioManager {
     }
 
     play() {
-        if (!this.isFirstPlay) {
-            return;
-        }
         this.audioElement.play().then(() => {
-            this.isFirstPlay = false;
         }).catch((error) => {
             console.log(error);
         });
