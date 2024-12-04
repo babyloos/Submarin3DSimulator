@@ -813,7 +813,7 @@ export class ThreeViewController {
             switch (this.playerBoat.engineOut) {
                 case EngineOut.aheadFull:
                     timeMag = 3;
-                    engineSound = 2;
+                    engineSound = 1.5;
                     break;
                 case EngineOut.aheadHalf:
                     timeMag = 2;
@@ -837,7 +837,7 @@ export class ThreeViewController {
                     break;
                 case EngineOut.asternFull:
                     timeMag = -3;
-                    engineSound = 2;
+                    engineSound = 1.5;
                     break;
             }
             this.playerBoatMixer.update(this.elapsedTime * timeMag);
