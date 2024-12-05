@@ -1,5 +1,6 @@
 import { SurfaceStatus } from "../constants.js";
 import { Util } from "../util.js";
+import { AudioManager } from "./audioManager.js";
 import { InstructionController } from "./instructionController.js";
 
 /**
@@ -12,6 +13,8 @@ export class HydrophoneController extends InstructionController {
      */
     constructor() {
         super();
+        this.audioManager = new AudioManager();
+        this.audioManager.load('resources/audio/jawohl2.mp3');
     }
 
     /**
@@ -27,6 +30,7 @@ export class HydrophoneController extends InstructionController {
     #hydrophoneButtonInitialize() {
         $('#hydrophoneButton').on("click", function () {
             // 聴音員の報告を行う
+            this.audioManager.play();
             const results = this.#listen();
             this.#showResultMessage(results);
             this.closeMenu();
