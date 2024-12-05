@@ -1,5 +1,6 @@
 import { SurfaceStatus } from "../constants.js";
 import { Util } from "../util.js";
+import { AudioManager } from "./audioManager.js";
 import { InstructionController } from "./instructionController.js";
 
 /**
@@ -12,6 +13,8 @@ export class ObserverController extends InstructionController {
      */
     constructor() {
         super();
+        this.audioManager = new AudioManager();
+        this.audioManager.load('resources/audio/jawohl.mp3');
     }
 
     /**
@@ -27,6 +30,7 @@ export class ObserverController extends InstructionController {
     #observeButtonInitialize() {
         $('#observeButton').on("click", function () {
             // 監視員の報告を行う
+            this.audioManager.play();
             const results = this.#observation();
             this.#showResultMessage(results);
             this.closeMenu();
