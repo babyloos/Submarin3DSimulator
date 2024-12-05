@@ -43,14 +43,16 @@ export class ControllController {
     torpedoCount;        // 魚雷残数表示欄
 
     // 音声
-    audioManager;
+    enterSound;
 
     /**
      * コンストラクタ
      */
     constructor() {
-        this.audioManager = new AudioManager();
-        this.audioManager.load('resources/audio/enter.mp3');
+        this.enterSound = new AudioManager();
+        this.enterSound.load('resources/audio/enter.mp3');
+        this.periscopeSound = new AudioManager();
+        this.periscopeSound.load('resources/audio/peri.mp3');
     }
 
     /**
@@ -110,6 +112,7 @@ export class ControllController {
         const periscopeDepth = 11;
         const shadowAllow = $('#depthMaterAllowShadow');
         $('#periscopeDepthButton').on('click', function() {
+            this.periscopeSound.play();
             const clickDeg = this.#depthToClickDeg(periscopeDepth);
             shadowAllow.css('display', 'block');
             shadowAllow.css('transform', 'rotate(' + clickDeg + 'deg)');
@@ -511,7 +514,7 @@ export class ControllController {
 
         const parent = this;
         $('.speedChangeButton').on('click', function() {
-            parent.audioManager.play();
+            parent.enterSound.play();
             // 押下時動作
             switch (this.getAttribute('id')) {
                 case speedMinButton.attr('id'):
