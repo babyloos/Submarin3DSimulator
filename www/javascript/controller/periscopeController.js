@@ -1,4 +1,5 @@
 import { InstructionController } from "./instructionController.js";
+import { AudioManager } from "./audioManager.js";
 
 /**
  * 潜望鏡画面用コントローラ
@@ -18,6 +19,8 @@ export class PeriscopeController extends InstructionController {
      */
     constructor() {
         super();
+        this.audioManager = new AudioManager();
+        this.audioManager.load('resources/audio/enter.mp3');
     }
 
     /**
@@ -35,6 +38,7 @@ export class PeriscopeController extends InstructionController {
     #periscopeButtonInitialize() {
         $('#periscopeButton').on("click", function () {
             // ボタンの活性状態切り替え
+            this.audioManager.play();
             if (this.isActivePeriscopeView) {
                 // 潜望鏡画面非表示
                 this.#deactivePeriscopeView();
