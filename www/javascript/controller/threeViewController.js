@@ -233,7 +233,7 @@ export class ThreeViewController {
         audioLoader.load('resources/audio/uboatEngine.mp3', (buffer) => {
             this.uboatEngineSound.setBuffer(buffer);
             this.uboatEngineSound.setRefDistance(20);
-            this.uboatEngineSound.setVolume(0.5);
+            this.uboatEngineSound.setVolume(0);
             this.uboatEngineSound.setLoop(true);
             this.uboatEngineSound.play();
         });
