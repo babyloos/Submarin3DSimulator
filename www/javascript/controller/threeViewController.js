@@ -52,6 +52,7 @@ export class ThreeViewController {
     seaWave;
     underSeaSound;
     uboatEngineSound;
+    angleOnBowSound;
 
     // コントローラ
     controls;
@@ -238,6 +239,15 @@ export class ThreeViewController {
             this.uboatEngineSound.play();
         });
 
+        // 潜望鏡
+        this.angleOnBowSound = new THREE.Audio(this.listener);
+        this.audioObjects.push(this.angleOnBowSound);
+        audioLoader.load('resources/audio/angleOnBow.mp3', (buffer) => {
+            this.angleOnBowSound.setBuffer(buffer);
+            this.angleOnBowSound.setVolume(0.1);
+            this.angleOnBowSound.setLoop(false);
+        });
+
 
         // ライト
         const pointLight = new THREE.PointLight(0xffffff, 3.0);
@@ -368,6 +378,9 @@ export class ThreeViewController {
                         radDiff /= 6;
                     }
                     this.periscopeRad += radDiff;
+                    if (radDiff && this.angleOnBowSound) {
+                        this.angleOnBowSound.play();
+                    }
                     // bearingへの反映
                     const bearingDeg = Util.radianToDegree(-this.periscopeRad);
                     const tdc = this.playerBoat.tdc;
