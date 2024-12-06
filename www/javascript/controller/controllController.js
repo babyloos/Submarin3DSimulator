@@ -38,12 +38,14 @@ export class ControllController {
     targetSpeed = 0;
     torpedoSpeed = 40;
     gyroAngle = 0;
+    beforeFlactional = 0;
 
     // STATUSパネル用
     torpedoCount;        // 魚雷残数表示欄
 
     // 音声
     enterSound;
+    angleOnBowSound;
 
     /**
      * コンストラクタ
@@ -53,6 +55,8 @@ export class ControllController {
         this.enterSound.load('resources/audio/enter.mp3');
         this.periscopeSound = new AudioManager();
         this.periscopeSound.load('resources/audio/peri.mp3');
+        this.angleOnBowSound = new AudioManager();
+        this.angleOnBowSound.load('resources/audio/angleOnBow.mp3');
     }
 
     /**
@@ -174,12 +178,18 @@ export class ControllController {
         });
 
         // 潜望鏡の回転によるtdcの更新
-        this.uBoat.tdc.onUpdateTdcAction = function (result) {
+        this.uBoat.tdc.onUpdateTdcAction = (result) => {
             self.bearing = self.uBoat.tdc.bearing;
             bearingAllow.css('transform', 'rotate(' + self.uBoat.tdc.bearing + 'deg)');
             const gyro = result[0];
             const hitTime = result[1];
             const hitTimeStr = Util.numbToNDigitsStr(hitTime, 3, false, 0);
+            const rounded = Math.round(gyro * 100) / 100;
+            const fractionalPart = (rounded * 100) % 100;
+            if (fractionalPart % 10 === 0 && fractionalPart !== this.beforeFlactional) {
+                this.angleOnBowSound.play();
+                this.beforeFlactional = fractionalPart;
+            }
             $('#gyroAllow').css('transform', 'rotate(' + gyro + 'deg)');
             $('#hitTime').html(hitTimeStr);
         }

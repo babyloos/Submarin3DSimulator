@@ -378,9 +378,6 @@ export class ThreeViewController {
                         radDiff /= 6;
                     }
                     this.periscopeRad += radDiff;
-                    if (radDiff && this.angleOnBowSound) {
-                        this.angleOnBowSound.play();
-                    }
                     // bearingへの反映
                     const bearingDeg = Util.radianToDegree(-this.periscopeRad);
                     const tdc = this.playerBoat.tdc;
