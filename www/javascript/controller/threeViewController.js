@@ -196,20 +196,8 @@ export class ThreeViewController {
         this.listener = new THREE.AudioListener();
         this.camera.add(this.listener);
         this.audioLoader = new THREE.AudioLoader();
-        let isAudioReady = false;
 
         // 環境音
-        this.sampleSound = new THREE.PositionalAudio(this.listener);
-        this.audioObjects.push(this.sampleSound);
-        this.audioLoader.load('resources/audio/titleBGM.mp3', (buffer) => {
-            this.sampleSound.setBuffer(buffer);
-            this.sampleSound.setRefDistance(20);
-            this.sampleSound.setLoop(true); // ループ再生
-            // this.sound.setVolume(0.5); // ボリューム調整
-            isAudioReady = true;
-            // this.sampleSound.play(); // 再生開始
-        });
-
         // 水中音
         this.underSeaSound = new THREE.Audio(this.listener);
         this.audioObjects.push(this.underSeaSound);
@@ -217,7 +205,6 @@ export class ThreeViewController {
             this.underSeaSound.setBuffer(buffer);
             this.underSeaSound.setVolume(0.5);
             this.underSeaSound.setLoop(true);
-            // this.underSeaSound.play();
         });
 
         // 水上音
@@ -254,7 +241,6 @@ export class ThreeViewController {
         // 商船
         // エンジン音
         this.audioLoader.load('resources/audio/merchantEngine.mp3', (buffer) => {
-            console.log(this.otherShips.length);
             for (var i = 0; i < this.otherShips.length; i++) {
                 if (this.otherShips[i].objectType !== ObjectType.marchant1) {
                     console.log("continue");
