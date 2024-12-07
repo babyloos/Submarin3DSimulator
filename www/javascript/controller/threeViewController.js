@@ -262,14 +262,19 @@ export class ThreeViewController {
         this.audioLoader.load('resources/audio/torpedoHit.mp3', (buffer) => {
             for (var i = 0; i < this.enemyShips.length; i++) {
                 const torpedoHitSound = new THREE.PositionalAudio(this.listener);
-                this.audioObjects.push(torpedoHitSound);
+                torpedoHitSound.name = "torpedoHitSound";
                 torpedoHitSound.setBuffer(buffer);
                 torpedoHitSound.setRefDistance(20);
                 torpedoHitSound.setVolume(5);
                 torpedoHitSound.setLoop(false);
+                this.audioObjects.push(torpedoHitSound);
 
                 const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
                 otherShipObj.add(torpedoHitSound);
+
+                this.enemyShips[i].setOnHitTorpedoCallback(() => {
+                    torpedoHitSound.play();
+                });
             }
         });
 
@@ -897,11 +902,9 @@ export class ThreeViewController {
             }
 
             if (!otherShip.isEnabled) {
-                if (otherShip.objectType === ObjectType.marchant1) {
-                    // !isEnabledになったオブジェクトに対して毎回呼び出している
-                    // TODO: 無駄な処理を削除する
-                    this.#removeAllAudioFromObject(otherShipObj);
-                }
+                // !isEnabledになったオブジェクトに対して毎回呼び出している
+                // TODO: 無駄な処理を削除する
+                this.#removeAllAudioFromObject(otherShipObj);
             }
         }
 
@@ -919,6 +922,10 @@ export class ThreeViewController {
         // 子要素を走査して PositionalAudio または Audio を探す
         object.children.forEach((child) => {
             if (child instanceof THREE.PositionalAudio) {
+                if (child.name === "torpedoHitSound") {
+                    return;
+                }
+
                 // 再生を停止
                 if (child.isPlaying) {
                     child.stop();

@@ -39,6 +39,9 @@ export class EnemyShip extends GameObject {
     // 撃沈された際の処理
     onSunk;
 
+    // 潜水艦に魚雷が命中した際のコールバック
+    onHitTorpedoCallback;
+
     /**
      * コンストラクタ
      * @param {number} convoyId 船団ID
@@ -179,6 +182,12 @@ export class EnemyShip extends GameObject {
             // 敵船撃沈時処理
             this.onSunk(this.tonnage);
         }
+
+        this.onHitTorpedoCallback();
+    }
+
+    setOnHitTorpedoCallback(callback) {
+        this.onHitTorpedoCallback = callback;
     }
 
     /**
