@@ -14,8 +14,6 @@ export class Torpedo extends GameObject {
 
     depth = 0;
 
-    onHitTorpedoCallback = null;
-
     /**
      * コンストラクタ
      * @param {double} pointX X座標
@@ -97,11 +95,6 @@ export class Torpedo extends GameObject {
     onHitTorpedo() {
         super.onHitTorpedo();
         this.isEnabled = false;
-        this.onHitTorpedoCallback();
-    }
-
-    setOnHitTorpedoCallback(callback) {
-        this.onHitTorpedoCallback = callback;
     }
 
     /**
