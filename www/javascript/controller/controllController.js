@@ -46,6 +46,7 @@ export class ControllController {
     // 音声
     enterSound;
     angleOnBowSound;
+    changeDepthSound;
 
     /**
      * コンストラクタ
@@ -57,6 +58,8 @@ export class ControllController {
         this.periscopeSound.load('resources/audio/peri.mp3');
         this.angleOnBowSound = new AudioManager();
         this.angleOnBowSound.load('resources/audio/angleOnBow.mp3');
+        this.changeDepthSound = new AudioManager();
+        this.changeDepthSound.load('resources/audio/changeDepth.mp3');
     }
 
     /**
@@ -760,7 +763,10 @@ export class ControllController {
         });
 
         const clickDegToDepth = this.#clickDegToDepth;
-        depthMater.on('touchend', function (event) {
+        const parent = this;
+        depthMater.on('touchend', function(event) {
+            parent.changeDepthSound.play();
+
             const touchObject = event.changedTouches[0];
             const clickX = touchObject.pageX;
             const clickY = touchObject.pageY;
