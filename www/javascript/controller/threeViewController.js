@@ -64,7 +64,7 @@ export class ThreeViewController {
     // 描画するGameObject
     playerBoat;
     playerBoatMixer;
-    otherShips;
+    enemyShips;
     otherShipMixers;
 
     // エフェクト
@@ -150,7 +150,7 @@ export class ThreeViewController {
     /**
      * 3D表示初期設定
      */
-    initialize(playerBoat, otherShips, timeManager) {
+    initialize(playerBoat, enemyShips, timeManager) {
 
         this.timeManager = timeManager;
 
@@ -158,8 +158,8 @@ export class ThreeViewController {
         this.beforeHeight = window.innerHeight;
 
         this.playerBoat = playerBoat;
-        this.otherShips = otherShips;
-        this.otherShipMixers = new Array(this.otherShips.length);
+        this.enemyShips = enemyShips;
+        this.otherShipMixers = new Array(this.enemyShips.length);
 
         // debug
         this.stats = this.#createStats();
@@ -240,8 +240,8 @@ export class ThreeViewController {
         // 商船
         // エンジン音
         this.audioLoader.load('resources/audio/merchantEngine.mp3', (buffer) => {
-            for (var i = 0; i < this.otherShips.length; i++) {
-                if (this.otherShips[i].objectType !== ObjectType.marchant1) {
+            for (var i = 0; i < this.enemyShips.length; i++) {
+                if (this.enemyShips[i].objectType !== ObjectType.marchant1) {
                     console.log("continue");
                     continue;
                 }
@@ -607,8 +607,8 @@ export class ThreeViewController {
         }.bind(this), this.onProgress.bind(this), this.onError);
         gltfLoader.load('resources/model/cargoShip.glb', function (obj) {
             // 商船
-            for (var i = 0; i < this.otherShips.length; i++) {
-                if (this.otherShips[i].objectType !== ObjectType.marchant1) {
+            for (var i = 0; i < this.enemyShips.length; i++) {
+                if (this.enemyShips[i].objectType !== ObjectType.marchant1) {
                     continue;
                 }
                 const otherShipObj = SkeletonUtils.clone(obj.scene);
@@ -632,8 +632,8 @@ export class ThreeViewController {
         }.bind(this), this.onProgress.bind(this), this.onError);
         gltfLoader.load('resources/model/destroyer.glb', function (obj) {
             // 駆逐艦
-            for (var i = 0; i < this.otherShips.length; i++) {
-                if (this.otherShips[i].objectType !== ObjectType.destoryer1) {
+            for (var i = 0; i < this.enemyShips.length; i++) {
+                if (this.enemyShips[i].objectType !== ObjectType.destoryer1) {
                     continue;
                 }
                 const otherShipObj = SkeletonUtils.clone(obj.scene);
@@ -873,13 +873,13 @@ export class ThreeViewController {
         this.wallW.position.x = this.playerBoat.pointX - this.wallRange;
         this.wallS.position.z = this.playerBoat.pointY + this.wallRange;
 
-        // otherShips
-        for (var i = 0; i < this.otherShips.length; i++) {
+        // enemyShips
+        for (var i = 0; i < this.enemyShips.length; i++) {
             const otherShipObj = this.#getObjectByName("otherShip" + i);
             if (otherShipObj === null) {
                 break;
             }
-            const otherShip = this.otherShips[i];
+            const otherShip = this.enemyShips[i];
             otherShipObj.position.set(otherShip.pointX, -otherShip.depth, otherShip.pointY);
             otherShipObj.rotation.set(0, -Util.degreeToRadian(otherShip.course), 0);
             if (otherShip.isEnabled && this.otherShipMixers && this.otherShipMixers[i]) {
@@ -978,8 +978,8 @@ export class ThreeViewController {
      * 砲弾の更新
      */
     #updateShells() {
-        for (var i = 0; i < this.otherShips.length; i++) {
-            const otherShip = this.otherShips[i];
+        for (var i = 0; i < this.enemyShips.length; i++) {
+            const otherShip = this.enemyShips[i];
             if (otherShip.objectType === ObjectType.destoryer1) {
                 for (var j = 0; j < otherShip.shells.length; j++) {
                     const shell = otherShip.shells[j];
@@ -1011,8 +1011,8 @@ export class ThreeViewController {
      * 砲弾の更新
      */
     #updateDepthCharges() {
-        for (var i = 0; i < this.otherShips.length; i++) {
-            const otherShip = this.otherShips[i];
+        for (var i = 0; i < this.enemyShips.length; i++) {
+            const otherShip = this.enemyShips[i];
             if (otherShip.objectType === ObjectType.destoryer1) {
                 for (var j = 0; j < otherShip.depthCharges.length; j++) {
                     const depthCharge = otherShip.depthCharges[j];
