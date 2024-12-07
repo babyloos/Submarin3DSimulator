@@ -260,7 +260,17 @@ export class ThreeViewController {
 
         // 魚雷
         this.audioLoader.load('resources/audio/torpedoHit.mp3', (buffer) => {
-            this.torpedoSoundBuffer = buffer;
+            for (var i = 0; i < this.enemyShips.length; i++) {
+                const torpedoHitSound = new THREE.PositionalAudio(this.listener);
+                this.audioObjects.push(torpedoHitSound);
+                torpedoHitSound.setBuffer(buffer);
+                torpedoHitSound.setRefDistance(20);
+                torpedoHitSound.setVolume(5);
+                torpedoHitSound.setLoop(false);
+
+                const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
+                otherShipObj.add(torpedoHitSound);
+            }
         });
 
         // ライト
@@ -910,7 +920,9 @@ export class ThreeViewController {
         object.children.forEach((child) => {
             if (child instanceof THREE.PositionalAudio) {
                 // 再生を停止
-                child.stop();
+                if (child.isPlaying) {
+                    child.stop();
+                }
 
                 // オブジェクトから削除
                 object.remove(child);
@@ -935,22 +947,6 @@ export class ThreeViewController {
                 this.gameObjects.push(obj);
                 this.scene.add(obj);
                 this.torpedoAddedCount += 1;
-
-                // 魚雷衝突時の音を追加
-                const torpedoHitSound = new THREE.PositionalAudio(this.listener);
-                this.audioObjects.push(torpedoHitSound);
-                torpedoHitSound.setBuffer(this.torpedoSoundBuffer);
-                torpedoHitSound.setRefDistance(20);
-                torpedoHitSound.setVolume(0.5);
-                // torpedoHitSound.play();
-                obj.add(torpedoHitSound);
-                console.log("add sound to torpedo");
-
-                // 魚雷が衝突した際のコールバックを設定
-                this.playerBoat.torpedos[i].onHitTorpedoCallback = () => {
-                        console.log("torpedo hit");
-                        torpedoHitSound.play();
-                    };
             }
         }
 
