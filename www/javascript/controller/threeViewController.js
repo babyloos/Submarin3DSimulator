@@ -46,6 +46,7 @@ export class ThreeViewController {
     renderer;
 
     // 音声
+    audioLoader;
     listener;
     audioObjects = [];
     sampleSound;
@@ -54,6 +55,7 @@ export class ThreeViewController {
     uboatEngineSound;
     angleOnBowSound;
     merchantEngineSound;
+    merchantEngineSoundBuffer;
 
     // コントローラ
     controls;
@@ -193,13 +195,13 @@ export class ThreeViewController {
         // 音声
         this.listener = new THREE.AudioListener();
         this.camera.add(this.listener);
-        const audioLoader = new THREE.AudioLoader();
+        this.audioLoader = new THREE.AudioLoader();
         let isAudioReady = false;
 
         // 環境音
         this.sampleSound = new THREE.PositionalAudio(this.listener);
         this.audioObjects.push(this.sampleSound);
-        audioLoader.load('resources/audio/titleBGM.mp3', (buffer) => {
+        this.audioLoader.load('resources/audio/titleBGM.mp3', (buffer) => {
             this.sampleSound.setBuffer(buffer);
             this.sampleSound.setRefDistance(20);
             this.sampleSound.setLoop(true); // ループ再生
@@ -211,7 +213,7 @@ export class ThreeViewController {
         // 水中音
         this.underSeaSound = new THREE.Audio(this.listener);
         this.audioObjects.push(this.underSeaSound);
-        audioLoader.load('resources/audio/submarineInternal.mp3', (buffer) => {
+        this.audioLoader.load('resources/audio/submarineInternal.mp3', (buffer) => {
             this.underSeaSound.setBuffer(buffer);
             this.underSeaSound.setVolume(0.5);
             this.underSeaSound.setLoop(true);
@@ -221,7 +223,7 @@ export class ThreeViewController {
         // 水上音
         this.seaWave = new THREE.Audio(this.listener);
         this.audioObjects.push(this.seaWave);
-        audioLoader.load('resources/audio/seaWave.mp3', (buffer) => {
+        this.audioLoader.load('resources/audio/seaWave.mp3', (buffer) => {
             this.seaWave.setBuffer(buffer);
             this.seaWave.setVolume(0.5);
             this.seaWave.setLoop(true);
@@ -232,7 +234,7 @@ export class ThreeViewController {
         // エンジン音
         this.uboatEngineSound = new THREE.PositionalAudio(this.listener);
         this.audioObjects.push(this.uboatEngineSound);
-        audioLoader.load('resources/audio/uboatEngine.mp3', (buffer) => {
+        this.audioLoader.load('resources/audio/uboatEngine.mp3', (buffer) => {
             this.uboatEngineSound.setBuffer(buffer);
             this.uboatEngineSound.setRefDistance(20);
             this.uboatEngineSound.setVolume(0);
@@ -243,7 +245,7 @@ export class ThreeViewController {
         // 潜望鏡
         this.angleOnBowSound = new THREE.Audio(this.listener);
         this.audioObjects.push(this.angleOnBowSound);
-        audioLoader.load('resources/audio/angleOnBow.mp3', (buffer) => {
+        this.audioLoader.load('resources/audio/angleOnBow.mp3', (buffer) => {
             this.angleOnBowSound.setBuffer(buffer);
             this.angleOnBowSound.setVolume(0.1);
             this.angleOnBowSound.setLoop(false);
@@ -251,16 +253,25 @@ export class ThreeViewController {
 
         // 商船
         // エンジン音
-        this.merchantEngineSound= new THREE.PositionalAudio(this.listener);
-        this.audioObjects.push(this.merchantEngineSound);
-        audioLoader.load('resources/audio/merchantEngine.mp3', (buffer) => {
-            this.merchantEngineSound.setBuffer(buffer);
-            this.merchantEngineSound.setRefDistance(20);
-            this.merchantEngineSound.setVolume(0.5);
-            this.merchantEngineSound.setLoop(true);
-            this.merchantEngineSound.play();
-        });
+        this.audioLoader.load('resources/audio/merchantEngine.mp3', (buffer) => {
+            console.log(this.otherShips.length);
+            for (var i = 0; i < this.otherShips.length; i++) {
+                if (this.otherShips[i].objectType !== ObjectType.marchant1) {
+                    console.log("continue");
+                    continue;
+                }
+                const merchantEngineSound = new THREE.PositionalAudio(this.listener);
+                this.audioObjects.push(merchantEngineSound);
+                merchantEngineSound.setBuffer(buffer);
+                merchantEngineSound.setRefDistance(20);
+                merchantEngineSound.setVolume(0.5);
+                merchantEngineSound.setLoop(true);
+                merchantEngineSound.play();
 
+                const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
+                otherShipObj.add(merchantEngineSound);
+            }
+        });
 
         // ライト
         const pointLight = new THREE.PointLight(0xffffff, 3.0);
@@ -613,7 +624,6 @@ export class ThreeViewController {
                 const otherShipObj = SkeletonUtils.clone(obj.scene);
                 otherShipObj.name = "otherShip" + i;
                 otherShipObj.position.set(10000, 10000, 10000);
-                otherShipObj.add(this.merchantEngineSound);
                 this.gameObjects.push(otherShipObj);
                 this.scene.add(otherShipObj);
                 // const animations = obj.animations;
@@ -885,6 +895,13 @@ export class ThreeViewController {
             if (otherShip.isEnabled && this.otherShipMixers && this.otherShipMixers[i]) {
                 this.otherShipMixers[i].update(this.elapsedTime * 3);
             }
+
+            // if (!otherShip.isEnabled) {
+            //     if (otherShip.objectType === ObjectType.marchant1) {
+            //         console.log("remove merchant sound");
+            //         otherShipObj.remove(this.merchantEngineSound);
+            //     }
+            // }
         }
 
         // Torpedos
