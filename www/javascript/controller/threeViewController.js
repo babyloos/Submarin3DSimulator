@@ -54,8 +54,7 @@ export class ThreeViewController {
     underSeaSound;
     uboatEngineSound;
     angleOnBowSound;
-    merchantEngineSound;
-    merchantEngineSoundBuffer;
+    torpedoSoundBuffer;
 
     // コントローラ
     controls;
@@ -257,6 +256,11 @@ export class ThreeViewController {
                 const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
                 otherShipObj.add(merchantEngineSound);
             }
+        });
+
+        // 魚雷
+        this.audioLoader.load('resources/audio/torpedoHit.mp3', (buffer) => {
+            this.torpedoSoundBuffer = buffer;
         });
 
         // ライト
@@ -910,8 +914,6 @@ export class ThreeViewController {
 
                 // オブジェクトから削除
                 object.remove(child);
-
-                console.log('Audio removed from object:', object);
             }
         });
     }
@@ -933,6 +935,22 @@ export class ThreeViewController {
                 this.gameObjects.push(obj);
                 this.scene.add(obj);
                 this.torpedoAddedCount += 1;
+
+                // 魚雷衝突時の音を追加
+                const torpedoHitSound = new THREE.PositionalAudio(this.listener);
+                this.audioObjects.push(torpedoHitSound);
+                torpedoHitSound.setBuffer(this.torpedoSoundBuffer);
+                torpedoHitSound.setRefDistance(20);
+                torpedoHitSound.setVolume(0.5);
+                // torpedoHitSound.play();
+                obj.add(torpedoHitSound);
+                console.log("add sound to torpedo");
+
+                // 魚雷が衝突した際のコールバックを設定
+                this.playerBoat.torpedos[i].onHitTorpedoCallback = () => {
+                        console.log("torpedo hit");
+                        torpedoHitSound.play();
+                    };
             }
         }
 
