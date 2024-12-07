@@ -896,12 +896,13 @@ export class ThreeViewController {
                 this.otherShipMixers[i].update(this.elapsedTime * 3);
             }
 
-            // if (!otherShip.isEnabled) {
-            //     if (otherShip.objectType === ObjectType.marchant1) {
-            //         console.log("remove merchant sound");
-            //         otherShipObj.remove(this.merchantEngineSound);
-            //     }
-            // }
+            if (!otherShip.isEnabled) {
+                if (otherShip.objectType === ObjectType.marchant1) {
+                    // !isEnabledになったオブジェクトに対して毎回呼び出している
+                    // TODO: 無駄な処理を削除する
+                    this.#removeAllAudioFromObject(otherShipObj);
+                }
+            }
         }
 
         // Torpedos
@@ -912,6 +913,21 @@ export class ThreeViewController {
 
         // depthCharges
         this.#updateDepthCharges();
+    }
+
+    #removeAllAudioFromObject(object) {
+        // 子要素を走査して PositionalAudio または Audio を探す
+        object.children.forEach((child) => {
+            if (child instanceof THREE.PositionalAudio) {
+                // 再生を停止
+                child.stop();
+
+                // オブジェクトから削除
+                object.remove(child);
+
+                console.log('Audio removed from object:', object);
+            }
+        });
     }
 
     /**
