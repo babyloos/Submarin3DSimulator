@@ -47,6 +47,7 @@ export class ControllController {
     enterSound;
     angleOnBowSound;
     changeDepthSound;
+    changeCourseSound;
 
     /**
      * コンストラクタ
@@ -60,6 +61,8 @@ export class ControllController {
         this.angleOnBowSound.load('resources/audio/angleOnBow.mp3');
         this.changeDepthSound = new AudioManager();
         this.changeDepthSound.load('resources/audio/changeDepth.mp3');
+        this.changeCourseSound = new AudioManager();
+        this.changeCourseSound.load('resources/audio/changeCourse.mp3');
     }
 
     /**
@@ -685,7 +688,10 @@ export class ControllController {
             allowShadow.css('transform', 'rotate(' + clickDeg + 'deg)');
         });
 
+        const parent = this;
         this.compassBack.on('touchend', function (event) {
+            parent.changeCourseSound.play();
+
             const touchObject = event.changedTouches[0];
             const clickX = touchObject.pageX;
             const clickY = touchObject.pageY;
