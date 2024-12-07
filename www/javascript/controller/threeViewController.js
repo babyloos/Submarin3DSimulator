@@ -53,6 +53,7 @@ export class ThreeViewController {
     underSeaSound;
     uboatEngineSound;
     angleOnBowSound;
+    merchantEngineSound;
 
     // コントローラ
     controls;
@@ -246,6 +247,18 @@ export class ThreeViewController {
             this.angleOnBowSound.setBuffer(buffer);
             this.angleOnBowSound.setVolume(0.1);
             this.angleOnBowSound.setLoop(false);
+        });
+
+        // 商船
+        // エンジン音
+        this.merchantEngineSound= new THREE.PositionalAudio(this.listener);
+        this.audioObjects.push(this.merchantEngineSound);
+        audioLoader.load('resources/audio/merchantEngine.mp3', (buffer) => {
+            this.merchantEngineSound.setBuffer(buffer);
+            this.merchantEngineSound.setRefDistance(20);
+            this.merchantEngineSound.setVolume(0.5);
+            this.merchantEngineSound.setLoop(true);
+            this.merchantEngineSound.play();
         });
 
 
@@ -600,8 +613,8 @@ export class ThreeViewController {
                 const otherShipObj = SkeletonUtils.clone(obj.scene);
                 otherShipObj.name = "otherShip" + i;
                 otherShipObj.position.set(10000, 10000, 10000);
+                otherShipObj.add(this.merchantEngineSound);
                 this.gameObjects.push(otherShipObj);
-                // otherShipObj.add(this.sound);
                 this.scene.add(otherShipObj);
                 // const animations = obj.animations;
                 // if (animations && animations.length) {
