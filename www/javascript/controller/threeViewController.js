@@ -242,7 +242,6 @@ export class ThreeViewController {
         this.audioLoader.load('resources/audio/merchantEngine.mp3', (buffer) => {
             for (var i = 0; i < this.enemyShips.length; i++) {
                 if (this.enemyShips[i].objectType !== ObjectType.marchant1) {
-                    console.log("continue");
                     continue;
                 }
                 const merchantEngineSound = new THREE.PositionalAudio(this.listener);
@@ -270,13 +269,40 @@ export class ThreeViewController {
                 this.audioObjects.push(torpedoHitSound);
 
                 const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
-                otherShipObj.add(torpedoHitSound);
+                if (otherShipObj) {
+                    otherShipObj.add(torpedoHitSound);
+                }
 
                 this.enemyShips[i].setOnHitTorpedoCallback(() => {
                     torpedoHitSound.play();
                 });
             }
         });
+
+        // 駆逐艦
+        // エンジン音
+        setTimeout(() => {
+            this.audioLoader.load('resources/audio/destroyerEngine.mp3', (buffer) => {
+                for (var i = 0; i < this.enemyShips.length; i++) {
+                    if (this.enemyShips[i].objectType !== ObjectType.destoryer1) {
+                        continue;
+                    }
+                    const destoryerEngineSound = new THREE.PositionalAudio(this.listener);
+                    this.audioObjects.push(destoryerEngineSound);
+                    destoryerEngineSound.setBuffer(buffer);
+                    destoryerEngineSound.setRefDistance(20);
+                    destoryerEngineSound.setVolume(2);
+                    destoryerEngineSound.setLoop(true);
+                    destoryerEngineSound.play();
+
+                    const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
+                    if (otherShipObj) {
+                        console.log("add otherShipObj sound");
+                        otherShipObj.add(destoryerEngineSound);
+                    }
+                }
+            });
+        }, 3000);
 
         // ライト
         const pointLight = new THREE.PointLight(0xffffff, 3.0);
