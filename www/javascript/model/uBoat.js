@@ -4,6 +4,7 @@ import { Util } from "../util.js";
 import { GameObject } from "./gameObject.js";
 import { TDC } from "./TDC.js";
 import { Torpedo } from "./torpedo.js";
+import { AudioManager } from "../controller/audioManager.js";
 
 /**
  * U-boatクラス
@@ -26,6 +27,9 @@ export class Uboat extends GameObject {
     beforeEngineOut;            // バッテリーが切れる以前のエンジン出力
     beforeDistSpeed;            // バッテリーが切れる以前の目標速度
 
+    // sounds
+    torpedoFire;
+
     /**
      * コンストラクタ
      * @param {double} pointX X座標
@@ -36,6 +40,9 @@ export class Uboat extends GameObject {
         super(ObjectType.uBoatType7C, pointX, pointY, course, 0, 20, 20);
         this.tdc = new TDC();
         this.torpedos = new Array();
+
+        this.torpedoFire = new AudioManager();
+        this.torpedoFire.load('resources/audio/torpedoFire.mp3');
     }
 
     /**
@@ -275,6 +282,7 @@ export class Uboat extends GameObject {
             throw new Error("invalid operation.");
         }
 
+        this.torpedoFire.play();
         const torpedo = new Torpedo(this.pointX, this.pointY, this.depth);
         torpedo.initialize(this.course, this.speed, this.tdc.gyroAngle, 0);
         this.torpedos.push(torpedo);
