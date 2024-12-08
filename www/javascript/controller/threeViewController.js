@@ -4,7 +4,7 @@ import { Water } from '../../javascript/lib/Water.js';
 import { Sky } from '../../javascript/lib/Sky.js';
 import { GLTFLoader } from '../../javascript/lib/GLTFLoader.js';
 import { Util } from '../util.js';
-import { EngineOut, ObjectType } from '../constants.js';
+import { EnemyShipStatus, EngineOut, ObjectType } from '../constants.js';
 import { LoadProgress } from '../main.js';
 import { EnemyShip } from '../model/enemyShip.js';
 import { TorpedoHitParticle } from '../model/torpedoHitParticle.js';
@@ -312,6 +312,7 @@ export class ThreeViewController {
                         continue;
                     }
                     const activeSonarSound = new THREE.PositionalAudio(this.listener);
+                    activeSonarSound.name = "activeSonarSound";
                     this.audioObjects.push(activeSonarSound);
                     activeSonarSound.setBuffer(buffer);
                     activeSonarSound.setRefDistance(20);
@@ -948,6 +949,23 @@ export class ThreeViewController {
             otherShipObj.rotation.set(0, -Util.degreeToRadian(otherShip.course), 0);
             if (otherShip.isEnabled && this.otherShipMixers && this.otherShipMixers[i]) {
                 this.otherShipMixers[i].update(this.elapsedTime * 3);
+            }
+
+            if (otherShip.isEnabled) {
+                // ソナー音の再生
+                if (otherShip.enemyShipStatus !== EnemyShipStatus.usually) {
+                    const activeSonarSound = otherShipObj.children.find(child => child.name === "activeSonarSound");
+                    if (activeSonarSound && !activeSonarSound.isPlaying) {
+                        console.log("play activeSonarSound");
+                        activeSonarSound.play();
+                    }
+                } else {
+                    const activeSonarSound = otherShipObj.children.find(child => child.name === "activeSonarSound");
+                    if (activeSonarSound && activeSonarSound.isPlaying) {
+                        console.log("stop activeSonarSound");
+                        activeSonarSound.stop();
+                    }
+                }
             }
 
             if (!otherShip.isEnabled) {
