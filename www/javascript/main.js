@@ -129,6 +129,7 @@ export class Main {
 function exitGame() {
     // 全てのイベントを削除
     $('*').off();
+    main.game.threePageViewControllerAbandon();
     main.game.dispose();
     main.game = null;
     PageController.pageTransition('titlePage');

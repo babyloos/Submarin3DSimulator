@@ -414,10 +414,16 @@ export class Game {
         // threePage削除
         this.threePageViewController.stopAnimate();
         // 全オブジェクト削除
-        this.threePageViewController.abandon();
+        this.threePageViewControllerAbandon();
         this.threePageViewController = null;
         // exitGame呼び出し
         this._exitGame();
+    }
+
+    threePageViewControllerAbandon() {
+        if (this.threePageViewController) {
+            this.threePageViewController.abandon();
+        }
     }
 
     /**
