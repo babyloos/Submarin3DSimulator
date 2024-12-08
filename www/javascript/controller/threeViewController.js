@@ -1084,7 +1084,7 @@ export class ThreeViewController {
     }
 
     /**
-     * 砲弾の更新
+     * 爆雷の更新
      */
     #updateDepthCharges() {
         for (var i = 0; i < this.enemyShips.length; i++) {
