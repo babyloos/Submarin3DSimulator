@@ -274,7 +274,7 @@ export class ThreeViewController {
                 }
 
                 this.enemyShips[i].setOnHitTorpedoCallback(() => {
-                    torpedoHitSound.play();
+                    torpedoHitSound.play()
                 });
             }
         });
@@ -299,6 +299,29 @@ export class ThreeViewController {
                     if (otherShipObj) {
                         console.log("add otherShipObj sound");
                         otherShipObj.add(destoryerEngineSound);
+                    }
+                }
+            });
+        }, 3000);
+
+        // アクティブソナー
+        setTimeout(() => {
+            this.audioLoader.load('resources/audio/sonar.mp3', (buffer) => {
+                for (var i = 0; i < this.enemyShips.length; i++) {
+                    if (this.enemyShips[i].objectType !== ObjectType.destoryer1) {
+                        continue;
+                    }
+                    const activeSonarSound = new THREE.PositionalAudio(this.listener);
+                    this.audioObjects.push(activeSonarSound);
+                    activeSonarSound.setBuffer(buffer);
+                    activeSonarSound.setRefDistance(20);
+                    activeSonarSound.setVolume(10);
+                    activeSonarSound.setLoop(true);
+
+                    const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
+                    if (otherShipObj) {
+                        console.log("add activeSonarSound");
+                        otherShipObj.add(activeSonarSound);
                     }
                 }
             });
