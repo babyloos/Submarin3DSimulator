@@ -1115,7 +1115,7 @@ export class ThreeViewController {
                         depthChargeSound.name = "depthChargeSound";
                         depthChargeSound.setBuffer(this.depthExplosionSoundBuffer);
                         depthChargeSound.setLoop(false);
-                        depthChargeSound.setVolume(20);
+                        depthChargeSound.setVolume(5);
                         depthChargeSound.setRefDistance(20);
                         obj.add(depthChargeSound);
 
