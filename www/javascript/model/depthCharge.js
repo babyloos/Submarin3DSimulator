@@ -35,6 +35,9 @@ export class DepthCharge extends GameObject {
     // 参照先のプレイヤボート
     playerBoat;
 
+    // 爆発時のコールバック
+    onExplosionCallback;
+
     /**
      * コンストラクタ
      * @param {number} pointX X座標
@@ -102,6 +105,14 @@ export class DepthCharge extends GameObject {
         const vHorizon = distancePerTime * Math.cos(angleOfAtackRad);                   // 1フレームでの水平方向移動量
         const courseRad = Util.degreeToRadian(Util.calcAngleForCalc(this.course));
         return new Point(Math.cos(courseRad) * vHorizon, -Math.sin(courseRad) * vHorizon);
+    }
+
+    setOnDepthChargeCallback(callback) {
+        this.onExplosionCallback = callback;
+    }
+
+    onExplosion() {
+        this.onExplosionCallback();
     }
 
     /**

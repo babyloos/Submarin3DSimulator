@@ -94,6 +94,7 @@ export class CollisionManager {
                     continue;
                 }
                 if (depthCharge.depth >= depthCharge.fireDepth) {
+                    depthCharge.onExplosion();
                     this.threeViewController.onExplosionDepthCharge(depthCharge);
                     // 爆雷とuBoatの距離が300m以内の場合にダメージ
                     const rangeToUboat = Util.calcDist2ObjectThree(depthCharge, this.uboat);

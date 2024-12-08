@@ -55,6 +55,7 @@ export class ThreeViewController {
     uboatEngineSound;
     angleOnBowSound;
     torpedoSoundBuffer;
+    depthExplosionSoundBuffer;
 
     // コントローラ
     controls;
@@ -327,6 +328,11 @@ export class ThreeViewController {
                 }
             });
         }, 3000);
+
+        // 爆雷
+        this.audioLoader.load('resources/audio/depthChargeExplosion.mp3', (buffer) => {
+            this.depthExplosionSoundBuffer = buffer;
+        });
 
         // ライト
         const pointLight = new THREE.PointLight(0xffffff, 3.0);
@@ -1103,6 +1109,19 @@ export class ThreeViewController {
                         obj.position.set(depthCharge.pointX, -depthCharge.depth, depthCharge.pointY);
                         this.gameObjects.push(obj);
                         this.scene.add(obj);
+
+                        // 爆雷の音
+                        const depthChargeSound = new THREE.PositionalAudio(this.listener);
+                        depthChargeSound.name = "depthChargeSound";
+                        depthChargeSound.setBuffer(this.depthExplosionSoundBuffer);
+                        depthChargeSound.setLoop(false);
+                        depthChargeSound.setVolume(20);
+                        depthChargeSound.setRefDistance(20);
+                        obj.add(depthChargeSound);
+
+                        depthCharge.setOnDepthChargeCallback(() => {
+                            depthChargeSound.play();
+                        });
                     } else if (!depthCharge.isEnabled && depthChargeObject !== null) {
                         // 無効かつ追加済なら削除する
                         this.scene.remove(depthChargeObject);
