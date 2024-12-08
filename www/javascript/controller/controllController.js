@@ -48,6 +48,13 @@ export class ControllController {
     angleOnBowSound;
     changeDepthSound;
     changeCourseSound;
+    aheadFullSound;
+    aheadHalfSound;
+    aheadSlowSound;
+    allMachineStopSound;
+    asternSlowSound;
+    asternHalfSound;
+    asternFullSound;
 
     /**
      * コンストラクタ
@@ -63,6 +70,22 @@ export class ControllController {
         this.changeDepthSound.load('resources/audio/changeDepth.mp3');
         this.changeCourseSound = new AudioManager();
         this.changeCourseSound.load('resources/audio/changeCourse.mp3');
+
+        // エンジン出力
+        this.aheadFullSound = new AudioManager();
+        this.aheadFullSound.load('resources/audio/aheadFull.mp3');
+        this.aheadHalfSound = new AudioManager();
+        this.aheadHalfSound.load('resources/audio/aheadHalf.mp3');
+        this.aheadSlowSound = new AudioManager();
+        this.aheadSlowSound.load('resources/audio/aheadSlow.mp3');
+        this.allMachineStopSound = new AudioManager();
+        this.allMachineStopSound.load('resources/audio/allMachineStop.mp3');
+        this.asternSlowSound = new AudioManager();
+        this.asternSlowSound.load('resources/audio/asternSlow.mp3');
+        this.asternHalfSound = new AudioManager();
+        this.asternHalfSound.load('resources/audio/asternHalf.mp3');
+        this.asternFullSound = new AudioManager();
+        this.asternFullSound.load('resources/audio/asternFull.mp3');
     }
 
     /**
@@ -593,6 +616,7 @@ export class ControllController {
             }
         });
 
+        const parent = this;
         engineTelegraph.on('touchend', function (event) {
             const touchObject = event.changedTouches[0];
             const clickX = touchObject.pageX;
@@ -601,24 +625,31 @@ export class ControllController {
 
             if (clickDeg > 160 && clickDeg <= 198) {
                 // 停止
+                parent.allMachineStopSound.play();
                 uBoat.updateEngineOut(0);
             } else if (clickDeg > 198 && clickDeg <= 240) {
                 // 微速前進
+                parent.aheadSlowSound.play();
                 uBoat.updateEngineOut(1);
             } else if (clickDeg > 240 && clickDeg <= 270) {
                 // 半速前進
+                parent.aheadHalfSound.play();
                 uBoat.updateEngineOut(2);
             } else if (clickDeg > 270 && clickDeg <= maxDeg) {
                 // 全速前進
+                parent.aheadFullSound.play();
                 uBoat.updateEngineOut(3);
             } else if (clickDeg > 120 && clickDeg <= 160) {
                 // 微速後進
+                parent.asternSlowSound.play();
                 uBoat.updateEngineOut(-1);
             } else if (clickDeg > 85 && clickDeg <= 120) {
                 // 半速後進
+                parent.asternHalfSound.play();
                 uBoat.updateEngineOut(-2);
             } else if (clickDeg >= minDeg && clickDeg <= 85) {
                 // 全速後進
+                parent.asternFullSound.play();
                 uBoat.updateEngineOut(-3);
             }
 
