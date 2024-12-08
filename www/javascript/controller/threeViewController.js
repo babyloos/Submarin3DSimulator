@@ -952,17 +952,23 @@ export class ThreeViewController {
             }
 
             if (otherShip.isEnabled) {
+                const activeSonarSound = otherShipObj.children.find(child => child.name === "activeSonarSound");
+                if (!activeSonarSound) {
+                    continue;
+                }
                 // ソナー音の再生
                 if (otherShip.enemyShipStatus !== EnemyShipStatus.usually) {
-                    const activeSonarSound = otherShipObj.children.find(child => child.name === "activeSonarSound");
-                    if (activeSonarSound && !activeSonarSound.isPlaying) {
-                        console.log("play activeSonarSound");
-                        activeSonarSound.play();
+                    if (this.playerBoat.depth >= 10) {
+                        if (!activeSonarSound.isPlaying) {
+                            activeSonarSound.play();
+                        }
+                    } else {
+                        if (activeSonarSound.isPlaying) {
+                            activeSonarSound.stop();
+                        }
                     }
                 } else {
-                    const activeSonarSound = otherShipObj.children.find(child => child.name === "activeSonarSound");
-                    if (activeSonarSound && activeSonarSound.isPlaying) {
-                        console.log("stop activeSonarSound");
+                    if (activeSonarSound.isPlaying) {
                         activeSonarSound.stop();
                     }
                 }
