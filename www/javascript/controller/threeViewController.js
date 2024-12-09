@@ -234,7 +234,7 @@ export class ThreeViewController {
         this.audioObjects.push(this.angleOnBowSound);
         this.audioLoader.load('resources/audio/angleOnBow.mp3', (buffer) => {
             this.angleOnBowSound.setBuffer(buffer);
-            this.angleOnBowSound.setVolume(0.1);
+            this.angleOnBowSound.setVolume(2);
             this.angleOnBowSound.setLoop(false);
         });
 
@@ -1115,7 +1115,7 @@ export class ThreeViewController {
                         depthChargeSound.name = "depthChargeSound";
                         depthChargeSound.setBuffer(this.depthExplosionSoundBuffer);
                         depthChargeSound.setLoop(false);
-                        depthChargeSound.setVolume(5);
+                        depthChargeSound.setVolume(20);
                         depthChargeSound.setRefDistance(20);
                         obj.add(depthChargeSound);
 
