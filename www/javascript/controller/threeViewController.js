@@ -232,7 +232,8 @@ export class ThreeViewController {
         // 潜望鏡
         this.angleOnBowSound = new THREE.Audio(this.listener);
         this.audioObjects.push(this.angleOnBowSound);
-        this.audioLoader.load('resources/audio/angleOnBow.mp3', (buffer) => {
+        this.audioLoader.load('resources/audio/angle.mp3', (buffer) => {
+            console.log("load angleOnBowSound");
             this.angleOnBowSound.setBuffer(buffer);
             this.angleOnBowSound.setVolume(2);
             this.angleOnBowSound.setLoop(false);
