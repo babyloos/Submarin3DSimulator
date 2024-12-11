@@ -83,6 +83,7 @@ export class CollisionManager {
                     this.threeViewController.onHitShellUboat(shell);
                 } else if (shell.depth > 0) {
                     // 砲弾が水面に落下
+                    shell.isEnabled = false;
                     this.threeViewController.onHitShellWater(shell);
                 }
             }
