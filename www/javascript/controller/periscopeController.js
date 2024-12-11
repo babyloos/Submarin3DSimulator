@@ -55,6 +55,7 @@ export class PeriscopeController extends InstructionController {
     #periscopeZoomButtonInitialize() {
         const threeViewController = this.threeViewController;
         $('#zoomButton').on('click', function () {
+            this.audioManager.play();
             if (threeViewController.periscopeZoom) {
                 $(this).text('1.6x');
                 threeViewController.periscopeZoom = false;
@@ -64,7 +65,7 @@ export class PeriscopeController extends InstructionController {
                 threeViewController.periscopeZoom = true;
                 threeViewController.changeCameraMode(true);
             }
-        });
+        }.bind(this));
     }
 
     /**

@@ -56,6 +56,7 @@ export class ThreeViewController {
     angleOnBowSound;
     torpedoSoundBuffer;
     depthExplosionSoundBuffer;
+    shellWaterExplosionSoundBuffer;
 
     // コントローラ
     controls;
@@ -233,7 +234,6 @@ export class ThreeViewController {
         this.angleOnBowSound = new THREE.Audio(this.listener);
         this.audioObjects.push(this.angleOnBowSound);
         this.audioLoader.load('resources/audio/angle.mp3', (buffer) => {
-            console.log("load angleOnBowSound");
             this.angleOnBowSound.setBuffer(buffer);
             this.angleOnBowSound.setVolume(2);
             this.angleOnBowSound.setLoop(false);
@@ -299,7 +299,6 @@ export class ThreeViewController {
 
                     const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
                     if (otherShipObj) {
-                        console.log("add otherShipObj sound");
                         otherShipObj.add(destoryerEngineSound);
                     }
                 }
@@ -323,7 +322,6 @@ export class ThreeViewController {
 
                     const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
                     if (otherShipObj) {
-                        console.log("add activeSonarSound");
                         otherShipObj.add(activeSonarSound);
                     }
                 }
@@ -333,6 +331,11 @@ export class ThreeViewController {
         // 爆雷
         this.audioLoader.load('resources/audio/depthChargeExplosion.mp3', (buffer) => {
             this.depthExplosionSoundBuffer = buffer;
+        });
+
+        // 砲弾着水音
+        this.audioLoader.load('resources/audio/shellWaterExplosion.mp3', (buffer) => {
+            this.shellWaterExplosionSoundBuffer = buffer;
         });
 
         // ライト
@@ -389,7 +392,7 @@ export class ThreeViewController {
      * shell hit water line callback
      */
     onHitShellWater(shell) {
-        const explosionParticle = new ShellHitWaterParticle(this.scene, shell.pointX, shell.pointY);
+        const explosionParticle = new ShellHitWaterParticle(this.scene, shell.pointX, shell.pointY, this.listener, this.shellWaterExplosionSoundBuffer);
         explosionParticle.createParticles();
         this.explosionParticles.push(explosionParticle);
     }

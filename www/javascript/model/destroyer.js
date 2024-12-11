@@ -141,7 +141,7 @@ export class Destroyer extends EnemyShip {
         const targetPoint = new Point(this.playerBoat.pointX, this.playerBoat.pointY);
         const fireAngle = this.#calcFireAngle(targetPoint);
         const fireCourse = Util.arrangeCourseDig(Util.getRandomArbitrary(course - 5, course + 5));
-        const shell = new Shell(this.pointX, this.pointY, fireCourse, fireAngle);
+        const shell = new Shell(this.pointX, this.pointY - 5, fireCourse, fireAngle);
         this.shells.push(shell);
         this.fireShellElapsedTime = 0;
     }
@@ -215,8 +215,8 @@ export class Destroyer extends EnemyShip {
         var angleMin = 0;
         var angleMax = 0;
         if (range <= 500) {
-            angleMin = 0.0000;
-            angleMax = 0.0001;
+            angleMin = 0.0001;
+            angleMax = 0.0002;
         } else if (range <= 1000) {
             angleMin = 0.05;
             angleMax = 0.07;
