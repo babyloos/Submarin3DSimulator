@@ -56,6 +56,7 @@ export class ThreeViewController {
     angleOnBowSound;
     torpedoSoundBuffer;
     depthExplosionSoundBuffer;
+    shellWaterExplosionSoundBuffer;
 
     // コントローラ
     controls;
@@ -335,6 +336,11 @@ export class ThreeViewController {
             this.depthExplosionSoundBuffer = buffer;
         });
 
+        // 砲弾着水音
+        this.audioLoader.load('resources/audio/shellWaterExplosion.mp3', (buffer) => {
+            this.shellWaterExplosionSoundBuffer = buffer;
+        });
+
         // ライト
         const pointLight = new THREE.PointLight(0xffffff, 3.0);
         this.camera.add(pointLight);
@@ -389,7 +395,7 @@ export class ThreeViewController {
      * shell hit water line callback
      */
     onHitShellWater(shell) {
-        const explosionParticle = new ShellHitWaterParticle(this.scene, shell.pointX, shell.pointY);
+        const explosionParticle = new ShellHitWaterParticle(this.scene, shell.pointX, shell.pointY, this.listener, this.shellWaterExplosionSoundBuffer);
         explosionParticle.createParticles();
         this.explosionParticles.push(explosionParticle);
     }

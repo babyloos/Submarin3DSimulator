@@ -13,12 +13,22 @@ export class ShellHitWaterParticle {
     bassPosX;
     bassPosY;
 
-    constructor(scene, posX, posY) {
+    // sound
+    sound;
+
+    constructor(scene, posX, posY, listener, soundBuffer) {
         this.enable = true;
         this.scene = scene;
         this.particles = new Array();
         this.bassPosX = posX;
         this.bassPosY = posY;
+
+        this.sound = new THREE.PositionalAudio(listener);
+        this.sound.name = "shellHitWaterSound";
+        this.sound.setBuffer(soundBuffer);
+        this.sound.setRefDistance(20);
+        this.sound.setVolume(2);
+        this.sound.setLoop(false);
     }
 
     /**
@@ -72,6 +82,8 @@ export class ShellHitWaterParticle {
 
         // create mesh
         const mesh = new THREE.Points(geometry, material);
+        mesh.add(this.sound);
+        this.sound.play();
         this.particle = mesh;
         this.scene.add(mesh); // シーンは任意の THREE.Scene インスタンス
     }
