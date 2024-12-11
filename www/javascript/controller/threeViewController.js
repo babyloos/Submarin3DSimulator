@@ -234,7 +234,6 @@ export class ThreeViewController {
         this.angleOnBowSound = new THREE.Audio(this.listener);
         this.audioObjects.push(this.angleOnBowSound);
         this.audioLoader.load('resources/audio/angle.mp3', (buffer) => {
-            console.log("load angleOnBowSound");
             this.angleOnBowSound.setBuffer(buffer);
             this.angleOnBowSound.setVolume(2);
             this.angleOnBowSound.setLoop(false);
@@ -300,7 +299,6 @@ export class ThreeViewController {
 
                     const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
                     if (otherShipObj) {
-                        console.log("add otherShipObj sound");
                         otherShipObj.add(destoryerEngineSound);
                     }
                 }
@@ -324,7 +322,6 @@ export class ThreeViewController {
 
                     const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
                     if (otherShipObj) {
-                        console.log("add activeSonarSound");
                         otherShipObj.add(activeSonarSound);
                     }
                 }
