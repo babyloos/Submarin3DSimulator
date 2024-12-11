@@ -65,7 +65,7 @@ export class ControllController {
         this.periscopeSound = new AudioManager();
         this.periscopeSound.load('resources/audio/peri.mp3');
         this.angleOnBowSound = new AudioManager();
-        this.angleOnBowSound.load('resources/audio/angleOnBow.mp3');
+        this.angleOnBowSound.load('resources/audio/angle.mp3');
         this.changeDepthSound = new AudioManager();
         this.changeDepthSound.load('resources/audio/changeDepth.mp3');
         this.changeCourseSound = new AudioManager();
