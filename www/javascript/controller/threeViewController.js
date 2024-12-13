@@ -164,7 +164,7 @@ export class ThreeViewController {
         this.otherShipMixers = new Array(this.enemyShips.length);
 
         // debug
-        this.stats = this.#createStats();
+        // this.stats = this.#createStats();
 
         // リサイズ
         // ユーザーエージェントの判別
@@ -786,7 +786,7 @@ export class ThreeViewController {
      */
     animate() {
         // FPS表示
-        this.stats.begin();
+        // this.stats.begin();
         this.elapsedTime = this.clock.getDelta() * this.timeManager.gameSpeed;
         this.#updateCamera();
         this.water.material.uniforms['time'].value += 0.5 / 60.0;
@@ -794,7 +794,7 @@ export class ThreeViewController {
         this.#updateObjects();
         this.#updateEffects();
         this.#render();
-        this.stats.end();
+        // this.stats.end();
     }
 
     /**
