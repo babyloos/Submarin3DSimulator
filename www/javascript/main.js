@@ -13,6 +13,9 @@ export class Main {
         const audioManager = new AudioManager();
         audioManager.load('resources/audio/enter.mp3');
 
+        // debug
+        console.log(navigator.language);
+
         // スクロール禁止
         Util.no_scroll();
 
