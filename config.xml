@@ -36,7 +36,7 @@
       </edit-config>
     </platform>
     <platform name="android">
-        <preference name="android-targetSdkVersion" value="31" />
+        <preference name="android-targetSdkVersion" value="34" />
     </platform>
       <icon height="167" src="res/icon/ios/167.png" width="167"/>
       <icon height="57" src="res/icon/ios/57.png" width="57" />
