@@ -34,5 +34,8 @@ js/**/*.js
 js/**/*.js.map
 *.log
 
+# android
+keystore/*
+
 # Mac
 ._*
