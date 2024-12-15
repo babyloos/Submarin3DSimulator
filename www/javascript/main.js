@@ -3,7 +3,7 @@ import { PageController } from "./controller/pageController.js";
 import { Game } from "./game.js";
 import { Util } from "./util.js";
 import { AudioManager } from "./controller/audioManager.js";
-import { LanguageManager } from "./controller/languageManager.js";
+import ImgTranslator from "./controller/imgTranslator.js";
 
 export class Main {
 
@@ -15,7 +15,7 @@ export class Main {
         audioManager.load('resources/audio/enter.mp3');
 
         // debug
-        console.log(LanguageManager.getLanguage());
+        ImgTranslator.translate();
 
         // スクロール禁止
         Util.no_scroll();
