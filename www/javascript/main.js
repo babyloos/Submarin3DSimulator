@@ -14,9 +14,6 @@ export class Main {
         const audioManager = new AudioManager();
         audioManager.load('resources/audio/enter.mp3');
 
-        // debug
-        ImgTranslator.translate();
-
         // スクロール禁止
         Util.no_scroll();
 
@@ -185,6 +182,8 @@ window.addEventListener('DOMContentLoaded', function () {
     glot.import("resources/words.json").then(() => {
         glot.render()
     })
+
+    ImgTranslator.translate();
 })
 
 const main = new Main();
