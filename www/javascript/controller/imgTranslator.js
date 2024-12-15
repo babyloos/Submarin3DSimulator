@@ -6,6 +6,15 @@ export default class ImgTranslator {
         const language = navigator.language;
         console.log(language);
         const json = await this.getJson();
+
+        if (language !== 'ja') {
+            // 日本語版出ない場合は何もしない
+            return;
+        }
+
+        // translateのついているimgタグのsrcを書き換える
+        const imgElements = document.querySelectorAll('img[translate]');
+        console.log(imgElements);
     }
 
     static async getJson() {
