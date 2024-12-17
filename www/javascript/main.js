@@ -3,6 +3,7 @@ import { PageController } from "./controller/pageController.js";
 import { Game } from "./game.js";
 import { Util } from "./util.js";
 import { AudioManager } from "./controller/audioManager.js";
+import ImgTranslator from "./controller/imgTranslator.js";
 
 export class Main {
 
@@ -181,6 +182,8 @@ window.addEventListener('DOMContentLoaded', function () {
     glot.import("resources/words.json").then(() => {
         glot.render()
     })
+
+    ImgTranslator.translate();
 })
 
 const main = new Main();
