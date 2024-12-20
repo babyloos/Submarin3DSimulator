@@ -36,10 +36,18 @@
       "cordova-plugin-wkwebview-engine": {},
       "cordova-plugin-cors": {},
       "cordova-plugin-wkwebview-file-xhr": {},
-      "cordova-plugin-inappbrowser": {}
+      "cordova-plugin-inappbrowser": {},
+      "admob-plus-cordova": {
+        "APP_ID_ANDROID": "ca-app-pub-1479927029413242~9699188823",
+        "APP_ID_IOS": "ca-app-pub-1479927029413242~2577521015",
+        "PLAY_SERVICES_VERSION": "23.2.0",
+        "USAGE": "This identifier will be used to deliver personalized ads to you.",
+        "DISABLESDKCRASHREPORTING": "false"
+      }
     }
   },
   "dependencies": {
+    "admob-plus-cordova": "2.0.0-alpha.19",
     "cordova-ios": "7.1.1",
     "stats.js": "^0.17.0"
   }
