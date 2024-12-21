@@ -190,10 +190,10 @@ window.addEventListener('DOMContentLoaded', function () {
 let interstitial;
 
 document.addEventListener('deviceready', async () => {
-    const isDebug = true;
+    console.log('device ready');
+    const isDebug = BuildInfo.debug;
     console.log(isDebug ? 'Debug build' : 'Release build');
 
-    console.log('device ready');
     let unitId;
     if (cordova.platformId === 'android') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-1479927029413242/6298498855';
