@@ -47,7 +47,6 @@ export class Main {
         // ニューゲーム
         newGameButton.on('click', function () {
             audioManager.play();
-            // TODO: 広告表示
             PageController.pageTransition('diffSelectPage');
         });
 
@@ -58,6 +57,7 @@ export class Main {
         });
         startButton.on('click', () => {
             audioManager.play();
+            showAd();
             transitionThreePage(true, selectedDiff);
         });
         diffSelector.on('change', function () {
@@ -82,12 +82,14 @@ export class Main {
         // コンティニュー
         continueButton.on('click', function () {
             audioManager.play();
+            showAd();
             transitionThreePage(false, selectedDiff);
         });
 
         // マニュアル
         manualButton.on('click', function () {
             audioManager.play();
+            showAd();
             PageController.pageTransition('manualPage');
         });
         manualBackButton.on('click', function () {
@@ -208,10 +210,13 @@ document.addEventListener('deviceready', async () => {
     interstitial.on('load', (evt) => {
         // evt.ad
     })
+}, false);
 
+const showAd = async () => {
+    console.log("showAd");
     await interstitial.load()
     await interstitial.show()
-}, false);
+}
 
 window.addEventListener('admob.ad.dismiss', async () => {
     // Once a interstitial ad is shown, it cannot be shown again.
