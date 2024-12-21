@@ -203,9 +203,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('deviceready', async () => {
     console.log('device ready');
-    interstitial = new admob.InterstitialAd({
+    const interstitial = new admob.InterstitialAd({
         // iOS test
         adUnitId: 'ca-app-pub-3940256099942544/4411468910',
+        // Android test
+        // adUnitId: 'ca-app-pub-3940256099942544/1033173712',
     })
 
     interstitial.on('load', (evt) => {
