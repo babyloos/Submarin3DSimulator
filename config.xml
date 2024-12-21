@@ -23,6 +23,7 @@
       <icon density="xxxhdpi" src="res/icon/android/mipmap-xxxhdpi/ic_subsim.png" />
     </platform>
     <platform name="ios">
+      <preference name="UseSwiftLanguageVersion" value="5.0" />
       <preference name="LaunchStoryboard" value="CDVLaunchScreen" />
       <preference name="WKWebViewOnly" value="true" />
       <feature name="CDVWKWebViewEngine">
