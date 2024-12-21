@@ -47,6 +47,7 @@ export class Main {
         // ニューゲーム
         newGameButton.on('click', function () {
             audioManager.play();
+            // TODO: 広告表示
             PageController.pageTransition('diffSelectPage');
         });
 
@@ -186,28 +187,22 @@ window.addEventListener('DOMContentLoaded', function () {
     ImgTranslator.translate();
 })
 
-// const showAd = async () => {
-//     const interstitial = new admob.InterstitialAd({
-//         adUnitId: 'ca-app-pub-3940256099942544/1033173712',
-//     })
-
-//     interstitial.on('load', (evt) => {
-//         // evt.ad
-//     })
-
-//     await interstitial.load()
-//     await interstitial.show()
-// }
-
-// showAd();
+let interstitial;
 
 document.addEventListener('deviceready', async () => {
+    const isDebug = true;
+    console.log(isDebug ? 'Debug build' : 'Release build');
+
     console.log('device ready');
-    const interstitial = new admob.InterstitialAd({
-        // iOS test
-        adUnitId: 'ca-app-pub-3940256099942544/4411468910',
-        // Android test
-        // adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+    let unitId;
+    if (cordova.platformId === 'android') {
+        unitId = isDebug ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-1479927029413242/6298498855';
+    } else if (cordova.platformId === 'ios') {
+        unitId = isDebug ? 'ca-app-pub-3940256099942544/4411468910' : 'ca-app-pub-1479927029413242/1802112503';
+    }
+
+    interstitial = new admob.InterstitialAd({
+        adUnitId: unitId,
     })
 
     interstitial.on('load', (evt) => {
