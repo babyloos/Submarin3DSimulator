@@ -197,9 +197,10 @@ document.addEventListener('deviceready', async () => {
     console.log(isDebug ? 'Debug build' : 'Release build');
 
     let unitId;
-    if (cordova.platformId === 'android') {
+    let platform = cordova.platformId;
+    if (platform === 'android') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-1479927029413242/6298498855';
-    } else if (cordova.platformId === 'ios') {
+    } else if (platform === 'ios') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/4411468910' : 'ca-app-pub-1479927029413242/1802112503';
     }
 
@@ -214,8 +215,12 @@ document.addEventListener('deviceready', async () => {
 
 const showAd = async () => {
     console.log("showAd");
-    await interstitial.load()
-    await interstitial.show()
+    try {
+        await interstitial.load()
+        await interstitial.show()
+    } catch (error) {
+        console.error('Ad failed to load:', error);
+    }
 }
 
 window.addEventListener('admob.ad.dismiss', async () => {
