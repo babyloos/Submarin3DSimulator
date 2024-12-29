@@ -19,62 +19,59 @@
     <div id="topPage" class="activePage">
         <div class="video_wrapper">
             <video src="./resources/movie/title_back_test.mp4" playsinline autoplay muted loop width="100%"></video>
-            <!-- タイトル画面 -->
-            <div id="titlePage" class="absolutePage vignette activePage">
-                <div class="menu text-center">
-                    <div>
-                        <div class="titleBackground">
-                            <h1 glot-model='RES_Title'>潜水艦3Dシミュレータ</h1>
+        </div>
+        <!-- タイトル画面 -->
+        <div id="titlePage" class="absolutePage vignette activePage">
+            <div class="menu text-center">
+                <div>
+                    <div class="titleBackground">
+                        <h1 glot-model='RES_Title'>潜水艦3Dシミュレータ</h1>
+                    </div>
+                    <div class="menuButtonWrapper">
+                        <div class="row">
+                            <button id="newGameButton" class="btn btn-info" glot-model='RES_NewGame'>ニューゲーム</button>
                         </div>
-                        <div class="menuButtonWrapper">
-                            <div class="row">
-                                <button id="newGameButton" class="btn btn-info" glot-model='RES_NewGame'>ニューゲーム</button>
-                            </div>
-                            <div class="row">
-                                <button id="continueButton" class="btn btn-info"
-                                    glot-model='RES_Continue'>コンティニュー</button>
-                            </div>
-                            <div class="row">
-                                <button id="manualButton" class="btn btn-info" glot-model='RES_Manual'>マニュアル</button>
-                            </div>
+                        <div class="row">
+                            <button id="continueButton" class="btn btn-info" glot-model='RES_Continue'>コンティニュー</button>
+                        </div>
+                        <div class="row">
+                            <button id="manualButton" class="btn btn-info" glot-model='RES_Manual'>マニュアル</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="gameModeSelectPage" class="absolutePage vignette hiddenPage">
-                <div class="menu text-center">
-                    <div>
-                        <div class="titleBackground">
-                            <h1 glot-model='RES_Title'>潜水艦3Dシミュレーター</h1>
-                        </div>
-                        <div class="menuButtonWrapper">
-                            <p>
-                                <input type="radio" class="btn-check" name="gameModeSelect" id="gameModeSquamish"
-                                    autocomplete="off">
-                                <label class="btn btn-info btn-sm" for="gameModeSquamish"
-                                    glot-model='RES_squamish'>スカーミッシュ</label>
-                            </p>
-                            <p>
-                                <input type="radio" class="btn-check" name="gameModeSelect" id="gameModeMission"
-                                    autocomplete="off">
-                                <label class="btn btn-info btn-sm" for="gameModeMission" glot-model='RES_mission'>ミッション</label>
-                            </p>
-                        </div>
+        </div>
+        <div id="gameModeSelectPage" class="absolutePage vignette hiddenPage">
+            <div class="menu text-center">
+                <div>
+                    <div class="titleBackground">
+                        <h1 glot-model='RES_Title'>潜水艦3Dシミュレーター</h1>
+                    </div>
+                    <div class="menuButtonWrapper">
+                        <p>
+                            <input type="radio" class="btn-check" name="gameModeSelect" id="gameModeSquamish"
+                                autocomplete="off">
+                            <label class="btn btn-info btn-sm" for="gameModeSquamish"
+                                glot-model='RES_squamish'>スカーミッシュ</label>
+                        </p>
+                        <p>
+                            <input type="radio" class="btn-check" name="gameModeSelect" id="gameModeMission"
+                                autocomplete="off">
+                            <label class="btn btn-info btn-sm" for="gameModeMission"
+                                glot-model='RES_mission'>ミッション</label>
+                        </p>
                     </div>
                 </div>
-                <div class="buttonContainer">
-                    <button type="button" id="gameModeSelectBackbutton" class=" btn btn-info btn-sm"
-                        glot-model='RES_Back'>戻る</button>
-                    <button type="button" id="selectDiffButton" class=" btn btn-info btn-sm" glot-model='RES_selectDiff'
-                        disabled>難易度選択</button>
-                </div>
             </div>
-            <div id="manualTitle" class="ms-10">
-                <h1 class="" glot-model='RES_Manual'>マニュアル</h1>
+            <div class="buttonContainer">
+                <button type="button" id="gameModeSelectBackbutton" class=" btn btn-info btn-sm"
+                    glot-model='RES_Back'>戻る</button>
+                <button type="button" id="selectDiffButton" class=" btn btn-info btn-sm" glot-model='RES_selectDiff'
+                    disabled>難易度選択</button>
             </div>
         </div>
         <!-- マニュアル画面 -->
-        <div id="manualPage" class="vignette hiddenPage">
+        <div id="manualPage" class="vignette absolutePage hiddenPage">
             <div id="manualTitle" class="ms-10">
                 <h1 class="" glot-model='RES_Manual'>マニュアル</h1>
             </div>
