@@ -3,6 +3,10 @@
 		"en": "Submarine 3D simulator",
 		"ja": "潜水艦3Dシミュレータ"
 	},
+	"RES_NewGame": {
+		"en": "New game",
+		"ja": "ニューゲーム"
+	},
 	"RES_squamish": {
 		"en": "Squamish",
 		"ja": "スカーミッシュ"
@@ -11,9 +15,9 @@
 		"en": "Mission",
 		"ja": "ミッション"
 	},
-	"RES_NewGame": {
-		"en": "New game",
-		"ja": "ニューゲーム"
+	"RES_selectDiff": {
+		"en": "Difficulty selection",
+		"ja": "難易度選択"
 	},
 	"RES_Continue": {
 		"en": "Continue",

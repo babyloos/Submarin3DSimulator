@@ -28,6 +28,7 @@ export class Main {
 
         // ゲームモード選択画面
         var selectGameMode = GameMode.mission;
+        const selectDiffButton = $('#selectDiffButton');
         const gameModeSelectBackButton = $('#gameModeSelectBackbutton');
         gameModeSelectBackButton.on('click', () => {
             audioManager.play();
@@ -77,7 +78,7 @@ export class Main {
                 default:
                     throw "selected undefined game mode.";
             }
-            startButton.attr('disabled', false);
+            selectDiffButton.attr('disabled', false);
         })
 
         // 難易度選択画面
