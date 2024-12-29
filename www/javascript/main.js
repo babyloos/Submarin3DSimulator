@@ -1,4 +1,4 @@
-import { GameDifficulty } from "./constants.js";
+import { GameDifficulty, GameMode } from "./constants.js";
 import { PageController } from "./controller/pageController.js";
 import { Game } from "./game.js";
 import { Util } from "./util.js";
@@ -17,8 +17,11 @@ export class Main {
         // スクロール禁止
         Util.no_scroll();
 
+        let gameMode = GameMode.mission;
+
         // トップページの画面遷移
         // タイトル画面
+        const squamishButton = $('#squamishButton');
         const newGameButton = $('#newGameButton');
         const continueButton = $('#continueButton');
         const manualButton = $('#manualButton');
@@ -44,8 +47,16 @@ export class Main {
             continueButton.attr('disabled', true);
         }
 
+        // スカーミッシュ
+        squamishButton.on('click', function () {
+            gameMode = GameMode.squamish;
+            audioManager.play();
+            PageController.pageTransition('diffSelectPage');
+        });
+
         // ニューゲーム
         newGameButton.on('click', function () {
+            gameMode = GameMode.mission;
             audioManager.play();
             PageController.pageTransition('diffSelectPage');
         });
@@ -60,6 +71,8 @@ export class Main {
             showAd();
             transitionThreePage(true, selectedDiff);
         });
+
+        // 難易度選択
         diffSelector.on('change', function () {
             audioManager.play();
             let val = $(this).attr('id');
@@ -81,6 +94,7 @@ export class Main {
 
         // コンティニュー
         continueButton.on('click', function () {
+            // TODO: ゲームモードを取得する
             audioManager.play();
             showAd();
             transitionThreePage(false, selectedDiff);
@@ -121,7 +135,7 @@ export class Main {
                     $('.absolutePanel').removeClass('hiddenPage');
                 }
             });
-            this.game = new Game(isNewGame, selectedDiff, loadProgress, exitGame, gameOver, gameClear);
+            this.game = new Game(isNewGame, gameMode, selectedDiff, loadProgress, exitGame, gameOver, gameClear);
         }.bind(this);
     }
 }

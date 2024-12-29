@@ -89,13 +89,14 @@ export class Game {
     /**
      * コンストラクタ
      * @param {boolean} isNewgame ニューゲームか否か
+     * @Param {GameMode} gameMode ゲームモード
      * @param {GameDifficulty} difficulty ゲーム難易度
      * @param {LoadProgress} loadProgress モデルロード進捗率更新用オブジェクト
      * @param {Function} exitGame ゲーム終了時処理
      * @param {Function} gameOver ゲームオーバー時処理
      * @param {Function} gameClear ゲームクリア時処理
      */
-    constructor(isNewgame, difficulty, loadProgress, exitGame, gameOver, gameClear) {
+    constructor(isNewgame, gameMode, difficulty, loadProgress, exitGame, gameOver, gameClear) {
         this.isNewgame = isNewgame;
         this._exitGame = exitGame;
         this._gameOver = gameOver;
