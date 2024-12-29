@@ -86,7 +86,7 @@ export class Main {
         // 難易度選択画面
         diffSelectBackbutton.on('click', function () {
             audioManager.play();
-            PageController.pageTransition('titlePage');
+            PageController.pageTransition('gameModeSelectPage');
         });
         startButton.on('click', () => {
             audioManager.play();
