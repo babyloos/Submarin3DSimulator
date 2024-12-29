@@ -28,6 +28,8 @@ export class Main {
         const selectDiffButton = $('#selectDiffButton');
         selectDiffButton.on('click', () => {
             audioManager.play();
+            diffSelector.prop('checked', false);
+            startButton.attr('disabled', true);
             PageController.pageTransition('diffSelectPage');
         });
         const gameModeSelectBackButton = $('#gameModeSelectBackbutton');
