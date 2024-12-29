@@ -1,10 +1,11 @@
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Submarine Simulator</title>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/index.css">
-      <!--meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; media-src *; img-src 'self' data: content:;">-->
+    <!--meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; media-src *; img-src 'self' data: content:;">-->
     <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no, viewport-fit=cover">
     <!-- iOS/Safari用 -->
@@ -12,11 +13,12 @@
     <!-- Android/Chrome用 -->
     <meta name="mobile-web-app-capable" content="yes">
 </head>
+
 <body>
     <!-- トップ画面 -->
     <div id="topPage" class="activePage">
         <div class="video_wrapper">
-        <video src="./resources/movie/title_back_test.mp4" playsinline autoplay muted loop width="100%"></video>
+            <video src="./resources/movie/title_back_test.mp4" playsinline autoplay muted loop width="100%"></video>
             <!-- タイトル画面 -->
             <div id="titlePage" class="absolutePage vignette activePage">
                 <div class="menu text-center">
@@ -29,7 +31,8 @@
                                 <button id="newGameButton" class="btn btn-info" glot-model='RES_NewGame'>ニューゲーム</button>
                             </div>
                             <div class="row">
-                                <button id="continueButton" class="btn btn-info" glot-model='RES_Continue'>コンティニュー</button>
+                                <button id="continueButton" class="btn btn-info"
+                                    glot-model='RES_Continue'>コンティニュー</button>
                             </div>
                             <div class="row">
                                 <button id="manualButton" class="btn btn-info" glot-model='RES_Manual'>マニュアル</button>
@@ -44,71 +47,86 @@
                     <h1 class="" glot-model='RES_Manual'>マニュアル</h1>
                 </div>
                 <div id="manualMessageBox" class="overflow-auto">
-                  <h5 glot-model='RES_Purpose'>ゲームの目的</h5>
-                  <p glot-model='RES_ManualOverview'>第二次大戦時のナチスドイツでは敵国の経済へ損害を与えるべく無制限潜水艦作戦と呼ばれる潜水艦による作戦が行われていました。<br>
-本ゲームの目的は、第二次大戦中のドイツ潜水艦U-Boatの艦長として潜水艦を指揮し魚雷攻撃によって敵船団を撃沈することです。</p>
-                  <h5 glot-model='RES_Difficulty'>難易度</h5>
-                  <p glot-model='RES_DifficultyOverview'>難易度によって敵船の数、クリアに必要な撃沈トン数が変わります。</p>
-                  <table>
-                    <thead>
-                    <tr><th glot-model='RES_Difficulty'>難易度</th><th glot-model='RES_EnemyCount'>駆逐艦の数</th><th glot-model='RES_MerchantCount'>商船の数</th><th glot-model='RES_SunkTonnage'>撃沈トン数</th><tr>
-                    </thead>
-                  <tbody>
-                    <tr>
-                      <td glot-model='RES_Easy'>簡単</td><td>1</td><td>5</td><td>8000</td>
-                    </tr>
-                    <tr>
-                      <td glot-model='RES_Normal'>普通</td><td>2</td><td>4</td><td>12000</td>
-                    </tr>
-                    <tr>
-                      <td glot-model='RES_Difficult'>難しい</td><td>4</td><td>3</td><td>20000</td>
-                    </tr>
-                </tbody>
-              </table>
-            <h5 glot-model='RES_OperationExplanation'>操作説明</h5>
-            <h6 glot-model='RES_SubmarineMove'>潜水艦の移動</h6>
-            <p glot-model='RES_Manual1'>
-潜水艦を移動させるには左下のコントロールパネルから行います。
-コントロールパネルには"エンジンテレグラフ", "方位指示盤", "深度指示盤"があり、それぞれ操作することで潜水艦のエンジン出力、進行方向、深度を変更することができます。
-            </p>
-            <h6 glot-model='RES_ManualDetail2'>見張り、聴音</h6>
-            <p glot-model='RES_ManualDetail3'>
-              右下の指示パネルから、周りの状況を確認することが出来ます。<br>
-                各ボタンをタップすることで左上のメッセージパネルに確認した敵船の情報が表示されます。<br>
-                左側の見張りボタンで目視での見張り、中央の聴音ボタンでハイドロフォンの聴音を行うことができます。<br>
-目視での見張りは潜水艦が浮上しているとき、ハイドロフォンでの聴音は潜水艦が潜航しているときにのみ利用できます。
-            </p>
-            <h6 glot-model='RES_ManualDetail4'>潜望鏡画面</h6>
-            <p glot-model='RES_ManualDetail5'>
-              右下の指示パネル右側の潜望鏡ボタンをタップすることで潜望鏡画面を表示することができます。<br>
-潜望鏡画面では潜望鏡による敵船の確認、魚雷の諸元入力、魚雷の発射を行います。
-            </p>
-            <h6 glot-model='RES_ManualDetail6'>倍速表示</h6>
-            <p glot-model='RES_ManualDetail7'>
-              右上のステータスパネル内の時間倍率ボタンでゲーム内時間の進行速度を変更することができます。<br>
-時間倍率は1~16倍まで変更することができます。
-            </p>
-            <h5 glot-model='RES_ManualDetail8'>敵船の行動</h5>
-            <p glot-model='RES_ManualDetail9'>
-              敵の船団は通常は目的地に向かって一定速度で一定方向へ進み続けます。<br>
-                しかし、一度潜水艦を発見すると対潜航行に入り商船は魚雷を回避するように進み、駆逐艦は潜水艦に向かって攻撃を開始してきます。<br>
-駆逐艦の攻撃方法は2種類あり、潜水艦が浮上している場合は砲撃による攻撃、潜航中は爆雷攻撃を行います。
-            </p>
-            <h5 glot-model='RES_ManualDetail10'>バッテリー、酸素残量</h5>
-            <p glot-model='RES_ManualDetail11'>
-              潜水艦はバッテリーでスクリューを回すため徐々にバッテリー残量が減っていきます。<br>
-                バッテリーがなくなると前進、後退が行えなくなりますが、潜航、浮上は可能です。<br>
-                潜航中は潜水艦内の酸素を消費するため徐々に酸素残量が減っていきいます。<br>
-酸素残量が0になるとゲームオーバーとなってしまうので浮上し回復してください。
-            </p>
-            <h5 glot-model='RES_ManualDetail12'>セーブ機能</h5>
-            <p glot-model='RES_ManualDetail13'>
-              ゲーム中に右上の終了ボタンをタップすることによって状態を保存し、タイトル画面のコンティニューボタンからゲームを再開することができます。<br>
-また、ゲーム内時間での1分ごとに自動で状態の保存が行われます。
-            </p>
+                    <h5 glot-model='RES_Purpose'>ゲームの目的</h5>
+                    <p glot-model='RES_ManualOverview'>第二次大戦時のナチスドイツでは敵国の経済へ損害を与えるべく無制限潜水艦作戦と呼ばれる潜水艦による作戦が行われていました。<br>
+                        本ゲームの目的は、第二次大戦中のドイツ潜水艦U-Boatの艦長として潜水艦を指揮し魚雷攻撃によって敵船団を撃沈することです。</p>
+                    <h5 glot-model='RES_Difficulty'>難易度</h5>
+                    <p glot-model='RES_DifficultyOverview'>難易度によって敵船の数、クリアに必要な撃沈トン数が変わります。</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th glot-model='RES_Difficulty'>難易度</th>
+                                <th glot-model='RES_EnemyCount'>駆逐艦の数</th>
+                                <th glot-model='RES_MerchantCount'>商船の数</th>
+                                <th glot-model='RES_SunkTonnage'>撃沈トン数</th>
+                            <tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td glot-model='RES_Easy'>簡単</td>
+                                <td>1</td>
+                                <td>5</td>
+                                <td>8000</td>
+                            </tr>
+                            <tr>
+                                <td glot-model='RES_Normal'>普通</td>
+                                <td>2</td>
+                                <td>4</td>
+                                <td>12000</td>
+                            </tr>
+                            <tr>
+                                <td glot-model='RES_Difficult'>難しい</td>
+                                <td>4</td>
+                                <td>3</td>
+                                <td>20000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h5 glot-model='RES_OperationExplanation'>操作説明</h5>
+                    <h6 glot-model='RES_SubmarineMove'>潜水艦の移動</h6>
+                    <p glot-model='RES_Manual1'>
+                        潜水艦を移動させるには左下のコントロールパネルから行います。
+                        コントロールパネルには"エンジンテレグラフ", "方位指示盤", "深度指示盤"があり、それぞれ操作することで潜水艦のエンジン出力、進行方向、深度を変更することができます。
+                    </p>
+                    <h6 glot-model='RES_ManualDetail2'>見張り、聴音</h6>
+                    <p glot-model='RES_ManualDetail3'>
+                        右下の指示パネルから、周りの状況を確認することが出来ます。<br>
+                        各ボタンをタップすることで左上のメッセージパネルに確認した敵船の情報が表示されます。<br>
+                        左側の見張りボタンで目視での見張り、中央の聴音ボタンでハイドロフォンの聴音を行うことができます。<br>
+                        目視での見張りは潜水艦が浮上しているとき、ハイドロフォンでの聴音は潜水艦が潜航しているときにのみ利用できます。
+                    </p>
+                    <h6 glot-model='RES_ManualDetail4'>潜望鏡画面</h6>
+                    <p glot-model='RES_ManualDetail5'>
+                        右下の指示パネル右側の潜望鏡ボタンをタップすることで潜望鏡画面を表示することができます。<br>
+                        潜望鏡画面では潜望鏡による敵船の確認、魚雷の諸元入力、魚雷の発射を行います。
+                    </p>
+                    <h6 glot-model='RES_ManualDetail6'>倍速表示</h6>
+                    <p glot-model='RES_ManualDetail7'>
+                        右上のステータスパネル内の時間倍率ボタンでゲーム内時間の進行速度を変更することができます。<br>
+                        時間倍率は1~16倍まで変更することができます。
+                    </p>
+                    <h5 glot-model='RES_ManualDetail8'>敵船の行動</h5>
+                    <p glot-model='RES_ManualDetail9'>
+                        敵の船団は通常は目的地に向かって一定速度で一定方向へ進み続けます。<br>
+                        しかし、一度潜水艦を発見すると対潜航行に入り商船は魚雷を回避するように進み、駆逐艦は潜水艦に向かって攻撃を開始してきます。<br>
+                        駆逐艦の攻撃方法は2種類あり、潜水艦が浮上している場合は砲撃による攻撃、潜航中は爆雷攻撃を行います。
+                    </p>
+                    <h5 glot-model='RES_ManualDetail10'>バッテリー、酸素残量</h5>
+                    <p glot-model='RES_ManualDetail11'>
+                        潜水艦はバッテリーでスクリューを回すため徐々にバッテリー残量が減っていきます。<br>
+                        バッテリーがなくなると前進、後退が行えなくなりますが、潜航、浮上は可能です。<br>
+                        潜航中は潜水艦内の酸素を消費するため徐々に酸素残量が減っていきいます。<br>
+                        酸素残量が0になるとゲームオーバーとなってしまうので浮上し回復してください。
+                    </p>
+                    <h5 glot-model='RES_ManualDetail12'>セーブ機能</h5>
+                    <p glot-model='RES_ManualDetail13'>
+                        ゲーム中に右上の終了ボタンをタップすることによって状態を保存し、タイトル画面のコンティニューボタンからゲームを再開することができます。<br>
+                        また、ゲーム内時間での1分ごとに自動で状態の保存が行われます。
+                    </p>
                 </div>
                 <div class="buttonContainer">
-                    <button type="button" id="manualBackButton" class=" btn btn-info btn-sm" glot-model='RES_back'>戻る</button>
+                    <button type="button" id="manualBackButton" class=" btn btn-info btn-sm"
+                        glot-model='RES_back'>戻る</button>
                 </div>
             </div>
             <!-- 難易度選択画面 -->
@@ -138,8 +156,10 @@
                     </div>
                 </div>
                 <div class="buttonContainer">
-                    <button type="button" id="diffSelectBackbutton" class=" btn btn-info btn-sm" glot-model='RES_Back'>戻る</button>
-                    <button type="button" id="startButton" class=" btn btn-info btn-sm" glot-model='RES_Start' disabled>スタート</button>
+                    <button type="button" id="diffSelectBackbutton" class=" btn btn-info btn-sm"
+                        glot-model='RES_Back'>戻る</button>
+                    <button type="button" id="startButton" class=" btn btn-info btn-sm" glot-model='RES_Start'
+                        disabled>スタート</button>
                 </div>
             </div>
             <!-- ロード画面 -->
@@ -205,7 +225,8 @@
                             到達時間
                         </div>
                         <div class="col-6">
-                          <span id="hitTime">000</span><span glot-model='RES_Seconds' style='margin-left: 10px'>秒</span>
+                            <span id="hitTime">000</span><span glot-model='RES_Seconds'
+                                style='margin-left: 10px'>秒</span>
                         </div>
                     </div>
                     <div class="row">
@@ -343,8 +364,8 @@
                         src="./resources/img/hydrophone_256x256.png" width="25" height="25" /></button>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-info" id="periscopeButton"><img
-                        src="./resources/img/target.png" width="25" height="25" /></button>
+                <button type="button" class="btn btn-info" id="periscopeButton"><img src="./resources/img/target.png"
+                        width="25" height="25" /></button>
             </div>
         </div>
     </div>
@@ -355,8 +376,8 @@
         <div id="gameOverMenu" class="modal-dialog position-absolute">
             <div class="modal-content">
                 <h1 id="gameOverMessage" glot-model='RES_Sinking'>撃沈…</h1>
-                <button class="backTitleButton btn btn-info" type="button"
-                    data-bs-dismiss="modal" glot-model='RES_BackToTitle'>タイトル画面に戻る</button>
+                <button class="backTitleButton btn btn-info" type="button" data-bs-dismiss="modal"
+                    glot-model='RES_BackToTitle'>タイトル画面に戻る</button>
             </div>
         </div>
     </div>
@@ -367,40 +388,40 @@
         <div id="gameClearMenu" class="modal-dialog position-absolute">
             <div class="modal-content">
                 <h1 id="gameClearMessage" glot-model='RES_Clear'>ゲームクリア</h1>
-                <button class="backTitleButton btn btn-info" type="button" class="btn btn-info"
-                    data-bs-dismiss="modal" glot-model='RES_BackToTitle'>タイトル画面に戻る</button>
+                <button class="backTitleButton btn btn-info" type="button" class="btn btn-info" data-bs-dismiss="modal"
+                    glot-model='RES_BackToTitle'>タイトル画面に戻る</button>
             </div>
         </div>
     </div>
 
     <!-- メッセージ翻訳用 -->
     <div style="display: none">
-      <span id='RES_Hydrophone' glot-model='RES_Hydrophone'>聴音員</span>
-      <span id='RES_HydrophoneDiscover' glot-model='RES_HydrophoneDiscover'>船音をxxx隻確認！</span>
-      <span id='RES_EnemyShip' glot-model='RES_EnemyShip'>敵船</span>
-      <span id='RES_NoSounds' glot-model='RES_NoSounds'>船音無し！</span>
-      <span id='RES_LowSounds' glot-model='RES_LowSounds'>音量微小</span>
-      <span id='RES_MiddleSounds' glot-model='RES_LowSounds'>音量中</span>
-      <span id='RES_SomewhatLargeSounds' glot-model='RES_MiddleSounds'>音量やや大きい</span>
-      <span id='RES_LargeSounds' glot-model='RES_SomewhatLargeSounds'>音量大</span>
-      <span id='RES_Direction' glot-model='RES_Direction'>方位</span>
-      <span id='RES_Observer' glot-model='RES_Observer'>監視員</span>
-      <span id='RES_ObserverDiscover' glot-model='RES_ObserverDiscover'>船影をxxx隻確認！</span>
-      <span id='RES_Range' glot-model='RES_Range'>距離</span>
-      <span id='RES_Course' glot-model='RES_Course'>針路</span>
-      <span id='RES_NoShips' glot-model='RES_NoShips'>船影無し！</span>
-      <span id='RES_ShipSpeed' glot-model='RES_ShipSpeed'>船速</span>
-      <span id='RES_AheadFull' glot-model='RES_AheadFull'>全速前進</span>
-      <span id='RES_AheadHalf' glot-model='RES_AheadHalf'>半速前進</span>
-      <span id='RES_AheadSlow' glot-model='RES_AheadSlow'>微速前進</span>
-      <span id='RES_AllStop' glot-model='RES_AllStop'>機関停止</span>
-      <span id='RES_AsternSlow' glot-model='RES_AsternSlow'>微速後進</span>
-      <span id='RES_AsternHalf' glot-model='RES_AsternHalf'>半速後進</span>
-      <span id='RES_AsternFull' glot-model='RES_AsternFull'>全速後進</span>
-      <span id='RES_ChiefEngineer' glot-model='RES_ChiefEngineer'>機関長</span>
-      <span id='RES_Navigator' glot-model='RES_Navigator'>航海長</span>
-      <span id='RES_ChangeCourse' glot-model='RES_ChangeCourse'>針路をxxxに変更</span>
-      <span id='RES_ChangeDepth' glot-model='RES_ChangeDepth'>深度をxxxに変更</span>
+        <span id='RES_Hydrophone' glot-model='RES_Hydrophone'>聴音員</span>
+        <span id='RES_HydrophoneDiscover' glot-model='RES_HydrophoneDiscover'>船音をxxx隻確認！</span>
+        <span id='RES_EnemyShip' glot-model='RES_EnemyShip'>敵船</span>
+        <span id='RES_NoSounds' glot-model='RES_NoSounds'>船音無し！</span>
+        <span id='RES_LowSounds' glot-model='RES_LowSounds'>音量微小</span>
+        <span id='RES_MiddleSounds' glot-model='RES_LowSounds'>音量中</span>
+        <span id='RES_SomewhatLargeSounds' glot-model='RES_MiddleSounds'>音量やや大きい</span>
+        <span id='RES_LargeSounds' glot-model='RES_SomewhatLargeSounds'>音量大</span>
+        <span id='RES_Direction' glot-model='RES_Direction'>方位</span>
+        <span id='RES_Observer' glot-model='RES_Observer'>監視員</span>
+        <span id='RES_ObserverDiscover' glot-model='RES_ObserverDiscover'>船影をxxx隻確認！</span>
+        <span id='RES_Range' glot-model='RES_Range'>距離</span>
+        <span id='RES_Course' glot-model='RES_Course'>針路</span>
+        <span id='RES_NoShips' glot-model='RES_NoShips'>船影無し！</span>
+        <span id='RES_ShipSpeed' glot-model='RES_ShipSpeed'>船速</span>
+        <span id='RES_AheadFull' glot-model='RES_AheadFull'>全速前進</span>
+        <span id='RES_AheadHalf' glot-model='RES_AheadHalf'>半速前進</span>
+        <span id='RES_AheadSlow' glot-model='RES_AheadSlow'>微速前進</span>
+        <span id='RES_AllStop' glot-model='RES_AllStop'>機関停止</span>
+        <span id='RES_AsternSlow' glot-model='RES_AsternSlow'>微速後進</span>
+        <span id='RES_AsternHalf' glot-model='RES_AsternHalf'>半速後進</span>
+        <span id='RES_AsternFull' glot-model='RES_AsternFull'>全速後進</span>
+        <span id='RES_ChiefEngineer' glot-model='RES_ChiefEngineer'>機関長</span>
+        <span id='RES_Navigator' glot-model='RES_Navigator'>航海長</span>
+        <span id='RES_ChangeCourse' glot-model='RES_ChangeCourse'>針路をxxxに変更</span>
+        <span id='RES_ChangeDepth' glot-model='RES_ChangeDepth'>深度をxxxに変更</span>
     </div>
 
     <!-- scripts -->
@@ -419,4 +440,5 @@
     <script src="./javascript/lib/stats.min.js"></script>
     <script src="./javascript/main.js" type="module"></script>
 </body>
+
 </html>
