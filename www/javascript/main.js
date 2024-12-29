@@ -35,13 +35,56 @@ export class Main {
             audioManager.play();
             PageController.pageTransition('titlePage');
         });
+        const gameModeSelector = $('#gameModeSelectPage input:radio[name="gameModeSelect"]');
+        gameModeSelector.on('change', function () {
+            audioManager.play();
+            let val = $(this).attr('id');
+            switch (val) {
+                case "gameModeSquamish":
+                    selectGameMode = GameMode.squamish;
+                    break;
+                case "gameModeMission":
+                    selectGameMode = GameMode.mission;
+                    break;
+                default:
+                    throw "selected undefined game mode.";
+            }
+            selectDiffButton.attr('disabled', false);
+        })
 
         // 難易度選択画面
         var selectedDiff = GameDifficulty.easy;
         const diffSelectBackbutton = $('#diffSelectBackbutton');
         const startButton = $('#startButton');
         const diffSelector = $('#diffSelectPage input:radio[name="diffSelect"]');
-        const gameModeSelector = $('#gameModeSelectPage input:radio[name="gameModeSelect"]');
+
+        diffSelectBackbutton.on('click', function () {
+            audioManager.play();
+            PageController.pageTransition('gameModeSelectPage');
+        });
+        startButton.on('click', () => {
+            audioManager.play();
+            showAd();
+            transitionThreePage(true, selectedDiff);
+        });
+        diffSelector.on('change', function () {
+            audioManager.play();
+            let val = $(this).attr('id');
+            switch (val) {
+                case "diffEasy":
+                    selectedDiff = GameDifficulty.easy;
+                    break;
+                case "diffNormal":
+                    selectedDiff = GameDifficulty.normal;
+                    break;
+                case "diffHard":
+                    selectedDiff = GameDifficulty.hard;
+                    break;
+                default:
+                    throw "selected undefined game difficulty.";
+            }
+            startButton.attr('disabled', false);
+        })
 
         // マニュアル画面
         const manualBackButton = $('#manualBackButton');
@@ -65,54 +108,6 @@ export class Main {
             selectDiffButton.attr('disabled', true);
             PageController.pageTransition('gameModeSelectPage');
         });
-
-        // ゲームモード選択
-        gameModeSelector.on('change', function () {
-            audioManager.play();
-            let val = $(this).attr('id');
-            switch (val) {
-                case "gameModeSquamish":
-                    selectGameMode = GameMode.squamish;
-                    break;
-                case "gameModeMission":
-                    selectGameMode = GameMode.mission;
-                    break;
-                default:
-                    throw "selected undefined game mode.";
-            }
-            selectDiffButton.attr('disabled', false);
-        })
-
-        // 難易度選択画面
-        diffSelectBackbutton.on('click', function () {
-            audioManager.play();
-            PageController.pageTransition('gameModeSelectPage');
-        });
-        startButton.on('click', () => {
-            audioManager.play();
-            showAd();
-            transitionThreePage(true, selectedDiff);
-        });
-
-        // 難易度選択
-        diffSelector.on('change', function () {
-            audioManager.play();
-            let val = $(this).attr('id');
-            switch (val) {
-                case "diffEasy":
-                    selectedDiff = GameDifficulty.easy;
-                    break;
-                case "diffNormal":
-                    selectedDiff = GameDifficulty.normal;
-                    break;
-                case "diffHard":
-                    selectedDiff = GameDifficulty.hard;
-                    break;
-                default:
-                    throw "selected undefined game difficulty.";
-            }
-            startButton.attr('disabled', false);
-        })
 
         // コンティニュー
         continueButton.on('click', function () {
