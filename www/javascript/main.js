@@ -29,6 +29,10 @@ export class Main {
         // ゲームモード選択画面
         var selectGameMode = GameMode.mission;
         const selectDiffButton = $('#selectDiffButton');
+        selectDiffButton.on('click', () => {
+            audioManager.play();
+            PageController.pageTransition('diffSelectPage');
+        });
         const gameModeSelectBackButton = $('#gameModeSelectBackbutton');
         gameModeSelectBackButton.on('click', () => {
             audioManager.play();

@@ -143,14 +143,26 @@
     margin-right: 10px;
 }
 
-/* 難易度選択画面 */
-#diffSelectPage,#gameModeSelectPage .buttonContainer {
+/* ゲームモード選択画面 */
+#gameModeSelectPage .buttonContainer {
     position: absolute;
     right: 10px;
     bottom: 10px;
 }
 
-#diffSelectpage,#gameModeSelectPage label {
+#gameModeSelectPage label {
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* 難易度選択画面 */
+#diffSelectPage .buttonContainer {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+#diffSelectpage label {
     width: 100%;
     margin-top: 20px;
 }
