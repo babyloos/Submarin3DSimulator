@@ -1,4 +1,4 @@
-import { FRAME_SPAN, GameDifficulty, ObjectType, TIME_SPAN } from "./constants.js";
+import { FRAME_SPAN, GameDifficulty, GameMode, ObjectType, TIME_SPAN } from "./constants.js";
 import { ControllController } from "./controller/controllController.js";
 import { HydrophoneController } from "./controller/hydrophoneController.js";
 import { MessageController } from "./controller/messageController.js";
@@ -86,6 +86,8 @@ export class Game {
     destroyerCount = 0;
     merchantCount = 0;
 
+    gameMode;
+
     /**
      * コンストラクタ
      * @param {boolean} isNewgame ニューゲームか否か
@@ -98,6 +100,7 @@ export class Game {
      */
     constructor(isNewgame, gameMode, difficulty, loadProgress, exitGame, gameOver, gameClear) {
         this.isNewgame = isNewgame;
+        this.gameMode = gameMode;
         this._exitGame = exitGame;
         this._gameOver = gameOver;
         this._gameClear = gameClear;
@@ -158,8 +161,18 @@ export class Game {
             // プレイヤボート
             this.playerBoat = new Uboat(0, 0, 0);
             // 船団の作成
-            const xPoint = Util.getRandomArbitrary(-20000, 20000);
-            const yPoint = Util.getRandomArbitrary(-20000, 20000);
+            let xPointMin = -20000;
+            let xPointMax = 20000;
+            let yPointMin = -20000;
+            let yPointMax = 20000;
+            if (this.gameMode === GameMode.squamish) {
+                xPointMin /= 100;
+                xPointMax /= 100;
+                yPointMin /= 100;
+                yPointMax /= 100;
+            }
+            const xPoint = Util.getRandomArbitrary(xPointMin, xPointMax);
+            const yPoint = Util.getRandomArbitrary(yPointMin, yPointMax);
             const speed = Util.getRandomArbitrary(1, 5);
             const course = Util.getRandomArbitrary(0, 359);
             const period = Util.getRandomArbitrary(500, 1000);
