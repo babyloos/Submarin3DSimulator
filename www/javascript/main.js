@@ -89,7 +89,6 @@ export class Main {
         // マニュアル
         manualButton.on('click', function () {
             audioManager.play();
-            showAd();
             PageController.pageTransition('manualPage');
         });
         manualBackButton.on('click', function () {
