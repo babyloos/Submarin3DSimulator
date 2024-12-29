@@ -79,7 +79,7 @@
 
 /* メニューボタンラッパ */
 .menuButtonWrapper {
-    margin: 5% auto;
+    margin: 10% auto;
     width: 50%;
 }
 
@@ -144,13 +144,13 @@
 }
 
 /* 難易度選択画面 */
-#diffSelectPage .buttonContainer {
+#diffSelectPage,#gameModeSelectPage .buttonContainer {
     position: absolute;
     right: 10px;
     bottom: 10px;
 }
 
-#diffSelectpage label {
+#diffSelectpage,#gameModeSelectPage label {
     width: 100%;
     margin-top: 20px;
 }

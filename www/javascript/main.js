@@ -47,18 +47,17 @@ export class Main {
             continueButton.attr('disabled', true);
         }
 
-        // スカーミッシュ
-        squamishButton.on('click', function () {
-            gameMode = GameMode.squamish;
-            audioManager.play();
-            PageController.pageTransition('diffSelectPage');
-        });
-
         // ニューゲーム
         newGameButton.on('click', function () {
             gameMode = GameMode.mission;
             audioManager.play();
-            PageController.pageTransition('diffSelectPage');
+            PageController.pageTransition('gameModeSelectPage');
+        });
+
+        // スカーミッシュ
+        squamishButton.on('click', function () {
+            gameMode = GameMode.squamish;
+            audioManager.play();
         });
 
         // 難易度選択画面

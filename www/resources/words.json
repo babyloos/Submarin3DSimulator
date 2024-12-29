@@ -7,6 +7,10 @@
 		"en": "Squamish",
 		"ja": "スカーミッシュ"
 	},
+	"RES_mission": {
+		"en": "Mission",
+		"ja": "ミッション"
+	},
 	"RES_NewGame": {
 		"en": "New game",
 		"ja": "ニューゲーム"
