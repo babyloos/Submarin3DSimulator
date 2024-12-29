@@ -4,7 +4,7 @@
 export class PageController {
 
     // 各画面ID
-    static pageIds = ["titlePage", "manualPage", "diffSelectPage", "mainPage", "threePage",
+    static pageIds = ["titlePage", "gameModeSelectPage", "manualPage", "diffSelectPage", "mainPage", "threePage",
         "loadPage", "messageArea2", "controllArea2", "statusArea2", "instructionArea"];
 
     // 表示中の画面ID
@@ -23,7 +23,7 @@ export class PageController {
             PageController.deactivatePage("topPage");
             PageController.activatePage("mainPageContainer");
             PageController.activatePage(pageId);
-        } else if (pageId === "titlePage" || pageId === "manualPage" || pageId === "diffSelectPage" || pageId === "loadPage") {
+        } else if (pageId === "titlePage" || pageId === "manualPage" || pageId === "diffSelectPage" || pageId === "loadPage" || pageId === "gameModeSelectPage") {
             PageController.pageIds.forEach(function (id) {
                 if (pageId !== id) {
                     PageController.deactivatePage(id);
