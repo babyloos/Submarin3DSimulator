@@ -16,6 +16,10 @@ export const GameDifficulty = {
     hard: 2,
 }
 
+export const GameMode = {
+    mission: 0,
+    squamish: 1,
+}
 
 export const EngineOut = {
     aheadFull: 3,
