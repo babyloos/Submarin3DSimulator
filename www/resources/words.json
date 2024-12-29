@@ -55,6 +55,30 @@
 		"en": "In Nazi Germany during World War II, submarines called unlimited submarines were being operated to cause damage to the enemy economy. <br>\nThe purpose of this game is to lead a submarine as captain of the German submarine U-BOAT during World War II and sink the enemy ship by torpedo attack.",
 		"ja": "二次大戦時のナチスドイツでは敵国の経済へ損害を与えるべく無制限潜水艦作戦と呼ばれる潜水艦による作戦が行われていました。<br>\n本ゲームの目的は、第二次大戦中のドイツ潜水艦U-Boatの艦長として潜水艦を指揮し魚雷攻撃によって敵船団を撃沈することです。"
 	},
+	"RES_GameMode": {
+		"en": "Game mode",
+		"ja": "ゲームモード"
+	},
+	"RES_GameModeDetail1": {
+		"en": "Game modes include \"Skirmish\" and \"Mission\".",
+		"ja": "ゲームモードには「スカーミッシュ」と「ミッション」があります。"
+	},
+	"RES_GameModeDetail2": {
+		"en": "\"Skirmish\" is intended for short gameplay, and the game starts with you already deep inside the enemy convoy.",
+		"ja": "「スカーミッシュ」では短時間のゲームプレイを想定しており、既に敵船団の中に深く入り込んだ状態からゲームスタートとなります。"
+	},
+	"RES_GameModeDetail3": {
+		"en": "Survive attacks from destroyers and try to sink merchant ships.",
+		"ja": "駆逐艦からの攻撃をやりすごし商船の撃沈に努めてください。"
+	},
+	"RES_GameModeDetail4": {
+		"en": "A \"mission\" begins with searching for enemies.",
+		"ja": "「ミッション」では敵の探索から始まります。"
+	},
+	"RES_GameModeDetail5": {
+		"en": "Use periscope depth to locate enemy convoy, approach them quietly, and try to sink the merchant ships.",
+		"ja": "潜望鏡深度で敵旅団の位置を特定し静かに接近し商船の撃沈に努めてください。"
+	},
 	"RES_Difficulty": {
 		"en": "Difficulty",
 		"ja": "難易度"
