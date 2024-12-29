@@ -165,7 +165,7 @@ export class Game {
             let xPointMax = 20000;
             let yPointMin = -20000;
             let yPointMax = 20000;
-            if (this.gameMode === GameMode.squamish) {
+            if (this.gameMode === GameMode.skirmish) {
                 this.playerBoat.depth = 11;
                 this.playerBoat.distDepth = 11;
                 xPointMin /= 100;

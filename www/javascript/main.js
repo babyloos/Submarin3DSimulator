@@ -43,7 +43,7 @@ export class Main {
             let val = $(this).attr('id');
             switch (val) {
                 case "gameModeSquamish":
-                    selectGameMode = GameMode.squamish;
+                    selectGameMode = GameMode.skirmish;
                     break;
                 case "gameModeMission":
                     selectGameMode = GameMode.mission;
