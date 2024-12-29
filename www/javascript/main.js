@@ -19,7 +19,6 @@ export class Main {
 
         // トップページの画面遷移
         // タイトル画面
-        const squamishButton = $('#squamishButton');
         const newGameButton = $('#newGameButton');
         const continueButton = $('#continueButton');
         const manualButton = $('#manualButton');
