@@ -28,6 +28,11 @@ export class Main {
 
         // ゲームモード選択画面
         var selectGameMode = GameMode.mission;
+        const gameModeSelectBackButton = $('#gameModeSelectBackbutton');
+        gameModeSelectBackButton.on('click', () => {
+            audioManager.play();
+            PageController.pageTransition('titlePage');
+        });
 
         // 難易度選択画面
         var selectedDiff = GameDifficulty.easy;
