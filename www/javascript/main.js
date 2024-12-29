@@ -61,6 +61,8 @@ export class Main {
         // ニューゲーム
         newGameButton.on('click', function () {
             audioManager.play();
+            gameModeSelector.prop('checked', false);
+            selectDiffButton.attr('disabled', true);
             PageController.pageTransition('gameModeSelectPage');
         });
 
