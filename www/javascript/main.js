@@ -17,8 +17,6 @@ export class Main {
         // スクロール禁止
         Util.no_scroll();
 
-        let gameMode = GameMode.mission;
-
         // トップページの画面遷移
         // タイトル画面
         const squamishButton = $('#squamishButton');
@@ -63,7 +61,6 @@ export class Main {
 
         // ニューゲーム
         newGameButton.on('click', function () {
-            gameMode = GameMode.mission;
             audioManager.play();
             PageController.pageTransition('gameModeSelectPage');
         });
@@ -160,7 +157,7 @@ export class Main {
                     $('.absolutePanel').removeClass('hiddenPage');
                 }
             });
-            this.game = new Game(isNewGame, gameMode, selectedDiff, loadProgress, exitGame, gameOver, gameClear);
+            this.game = new Game(isNewGame, selectGameMode, selectedDiff, loadProgress, exitGame, gameOver, gameClear);
         }.bind(this);
     }
 }
