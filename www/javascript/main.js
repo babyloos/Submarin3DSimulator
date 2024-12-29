@@ -26,11 +26,15 @@ export class Main {
         const continueButton = $('#continueButton');
         const manualButton = $('#manualButton');
 
+        // ゲームモード選択画面
+        var selectGameMode = GameMode.mission;
+
         // 難易度選択画面
         var selectedDiff = GameDifficulty.easy;
         const diffSelectBackbutton = $('#diffSelectBackbutton');
         const startButton = $('#startButton');
         const diffSelector = $('#diffSelectPage input:radio[name="diffSelect"]');
+        const gameModeSelector = $('#gameModeSelectPage input:radio[name="gameModeSelect"]');
 
         // マニュアル画面
         const manualBackButton = $('#manualBackButton');
@@ -54,11 +58,22 @@ export class Main {
             PageController.pageTransition('gameModeSelectPage');
         });
 
-        // スカーミッシュ
-        squamishButton.on('click', function () {
-            gameMode = GameMode.squamish;
+        // ゲームモード選択
+        gameModeSelector.on('change', function () {
             audioManager.play();
-        });
+            let val = $(this).attr('id');
+            switch (val) {
+                case "gameModeSquamish":
+                    selectGameMode = GameMode.squamish;
+                    break;
+                case "gameModeMission":
+                    selectGameMode = GameMode.mission;
+                    break;
+                default:
+                    throw "selected undefined game mode.";
+            }
+            startButton.attr('disabled', false);
+        })
 
         // 難易度選択画面
         diffSelectBackbutton.on('click', function () {
