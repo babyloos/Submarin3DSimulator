@@ -1,3 +1,14 @@
+/* コンテンツを選択できないようにする */
+body {
+  -webkit-user-select: none; /* テキスト選択を無効化 (iOS/Android) */
+  -ms-user-select: none;     /* テキスト選択を無効化 (Windows) */
+  user-select: none;         /* テキスト選択を無効化 (標準) */
+}
+
+img {
+  -webkit-touch-callout: none; /* 長押しメニュー（画像保存など）を無効化 */
+}
+
 /* 画面切り替え */
 .activePage {
     display: block;
