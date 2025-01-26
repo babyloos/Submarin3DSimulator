@@ -6,15 +6,20 @@ export default class ImgTranslator {
         const language = navigator.language;
         console.log(language);
 
-        if (language !== 'ja') {
-            // 日本語版でない場合は何もしない
+        if (language !== 'ja' && language !== 'zh' && language !== 'zh-CH' && language !== 'zh-TW') {
+            // 登録されている言語でない場合は何もしない
             return;
+        }
+
+        let languageImgPath = language;
+        if (languageImgPath === 'zh-CH' || languageImgPath === 'zh-TW') {
+            languageImgPath = 'zh';
         }
 
         // translateのついているimgタグのsrcを書き換える
         const imgElements = document.querySelectorAll('img[translate]');
         imgElements.forEach((imgElement) => {
-            imgElement.src = imgElement.src.replace('resources/img/', `resources/img/${language}/`);
+            imgElement.src = imgElement.src.replace('resources/img/', `resources/img/${languageImgPath}/`);
         });
     }
 }
