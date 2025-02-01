@@ -6,13 +6,13 @@ export default class ImgTranslator {
         const language = navigator.language;
         console.log(language);
 
-        if (language !== 'ja' && language !== 'zh' && language !== 'zh-CH' && language !== 'zh-TW') {
+        if (language !== 'ja' && language !== 'zh' && language !== 'zh-CN' && language !== 'zh-TW') {
             // 登録されている言語でない場合は何もしない
             return;
         }
 
         let languageImgPath = language;
-        if (languageImgPath === 'zh-CH' || languageImgPath === 'zh-TW') {
+        if (languageImgPath === 'zh-CN' || languageImgPath === 'zh-TW') {
             languageImgPath = 'zh';
         }
 
