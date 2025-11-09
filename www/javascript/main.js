@@ -247,21 +247,11 @@ document.addEventListener('deviceready', async () => {
   // アプリ課金確認
   // ローカル状態の反映（起動直後）
   setRemoved(getRemoved());
+  // IAP初期化
   initIAP();
+  // 購入ボタン初期化
+  initAdRemoveButton();
 }, false);
-
-// 購入ボタン押下時処理
-const initAdRemoveButton = () => {
-  $('#removeAdsButton').on('click', () => {
-    console.log("on remove ads button click");
-    console.log("SKU: " + SKU);
-    try {
-      store.order(SKU);   // ←これでストア画面が開く
-    } catch (e) {
-      alert('購入を開始できませんでした: ' + e.message);
-    }
-  });
-};
 
 const showAd = async () => {
   if (getRemoved()) {
@@ -306,10 +296,20 @@ function initIAP() {
 
   store.error(e => console.log('[IAP] error', e));
   store.refresh(); // 起動毎に同期（返金/復元/端末移行対策）
-
-  // 購入ボタン初期化
-  initAdRemoveButton();
 }
+
+// 購入ボタン押下時処理
+const initAdRemoveButton = () => {
+  $('.removeAdsButton').on('click', () => {
+    console.log("on remove ads button click");
+    console.log("SKU: " + SKU);
+    try {
+      store.order(SKU);   // ←これでストア画面が開く
+    } catch (e) {
+      alert('購入を開始できませんでした: ' + e.message);
+    }
+  });
+};
 
 const main = new Main();
 main.main();
