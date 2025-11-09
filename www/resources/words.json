@@ -34,6 +34,11 @@
     "ja": "マニュアル",
     "zh-Hans": "作战手册"
   },
+  "RES_REMOVE_ADS": {
+    "en": "Go ad-free",
+    "ja": "広告削除",
+    "zh-Hans": "广告去除"
+  },
   "RES_Easy": {
     "en": "Easy",
     "ja": "簡単",
