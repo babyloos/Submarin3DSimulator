@@ -248,7 +248,17 @@ document.addEventListener('deviceready', async () => {
   // ローカル状態の反映（起動直後）
   setRemoved(getRemoved());
   initIAP();
+
+  // 購入ボタン押下時処理
+  initAdRemoveButton();
 }, false);
+
+// 購入ボタン押下時処理
+const initAdRemoveButton = () => {
+  $('#removeAdsButton').on('click', () => {
+    console.log("on remove ads button click");
+  });
+};
 
 const showAd = async () => {
   if(getRemoved()) {
