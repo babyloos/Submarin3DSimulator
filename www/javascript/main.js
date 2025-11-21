@@ -248,7 +248,6 @@ document.addEventListener('deviceready', async () => {
   // ローカル状態の反映（起動直後）
   setRemoved(getRemoved());
 
-
   // IAP初期化
   initIAP();
 
@@ -324,29 +323,28 @@ function initIAP() {
 // 購入ボタン押下時処理
 const initAdRemoveButton = () => {
   $(".removeAdsButton").off("click").on("click", function () {
-    console.log("on remove ads button click");
+    console.log("removeAdsButton clicked");
 
-    if (!window.store) {
-        console.error("[IAP] store not ready");
+    if (!iapReady) {
+        console.log("[IAP] Not ready yet");
+        alert("購入の準備中です。数秒後にもう一度押してください。");
         return;
     }
 
     const product = store.get(SKU);
-
     if (!product) {
-        console.error("[IAP] Product not registered:", SKU);
-        alert("購入情報を取得できませんでした。ネット回線を確認してください。");
+        console.error("[IAP] Product not found");
         return;
     }
 
     if (!product.canPurchase) {
         console.log("[IAP] Product not purchasable yet");
-        alert("購入準備中です。数秒後にもう一度お試しください。");
+        alert("購入情報を取得中です。もう一度お試しください。");
         return;
     }
 
     console.log("Requesting purchase:", SKU);
-    product.requestPurchase();   // ← 購入ダイアログが表示される
+    product.requestPurchase();
   });
 };
 
