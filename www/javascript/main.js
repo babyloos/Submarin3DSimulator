@@ -247,10 +247,14 @@ document.addEventListener('deviceready', async () => {
   // アプリ課金確認
   // ローカル状態の反映（起動直後）
   setRemoved(getRemoved());
+
+
   // IAP初期化
   initIAP();
+
   // 購入ボタン初期化
   initAdRemoveButton();
+
 }, false);
 
 const showAd = async () => {
@@ -286,28 +290,63 @@ const setRemoved = (v) => {
 
 // IAP初期化
 function initIAP() {
-  if (!window.store) return console.log('[IAP] store not ready');
+  if (!window.store) {
+    console.error("[IAP] store not ready");
+    return;
+  }
+
+  console.log("[IAP] Initializing...");
+
   store.verbosity = store.DEBUG;
 
-  store.register({ id: SKU, type: store.NON_CONSUMABLE });
+  store.register({
+    id: SKU,
+    type: store.NON_CONSUMABLE
+  });
 
-  store.when(SKU).owned(() => { console.log('[IAP] owned'); setRemoved(true); });
-  store.when(SKU).approved(p => { console.log('[IAP] approved'); p.finish(); });
+  store.when(SKU).owned(() => {
+    console.log("[IAP] owned: purchased before");
+    setRemoved(true);
+  });
 
-  store.error(e => console.log('[IAP] error', e));
-  store.refresh(); // 起動毎に同期（返金/復元/端末移行対策）
+  store.when(SKU).approved(p => {
+    console.log("[IAP] approved: finishing purchase");
+    p.finish();
+  });
+
+  store.error(e => console.error("[IAP] ERROR", e));
+
+  store.refresh();
+
+  console.log("[IAP] Initialized");
 }
 
 // 購入ボタン押下時処理
 const initAdRemoveButton = () => {
-  $('.removeAdsButton').on('click', () => {
+  $(".removeAdsButton").off("click").on("click", function () {
     console.log("on remove ads button click");
-    console.log("SKU: " + SKU);
-    try {
-      store.order(SKU);   // ←これでストア画面が開く
-    } catch (e) {
-      alert('購入を開始できませんでした: ' + e.message);
+
+    if (!window.store) {
+        console.error("[IAP] store not ready");
+        return;
     }
+
+    const product = store.get(SKU);
+
+    if (!product) {
+        console.error("[IAP] Product not registered:", SKU);
+        alert("購入情報を取得できませんでした。ネット回線を確認してください。");
+        return;
+    }
+
+    if (!product.canPurchase) {
+        console.log("[IAP] Product not purchasable yet");
+        alert("購入準備中です。数秒後にもう一度お試しください。");
+        return;
+    }
+
+    console.log("Requesting purchase:", SKU);
+    product.requestPurchase();   // ← 購入ダイアログが表示される
   });
 };
 
