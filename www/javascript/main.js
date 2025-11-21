@@ -278,7 +278,7 @@ window.addEventListener('admob.ad.dismiss', async () => {
   await interstitial.load()
 });
 
-const SKU = 'com.babyloos.submarine3d.remove_ads';
+const SKU = 'com.babyloos.submarine3d.remove_ads1';
 const isiOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent);
 
 // 状態
