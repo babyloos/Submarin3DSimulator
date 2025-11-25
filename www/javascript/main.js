@@ -263,3 +263,4 @@ window.addEventListener('admob.ad.dismiss', async () => {
 
 const main = new Main();
 main.main();
+
