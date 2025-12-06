@@ -3,480 +3,400 @@
     "en": "Submarine 3D simulator",
     "ja": "潜水艦3Dシミュレータ",
     "zh": "海战潜水舰3D – 真实模拟器"
-    "zh-CN": "海战潜水舰3D – 真实模拟器"
   },
   "RES_NewGame": {
     "en": "New game",
     "ja": "ニューゲーム",
     "zh": "开始新巡航"
-    "zh-CN": "开始新巡航"
   },
   "RES_squamish": {
     "en": "Skirmish",
     "ja": "スカーミッシュ",
     "zh": "快速交战"
-    "zh-CN": "快速交战"
   },
   "RES_mission": {
     "en": "Mission",
     "ja": "ミッション",
     "zh": "任务作战"
-    "zh-CN": "任务作战"
   },
   "RES_selectDiff": {
     "en": "Difficulty selection",
     "ja": "難易度選択",
     "zh": "选择难度"
-    "zh-CN": "选择难度"
   },
   "RES_Continue": {
     "en": "Continue",
     "ja": "コンティニュー",
     "zh": "继续巡航"
-    "zh-CN": "继续巡航"
   },
   "RES_Manual": {
     "en": "Manual",
     "ja": "マニュアル",
     "zh": "作战手册"
-    "zh-CN": "作战手册"
   },
   "RES_Easy": {
     "en": "Easy",
     "ja": "簡単",
     "zh": "学员"
-    "zh-CN": "学员"
   },
   "RES_Normal": {
     "en": "Normal",
     "ja": "普通",
     "zh": "老兵"
-    "zh-CN": "老兵"
   },
   "RES_Difficult": {
     "en": "Hard",
     "ja": "難しい",
     "zh": "指挥官"
-    "zh-CN": "指挥官"
   },
   "RES_Back": {
     "en": "Back",
     "ja": "戻る",
     "zh": "返回"
-    "zh-CN": "返回"
   },
   "RES_Start": {
     "en": "Begin Patrol",
     "ja": "スタート",
     "zh": "开始巡航"
-    "zh-CN": "开始巡航"
   },
   "RES_Purpose": {
     "en": "Mission Objective",
     "ja": "ゲームの目的",
     "zh": "游戏目标"
-    "zh-CN": "游戏目标"
   },
   "RES_ManualOverview": {
     "en": "In Nazi Germany during World War II, submarines called unlimited submarines were being operated to cause damage to the enemy economy. <br>\nThe purpose of this game is to lead a submarine as captain of the German submarine U-BOAT during World War II and sink the enemy ship by torpedo attack.",
     "ja": "二次大戦時のナチスドイツでは敵国の経済へ損害を与えるべく無制限潜水艦作戦と呼ばれる潜水艦による作戦が行われていました。<br>\n本ゲームの目的は、第二次大戦中のドイツ潜水艦U-Boatの艦長として潜水艦を指揮し魚雷攻撃によって敵船団を撃沈することです。",
     "zh": "在二战期间，纳粹德国执行了被称为“无限制潜艇战”的战略，旨在打击敌方的经济命脉。<br>在本游戏中，你将扮演德国U艇的指挥官，操控潜艇使用鱼雷击沉敌方舰队。"
-    "zh-CN": "在二战期间，纳粹德国执行了被称为“无限制潜艇战”的战略，旨在打击敌方的经济命脉。<br>在本游戏中，你将扮演德国U艇的指挥官，操控潜艇使用鱼雷击沉敌方舰队。"
   },
   "RES_GameMode": {
     "en": "Game Modes",
     "ja": "ゲームモード",
     "zh": "游戏模式"
-    "zh-CN": "游戏模式"
   },
   "RES_GameModeDetail1": {
     "en": "The game includes two modes: 'Skirmish' and 'Mission'.",
     "ja": "ゲームモードには「スカーミッシュ」と「ミッション」があります。",
     "zh": "游戏包含两种模式：遭遇战 和 任务作战。"
-    "zh-CN": "游戏包含两种模式：遭遇战 和 任务作战。"
   },
   "RES_GameModeDetail2": {
     "en": "'Skirmish' mode drops you deep within an enemy convoy for a quick, intense engagement.",
     "ja": "「スカーミッシュ」では短時間のゲームプレイを想定しており、既に敵船団の中に深く入り込んだ状態からゲームスタートとなります。",
     "zh": "遭遇战模式适合短时间游戏，你将直接置身于敌方船队之中。"
-    "zh-CN": "遭遇战模式适合短时间游戏，你将直接置身于敌方船队之中。"
   },
   "RES_GameModeDetail3": {
     "en": "Evade destroyers and focus on sinking merchant vessels.",
     "ja": "駆逐艦からの攻撃をやりすごし商船の撃沈に努めてください。",
     "zh": "躲避驱逐舰攻击，集中火力击沉商船。"
-    "zh-CN": "躲避驱逐舰攻击，集中火力击沉商船。"
   },
   "RES_GameModeDetail4": {
     "en": "'Mission' mode begins with locating enemy ships.",
     "ja": "「ミッション」では敵の探索から始まります。",
     "zh": "任务作战模式从搜索敌舰开始。"
-    "zh-CN": "任务作战模式从搜索敌舰开始。"
   },
   "RES_GameModeDetail5": {
     "en": "Use periscope depth to locate the convoy, approach silently, and sink the targets.",
     "ja": "潜望鏡深度で敵旅団の位置を特定し静かに接近し商船の撃沈に努めてください。",
     "zh": "使用潜望镜深度侦测敌舰队，悄悄接近并发射鱼雷将其击沉。"
-    "zh-CN": "使用潜望镜深度侦测敌舰队，悄悄接近并发射鱼雷将其击沉。"
   },
   "RES_Difficulty": {
     "en": "Difficulty",
     "ja": "難易度",
     "zh": "难度"
-    "zh-CN": "难度"
   },
   "RES_DifficultyOverview": {
     "en": "Higher difficulty means more enemies and higher tonnage required for mission success.",
     "ja": "難易度によって敵船の数、クリアに必要な撃沈トン数が変わります。",
     "zh": "难度越高，敌舰数量越多，任务所需的击沉吨数也越高。"
-    "zh-CN": "难度越高，敌舰数量越多，任务所需的击沉吨数也越高。"
   },
   "RES_EnemyCount": {
     "en": "Destroyer Count",
     "ja": "駆逐艦の数",
     "zh": "驱逐舰数量"
-    "zh-CN": "驱逐舰数量"
   },
   "RES_MerchantCount": {
     "en": "Merchant Ship Count",
     "ja": "商船の数",
     "zh": "商船数量"
-    "zh-CN": "商船数量"
   },
   "RES_SunkTonnage": {
     "en": "Tonnage Required to Sink",
     "ja": "撃沈トン数",
     "zh": "击沉吨数要求"
-    "zh-CN": "击沉吨数要求"
   },
   "RES_OperationExplanation": {
     "en": "Controls Overview",
     "ja": "操作説明",
     "zh": "操作说明"
-    "zh-CN": "操作说明"
   },
   "RES_SubmarineMove": {
     "en": "Submarine Maneuvering",
     "ja": "潜水艦の移動",
     "zh": "潜艇操控"
-    "zh-CN": "潜艇操控"
   },
   "RES_Manual1": {
     "en": "To move the submarine, do it from the controlled panel at the lower left.\n The control panels include \"engine telegraph\", \"direction instructor\", and \"depth indicator\", and you can change the engine output, travel direction, and depth of the submarine by operating each.",
     "ja": "潜水艦を移動させるには左下のコントロールパネルから行います。\n コントロールパネルには\"エンジンテレグラフ\", \"方位指示盤\", \"深度指示盤\"があり、それぞれ操作することで潜水艦のエンジン出力、進行方向、深度を変更することができます。",
     "zh": "潜艇可通过左下方控制面板进行操作。\n控制面板包括“引擎电报”、“航向指示器”和“深度指示器”，分别控制推进力、航向与深度。"
-    "zh-CN": "潜艇可通过左下方控制面板进行操作。\n控制面板包括“引擎电报”、“航向指示器”和“深度指示器”，分别控制推进力、航向与深度。"
   },
   "RES_ManualDetail2": {
     "en": "Lookout & Sonar",
     "ja": "見張り、聴音",
     "zh": "瞭望与声呐"
-    "zh-CN": "瞭望与声呐"
   },
   "RES_ManualDetail3": {
     "en": "You can check the surrounding status from the instruction panel at the bottom right. <br>\nBy tapping each button, the information of the enemy ship confirmed in the upper left message panel is displayed. <br>\nYou can visually watch the look -imized buttons on the left, and to hear the hydropone with the central listening button. <br>\nVisually lookouts can only be used when submarines are emerging and hyprophones are diving.",
     "ja": "右下の指示パネルから、周りの状況を確認することが出来ます。<br>\n各ボタンをタップすることで左上のメッセージパネルに確認した敵船の情報が表示されます。<br>\n左側の見張りボタンで目視での見張り、中央の聴音ボタンでハイドロフォンの聴音を行うことができます。<br>\n目視での見張りは潜水艦が浮上しているとき、ハイドロフォンでの聴音は潜水艦が潜航しているときにのみ利用できます。",
     "zh": "你可以通过右下的操作面板查看周边情况。<br>点击各按钮，左上消息面板将显示敌舰信息。<br>左侧按钮进行目视瞭望，中央按钮使用水听器探测声音。<br>目视仅限潜艇浮出水面时，水听仅限潜艇潜航中使用。"
-    "zh-CN": "你可以通过右下的操作面板查看周边情况。<br>点击各按钮，左上消息面板将显示敌舰信息。<br>左侧按钮进行目视瞭望，中央按钮使用水听器探测声音。<br>目视仅限潜艇浮出水面时，水听仅限潜艇潜航中使用。"
   },
   "RES_ManualDetail4": {
     "en": "Periscope View",
     "ja": "潜望鏡画面",
     "zh": "潜望镜视角"
-    "zh-CN": "潜望镜视角"
   },
   "RES_ManualDetail5": {
     "en": "You can display the periscope screen by tapping the periscope button on the right side of the instruction panel on the lower right. <br>\nOn the deterrent mirror screen, you will check the enemy ship with the periscope, input torpedo specifications, and launch torpedoes.",
     "ja": "右下の指示パネル右側の潜望鏡ボタンをタップすることで潜望鏡画面を表示することができます。<br>\n潜望鏡画面では潜望鏡による敵船の確認、魚雷の諸元入力、魚雷の発射を行います。",
     "zh": "点击右下面板右侧的潜望镜按钮可切换至潜望镜画面。<br>你可以使用潜望镜观察敌舰，输入鱼雷参数并发射。"
-    "zh-CN": "点击右下面板右侧的潜望镜按钮可切换至潜望镜画面。<br>你可以使用潜望镜观察敌舰，输入鱼雷参数并发射。"
   },
   "RES_ManualDetail6": {
     "en": "Time Acceleration",
     "ja": "倍速表示",
     "zh": "时间加速"
-    "zh-CN": "时间加速"
   },
   "RES_ManualDetail7": {
     "en": "You can change the progress of the in -game time with the time -ratio button in the upper right status panel. <br>\nThe time magnification can be changed to 1 to 16 times.",
     "ja": "右上のステータスパネル内の時間倍率ボタンでゲーム内時間の進行速度を変更することができます。<br>\n時間倍率は1~16倍まで変更することができます。",
     "zh": "通过右上状态面板的时间倍率按钮，可加快游戏时间流速。<br>倍率范围为1到16倍。"
-    "zh-CN": "通过右上状态面板的时间倍率按钮，可加快游戏时间流速。<br>倍率范围为1到16倍。"
   },
   "RES_ManualDetail8": {
     "en": "Enemy Ship Behavior",
     "ja": "敵船の行動",
     "zh": "敌舰行动"
-    "zh-CN": "敌舰行动"
   },
   "RES_ManualDetail9": {
     "en": "The enemy fleet usually continues to move towards the destination at a constant speed. <br>\nHowever, once a submarine is found, the anti -submarine sailing is entered, merchant ships proceed to avoid torpedoes, and the destroyer starts attacking the submarine. <br>\nThere are two types of destroyers attacking, and if the submarine is emerging, a bombardment will be attacked, and a striking attack will be performed during submarine.",
     "ja": "敵の船団は通常は目的地に向かって一定速度で一定方向へ進み続けます。<br>\nしかし、一度潜水艦を発見すると対潜航行に入り商船は魚雷を回避するように進み、駆逐艦は潜水艦に向かって攻撃を開始してきます。<br>\n駆逐艦の攻撃方法は2種類あり、潜水艦が浮上している場合は砲撃による攻撃、潜航中は爆雷攻撃を行います。",
     "zh": "敌方船队通常匀速前进，一旦发现潜艇将进入反潜状态。<br>商船将试图规避鱼雷，驱逐舰将展开攻击。<br>若潜艇浮出水面，将遭遇炮击；潜航中则遭受深水炸弹攻击。"
-    "zh-CN": "敌方船队通常匀速前进，一旦发现潜艇将进入反潜状态。<br>商船将试图规避鱼雷，驱逐舰将展开攻击。<br>若潜艇浮出水面，将遭遇炮击；潜航中则遭受深水炸弹攻击。"
   },
   "RES_ManualDetail10": {
     "en": "Battery & Oxygen",
     "ja": "バッテリー、酸素残量",
     "zh": "电池与氧气"
-    "zh-CN": "电池与氧气"
   },
   "RES_ManualDetail11": {
     "en": "Submarines gradually decrease the battery level to turn the screw with the battery. <br>\nIf the battery runs out, you will not be able to move forward and retreat, but you can dive and rise. <br>\nDuring the voyage, the amount of oxygen remains gradually decreases due to consuming oxygen in the submarine. <br>\nIf the amount of oxygen is 0, the game will be over, so please come up and recover.",
     "ja": "潜水艦はバッテリーでスクリューを回すため徐々にバッテリー残量が減っていきます。<br>\nバッテリーがなくなると前進、後退が行えなくなりますが、潜航、浮上は可能です。<br>\n潜航中は潜水艦内の酸素を消費するため徐々に酸素残量が減っていきいます。<br>\n酸素残量が0になるとゲームオーバーとなってしまうので浮上し回復してください。",
     "zh": "潜艇依靠电池驱动螺旋桨，因此电量会逐渐减少。<br>电量耗尽时无法移动，但仍可潜航或上浮。<br>潜航时会消耗氧气，氧气耗尽将导致游戏失败，请及时上浮补充氧气。"
-    "zh-CN": "潜艇依靠电池驱动螺旋桨，因此电量会逐渐减少。<br>电量耗尽时无法移动，但仍可潜航或上浮。<br>潜航时会消耗氧气，氧气耗尽将导致游戏失败，请及时上浮补充氧气。"
   },
   "RES_ManualDetail12": {
     "en": "Save System",
     "ja": "セーブ機能",
     "zh": "保存系统"
-    "zh-CN": "保存系统"
   },
   "RES_ManualDetail13": {
     "en": "You can save the state by tapping the end button at the top right during the game, and the game can be resumed from the continuation button on the title screen. <br>\nIn addition, the state is automatically saved every minute in the game time.",
     "ja": "ゲーム中に右上の終了ボタンをタップすることによって状態を保存し、タイトル画面のコンティニューボタンからゲームを再開することができます。<br>\nまた、ゲーム内時間での1分ごとに自動で状態の保存が行われます。",
     "zh": "游戏中点击右上角的退出按钮可保存进度，返回标题画面可继续游戏。<br>此外游戏会每分钟自动保存一次。"
-    "zh-CN": "游戏中点击右上角的退出按钮可保存进度，返回标题画面可继续游戏。<br>此外游戏会每分钟自动保存一次。"
   },
   "RES_back": {
     "en": "Back",
     "ja": "戻る",
     "zh": "返回"
-    "zh-CN": "返回"
   },
   "RES_Damage": {
     "en": "Damage",
     "ja": "ダメージ",
     "zh": "损伤"
-    "zh-CN": "损伤"
   },
   "RES_Battery": {
     "en": "Battery",
     "ja": "バッテリー",
     "zh": "电池"
-    "zh-CN": "电池"
   },
   "RES_RemaningO2": {
     "en": "Oxygen",
     "ja": "酸素残量",
     "zh": "氧气"
-    "zh-CN": "氧气"
   },
   "RES_RemaningTorpedo": {
     "en": "Torpedo Count",
     "ja": "魚雷残数",
     "zh": "鱼雷数量"
-    "zh-CN": "鱼雷数量"
   },
   "RES_NowTime": {
     "en": "Current Time",
     "ja": "現在時刻",
     "zh": "当前时间"
-    "zh-CN": "当前时间"
   },
   "RES_TimeMag": {
     "en": "Time Compression",
     "ja": "時間倍率",
     "zh": "时间倍率"
-    "zh-CN": "时间倍率"
   },
   "RES_Observer": {
     "en": "Lookout",
     "ja": "監視員",
     "zh": "瞭望员"
-    "zh-CN": "瞭望员"
   },
   "RES_ObserverDiscover": {
     "en": "Check the ship's shadow xxx!",
     "ja": "船影をxxx隻確認！",
     "zh": "发现船影xxx艘！"
-    "zh-CN": "发现船影xxx艘！"
   },
   "RES_EnemyNum": {
     "en": "Enemy ship",
     "ja": "敵船○",
     "zh": "敌舰○"
-    "zh-CN": "敌舰○"
   },
   "RES_Direction": {
     "en": "Bearing",
     "ja": "方位",
     "zh": "方位"
-    "zh-CN": "方位"
   },
   "RES_Range": {
     "en": "Range",
     "ja": "距離",
     "zh": "距离"
-    "zh-CN": "距离"
   },
   "RES_Course": {
     "en": "Heading",
     "ja": "針路",
     "zh": "航向"
-    "zh-CN": "航向"
   },
   "RES_ShipSpeed": {
     "en": "Speed",
     "ja": "船速",
     "zh": "航速"
-    "zh-CN": "航速"
   },
   "RES_NoShips": {
     "en": "No Contacts!",
     "ja": "船影無し！",
     "zh": "未发现船影！"
-    "zh-CN": "未发现船影！"
   },
   "RES_Hydrophone": {
     "en": "Sonar Operator",
     "ja": "聴音員",
     "zh": "声呐员"
-    "zh-CN": "声呐员"
   },
   "RES_HydrophoneDiscover": {
     "en": "Check xxx ships!",
     "ja": "船音をxxx隻確認！",
     "zh": "发现声音xxx艘！"
-    "zh-CN": "发现声音xxx艘！"
   },
   "RES_EnemyShip": {
     "en": "Enemy Ship",
     "ja": "敵船",
     "zh": "敌舰"
-    "zh-CN": "敌舰"
   },
   "RES_NoSounds": {
     "en": "No Sound Contacts",
     "ja": "船音無し！",
     "zh": "未探测到声音！"
-    "zh-CN": "未探测到声音！"
   },
   "RES_LowSounds": {
     "en": "Faint Sound",
     "ja": "音量微小",
     "zh": "微弱声源"
-    "zh-CN": "微弱声源"
   },
   "RES_MiddleSounds": {
     "en": "Moderate Sound",
     "ja": "音量中",
     "zh": "中等声源"
-    "zh-CN": "中等声源"
   },
   "RES_SomewhatLargeSounds": {
     "en": "Strong Sound",
     "ja": "音量やや大きい",
     "zh": "较强声源"
-    "zh-CN": "较强声源"
   },
   "RES_LargeSounds": {
     "en": "Very Strong Sound",
     "ja": "音量大",
     "zh": "强烈声源"
-    "zh-CN": "强烈声源"
   },
   "RES_AheadFull": {
     "en": "Ahead Flank",
     "ja": "全速前進",
     "zh": "全速前进"
-    "zh-CN": "全速前进"
   },
   "RES_AheadHalf": {
     "en": "Ahead Half",
     "ja": "半速前進",
     "zh": "半速前进"
-    "zh-CN": "半速前进"
   },
   "RES_AheadSlow": {
     "en": "Ahead Slow",
     "ja": "微速前進",
     "zh": "低速前进"
-    "zh-CN": "低速前进"
   },
   "RES_AllStop": {
     "en": "All Stop",
     "ja": "機関停止",
     "zh": "引擎停止"
-    "zh-CN": "引擎停止"
   },
   "RES_AsternSlow": {
     "en": "Back Slow",
     "ja": "微速後進",
     "zh": "低速后退"
-    "zh-CN": "低速后退"
   },
   "RES_AsternHalf": {
     "en": "Back Half",
     "ja": "半速後進",
     "zh": "半速后退"
-    "zh-CN": "半速后退"
   },
   "RES_AsternFull": {
     "en": "Back Full",
     "ja": "全速後進",
     "zh": "全速后退"
-    "zh-CN": "全速后退"
   },
   "RES_ChiefEngineer": {
     "en": "Chief Engineer",
     "ja": "機関長",
     "zh": "轮机长"
-    "zh-CN": "轮机长"
   },
   "RES_Navigator": {
     "en": "Navigator",
     "ja": "航海長",
     "zh": "航海长"
-    "zh-CN": "航海长"
   },
   "RES_ChangeCourse": {
     "en": "Change Course to xxx",
     "ja": "針路をxxxに変更",
     "zh": "航向变更为xxx"
-    "zh-CN": "航向变更为xxx"
   },
   "RES_ChangeDepth": {
     "en": "Change Depth to xxx",
     "ja": "深度をxxxに変更",
     "zh": "深度变更为xxx"
-    "zh-CN": "深度变更为xxx"
   },
   "RES_ArrivalTime": {
     "en": "ETA",
     "ja": "到達時間",
     "zh": "到达时间"
-    "zh-CN": "到达时间"
   },
   "RES_Seconds": {
     "en": "seconds",
     "ja": "秒",
     "zh": "秒"
-    "zh-CN": "秒"
   },
   "RES_Times": {
     "en": "×",
     "ja": "倍",
     "zh": "倍"
-    "zh-CN": "倍"
   },
   "RES_Sinking": {
     "en": "Target Sunk",
     "ja": "撃沈…",
     "zh": "目标已击沉…"
-    "zh-CN": "目标已击沉…"
   },
   "RES_Clear": {
     "en": "Mission Accomplished",
     "ja": "ゲームクリア",
     "zh": "任务完成"
-    "zh-CN": "任务完成"
   },
   "RES_BackToTitle": {
     "en": "Return to Main Menu",
     "ja": "タイトル画面に戻る",
     "zh": "返回主菜单"
-    "zh-CN": "返回主菜单"
   }
 }
