@@ -294,6 +294,7 @@ const setRemoved = (v) => {
 // IAP初期化
 function initIAP() {
   if (!window.store) return console.log('[IAP] store not ready');
+  console.log('[IAP] store ready');
   store.verbosity = store.DEBUG;
 
   store.register({ id: SKU, type: store.NON_CONSUMABLE });
