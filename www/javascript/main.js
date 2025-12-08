@@ -247,18 +247,11 @@ document.addEventListener('deviceready', async () => {
   // アプリ課金確認
   // ローカル状態の反映（起動直後）
   setRemoved(getRemoved());
+
   initIAP();
 
-  // 購入ボタン押下時処理
   initAdRemoveButton();
 }, false);
-
-// 購入ボタン押下時処理
-const initAdRemoveButton = () => {
-  $('#removeAdsButton').on('click', () => {
-    console.log("on remove ads button click");
-  });
-};
 
 const showAd = async () => {
   if(getRemoved()) {
@@ -281,8 +274,9 @@ window.addEventListener('admob.ad.dismiss', async () => {
   await interstitial.load()
 });
 
-const SKU = 'com.babyloos.submarine3d.remove_ads';
-const isiOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent);
+var myProduct;
+const SKU = 'com.babyloos.submarine3d.remove_ads1';
+// const isiOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent);
 
 // 状態
 const getRemoved = () => localStorage.getItem('adsRemoved') === '1';
@@ -293,18 +287,31 @@ const setRemoved = (v) => {
 
 // IAP初期化
 function initIAP() {
-  if (!window.store) return console.log('[IAP] store not ready');
-  console.log('[IAP] store ready');
-  store.verbosity = store.DEBUG;
+  const {store, ProductType, Platform} = CdvPurchase;
+  // refreshUI();
+  store.register([{
+    type: ProductType.CONSUMABLE,
+    id: SKU,
+    platform: Platform.TEST,
+  }]);
+  store.when()
+    // .productUpdated(refreshUI)
+    .approved(() => {console.log("bought")});
+  store.initialize([Platform.TEST]);
 
-  store.register({ id: SKU, type: store.NON_CONSUMABLE });
-
-  store.when(SKU).owned(() => { console.log('[IAP] owned'); setRemoved(true); });
-  store.when(SKU).approved(p => { console.log('[IAP] approved'); p.finish(); });
-
-  store.error(e => console.log('[IAP] error', e));
-  store.refresh(); // 起動毎に同期（返金/復元/端末移行対策）
+  console.log("succeseed initIAP");
 }
+
+// 購入ボタン押下時処理
+const initAdRemoveButton = () => {
+  $('#removeAdsButton').on('click', function() {
+    const {store, ProductType, Platform} = CdvPurchase;
+    console.log('click remove add button');
+    myProduct = store.get(SKU, Platform.TEST);
+    myProduct.getOffer().order();
+  })
+};
+
 
 const main = new Main();
 main.main();
