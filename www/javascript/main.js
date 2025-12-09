@@ -290,13 +290,19 @@ function initIAP() {
   const {store, ProductType, Platform} = CdvPurchase;
   // refreshUI();
   store.register([{
-    type: ProductType.CONSUMABLE,
-    id: SKU,
+    type: ProductType.NON_CONSUMABLE,
+    id: "plugin.test",
     platform: Platform.TEST,
   }]);
+
   store.when()
     // .productUpdated(refreshUI)
     .approved(() => {console.log("bought")});
+
+  store.when("plugin.test").updated(p => {
+    console.log("UPDATED:", p);
+  });
+
   store.initialize([Platform.TEST]);
 
   console.log("succeseed initIAP");
@@ -307,7 +313,13 @@ const initAdRemoveButton = () => {
   $('#removeAdsButton').on('click', function() {
     const {store, ProductType, Platform} = CdvPurchase;
     console.log('click remove add button');
-    myProduct = store.get(SKU, Platform.TEST);
+    myProduct = store.get("plugin.test", Platform.TEST);
+    console.log(myProduct);
+    if (!myProduct) {
+      console.log("myProduct is undefined");
+      return
+    } 
+
     myProduct.getOffer().order();
   })
 };
