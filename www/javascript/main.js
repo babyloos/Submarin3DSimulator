@@ -249,8 +249,6 @@ document.addEventListener('deviceready', async () => {
   setRemoved(getRemoved());
 
   initIAP();
-
-  initAdRemoveButton();
 }, false);
 
 const showAd = async () => {
@@ -288,32 +286,31 @@ const setRemoved = (v) => {
 // IAP初期化
 function initIAP() {
   const {store, ProductType, Platform} = CdvPurchase;
-  // refreshUI();
-  store.register([{
+
+  initAdRemoveButton();
+
+  store.register({
     type: ProductType.NON_CONSUMABLE,
-    id: "plugin.test",
+    id: 'plugin.test',
     platform: Platform.TEST,
-  }]);
+  });
+
+  store.initialize();
 
   store.when()
     // .productUpdated(refreshUI)
     .approved(() => {console.log("bought")});
-
-  store.when("plugin.test").updated(p => {
-    console.log("UPDATED:", p);
-  });
-
-  store.initialize([Platform.TEST]);
 
   console.log("succeseed initIAP");
 }
 
 // 購入ボタン押下時処理
 const initAdRemoveButton = () => {
+  console.log('initAdRemoveButton');
   $('#removeAdsButton').on('click', function() {
     const {store, ProductType, Platform} = CdvPurchase;
     console.log('click remove add button');
-    myProduct = store.get("plugin.test", Platform.TEST);
+    myProduct = store.get('plugin.test', Platform.TEST);
     console.log(myProduct);
     if (!myProduct) {
       console.log("myProduct is undefined");
