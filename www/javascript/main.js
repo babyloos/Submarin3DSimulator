@@ -285,23 +285,21 @@ const setRemoved = (v) => {
 
 // IAP初期化
 function initIAP() {
-  const {store, ProductType, Platform} = CdvPurchase;
+  console.log('onDeviceReady');
 
-  initAdRemoveButton();
-
-  store.register({
-    type: ProductType.NON_CONSUMABLE,
-    id: 'plugin.test',
-    platform: Platform.TEST,
+  inAppPurchase
+  .getProducts(['com.babyloos.submarine3d.remove_ads1'])
+  .then(function (products) {
+    console.log(products);
+    /*
+    [{ productId: 'com.yourapp.prod1', 'title': '...', description: '...', currency: '...', price: '...', priceAsDecimal: '...' }, ...]
+    */
+  })
+  .catch(function (err) {
+     console.log(err);
   });
 
-  store.initialize();
-
-  store.when()
-    .productUpdated(() => {console.log("product updated")})
-    .approved(() => {console.log("bought")});
-
-  console.log("succeseed initIAP");
+  // initializePurchaseButton();
 }
 
 // 購入ボタン押下時処理
