@@ -298,7 +298,7 @@ function initIAP() {
   store.initialize();
 
   store.when()
-    // .productUpdated(refreshUI)
+    .productUpdated(() => {console.log("product updated")})
     .approved(() => {console.log("bought")});
 
   console.log("succeseed initIAP");
