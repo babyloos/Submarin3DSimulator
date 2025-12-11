@@ -288,35 +288,31 @@ function initIAP() {
   console.log('onDeviceReady');
 
   inAppPurchase
-  .getProducts(['com.babyloos.submarine3d.remove_ads1'])
+  .getProducts([SKU])
   .then(function (products) {
     console.log(products);
-    /*
-    [{ productId: 'com.yourapp.prod1', 'title': '...', description: '...', currency: '...', price: '...', priceAsDecimal: '...' }, ...]
-    */
+    initAdRemoveButton();
   })
   .catch(function (err) {
      console.log(err);
   });
 
-  // initializePurchaseButton();
 }
 
 // 購入ボタン押下時処理
 const initAdRemoveButton = () => {
   console.log('initAdRemoveButton');
   $('#removeAdsButton').on('click', function() {
-    const {store, ProductType, Platform} = CdvPurchase;
-    console.log('click remove add button');
-    myProduct = store.get('plugin.test', Platform.TEST);
-    console.log(myProduct);
-    if (!myProduct) {
-      console.log("myProduct is undefined");
-      return
-    } 
-
-    myProduct.getOffer().order();
-  })
+    inAppPurchase
+    .buy(SKU)
+    .then(function (data) {
+      console.log('購入完了');
+      console.log(data);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  });
 };
 
 
