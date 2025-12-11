@@ -291,18 +291,17 @@ function initIAP() {
   .getProducts([SKU])
   .then(function (products) {
     console.log(products);
-    initAdRemoveButton();
+    initRemoveAdsBuyButton();
   })
   .catch(function (err) {
      console.log(err);
   });
-
 }
 
 // 購入ボタン押下時処理
-const initAdRemoveButton = () => {
+const initRemoveAdsBuyButton = () => {
   console.log('initAdRemoveButton');
-  $('#removeAdsButton').on('click', function() {
+  $('#removeAdsBuyButton').on('click', function() {
     inAppPurchase
     .buy(SKU)
     .then(function (data) {

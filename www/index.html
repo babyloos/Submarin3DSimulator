@@ -40,8 +40,9 @@
                         </div>
                     </div>
                 </div>
-                <button id="removeAdsButton" class="btn btn-danger" glot-model='RES_REMOVE_ADS'
-                style="position: absolute; right: 48px; bottom: 12px; width: 15%;">広告削除</button>
+                <button id="removeAdsButton" class="btn btn-danger" glot-model='RES_REMOVE_ADS' data-bs-toggle="modal"
+                    data-bs-target="#removeAdsBuyModal"
+                    style="position: absolute; right: 48px; bottom: 12px; width: 15%;">広告削除</button>
             </div>
             <div id="gameModeSelectPage" class="absolutePage vignette hiddenPage">
                 <div class="menu text-center">
@@ -410,8 +411,8 @@
     </div>
 
     <!-- GameOver Dialog -->
-    <div class="modal fade" id="gameOverDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="gameOverDialogLabel" aria-hidden="true">
+    <div class="modal fade gameOverDialog" id="gameOverDialog" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="gameOverDialogLabel" aria-hidden="true">
         <div id="gameOverMenu" class="modal-dialog position-absolute">
             <div class="modal-content">
                 <h1 id="gameOverMessage" glot-model='RES_Sinking'>撃沈…</h1>
@@ -422,8 +423,8 @@
     </div>
 
     <!-- GameClear Dialog -->
-    <div class="modal fade" id="gameClearDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="gameClearDialogLabel" aria-hidden="true">
+    <div class="modal fade gameOverDialog" id="gameClearDialog" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="gameClearDialogLabel" aria-hidden="true">
         <div id="gameClearMenu" class="modal-dialog position-absolute">
             <div class="modal-content">
                 <h1 id="gameClearMessage" glot-model='RES_Clear'>ゲームクリア</h1>
@@ -461,6 +462,33 @@
         <span id='RES_Navigator' glot-model='RES_Navigator'>航海長</span>
         <span id='RES_ChangeCourse' glot-model='RES_ChangeCourse'>針路をxxxに変更</span>
         <span id='RES_ChangeDepth' glot-model='RES_ChangeDepth'>深度をxxxに変更</span>
+    </div>
+
+    <!-- 広告非表示購入ダイアログ -->
+    <div class="modal fade" id="removeAdsBuyModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">広告を削除しますか？</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-3">一度購入すると広告は永久に非表示になります。</p>
+                    <div class="price-box p-3 mb-3 rounded">
+                        <strong id="iapPrice">¥500</strong>
+                        <div class="small text-muted">（税込）</div>
+                    </div>
+                    <!-- 環境によって文言を変更する Apple or Google -->
+                    <p class="text-muted small">
+                        購入はAppleによって安全に処理されます。
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <button class="btn btn-primary" id="removeAdsBuyButton">購入する</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- scripts -->
