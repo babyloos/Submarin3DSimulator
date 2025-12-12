@@ -414,11 +414,6 @@
     "ja": "一度購入すると広告は永久に非表示になります。",
     "zh-Hans": "购买后广告将永久隐藏。"
   },
-  "RES_TaxIncluded": {
-    "en": "(Tax Included)",
-    "ja": "（税込）",
-    "zh-Hans": "（含税）"
-  },
   "RES_PurchaseProcessingInfo": {
     "en": "Purchases are securely processed by Apple.",
     "ja": "購入はAppleによって安全に処理されます。",
