@@ -286,6 +286,27 @@ const setRemoved = (v) => {
 function initIAP() {
   console.log('onDeviceReady');
 
+  // 購入状態を復元
+  inAppPurchase.restorePurchases()
+  .then(function (purchase) {
+    console.log('購入済みか確認');
+    console.log(purchase);
+
+    const owned = purchase.some(p => p.productId === SKU);
+
+    if (owned) {
+        console.log("広告削除を購入済み");
+        // ストレージのフラグを立てる（例: localStorage に保存）
+        localStorage.setItem('adsRemoved', '1');
+    } else {
+        console.log("未購入");
+        localStorage.setItem('adsRemoved', '0');
+    }
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+
   inAppPurchase
   .getProducts([SKU])
   .then(function (products) {
