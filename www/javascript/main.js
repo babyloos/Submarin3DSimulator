@@ -272,7 +272,6 @@ window.addEventListener('admob.ad.dismiss', async () => {
   await interstitial.load()
 });
 
-var myProduct;
 const SKU = 'com.babyloos.submarine3d.remove_ads1';
 // const isiOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent);
 
@@ -291,6 +290,10 @@ function initIAP() {
   .getProducts([SKU])
   .then(function (products) {
     console.log(products);
+    const price = products[0].price;
+    console.log('price: ' + price);
+    // 金額をダイアログに設定
+    $('#iapPrice').text(price);
     initRemoveAdsBuyButton();
   })
   .catch(function (err) {
