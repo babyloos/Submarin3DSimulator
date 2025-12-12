@@ -298,6 +298,9 @@ function initIAP() {
         console.log("広告削除を購入済み");
         // ストレージのフラグを立てる（例: localStorage に保存）
         localStorage.setItem('adsRemoved', '1');
+        // 購入ボタンを非活性化 
+        $('#removeAdsButton').removeClass('btn-danger').addClass('btn-secondary');
+        $('#removeAdsButton').prop('disabled', true);
     } else {
         console.log("未購入");
         localStorage.setItem('adsRemoved', '0');
