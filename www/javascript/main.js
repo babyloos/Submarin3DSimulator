@@ -215,11 +215,11 @@ export class LoadProgress {
 window.addEventListener('DOMContentLoaded', function () {
     var glot = new Glottologist();
     glot.import("resources/words.json").then(() => {
-        glot.render()
-    })
+        glot.render();
+    });
 
     ImgTranslator.translate();
-})
+});
 
 let interstitial;
 
