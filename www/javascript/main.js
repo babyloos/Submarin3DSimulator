@@ -212,8 +212,10 @@ export class LoadProgress {
     }
 }
 
+var glot;
+
 window.addEventListener('DOMContentLoaded', function () {
-    var glot = new Glottologist();
+    glot = new Glottologist();
     glot.import("resources/words.json").then(() => {
         glot.render();
     });
@@ -227,7 +229,9 @@ window.addEventListener('DOMContentLoaded', function () {
 // 言語切り替え時動作
 const initUpdateLanguage = () => {
   $('#languageSelect').on('change', function() {
-    console.log($(this).val());
+    glot.import("resources/words.json").then(() => {
+        glot.render($(this).val());
+    });
   });
 }
 
