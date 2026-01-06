@@ -41,7 +41,8 @@
                     </div>
                 </div>
                 <div class="position-absolute bottom-0 start-0 mb-4 ms-4">
-                    <button id="languageButton" class="btn btn-success">Language</button>
+                    <button id="languageButton" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#selectLanguageModal">Language</button>
                 </div>
             </div>
             <div id="gameModeSelectPage" class="absolutePage vignette hiddenPage">
@@ -430,6 +431,32 @@
                 <h1 id="gameClearMessage" glot-model='RES_Clear'>ゲームクリア</h1>
                 <button class="backTitleButton btn btn-info" type="button" class="btn btn-info" data-bs-dismiss="modal"
                     glot-model='RES_BackToTitle'>タイトル画面に戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 言語切り替えダイアログ -->
+    <div class="modal fade" id="selectLanguageModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" glot-model="RES_AdsDeleteQuestion">広告を削除しますか？</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-3" glot-model="RES_AdsDeleteText">一度購入すると広告は永久に非表示になります。</p>
+                    <div class="price-box p-3 mb-3 rounded">
+                        <strong id="iapPrice">¥500</strong>
+                    </div>
+                    <!-- 環境によって文言を変更する Apple or Google -->
+                    <p class="text-muted small" glot-model="RES_PurchaseProcessingInfo">
+                        購入はAppleによって安全に処理されます。
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" glot-model="RES_Cancel">キャンセル</button>
+                    <button class="btn btn-primary" id="removeAdsBuyButton" glot-model="RES_Purchase">購入する</button>
+                </div>
             </div>
         </div>
     </div>
