@@ -219,7 +219,17 @@ window.addEventListener('DOMContentLoaded', function () {
     });
 
     ImgTranslator.translate();
+
+    // 言語切り替え時動作設定
+    initUpdateLanguage();
 });
+
+// 言語切り替え時動作
+const initUpdateLanguage = () => {
+  $('#languageSelect').on('change', function() {
+    console.log($(this).val());
+  });
+}
 
 let interstitial;
 
