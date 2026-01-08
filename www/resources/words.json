@@ -369,6 +369,21 @@
     "ja": "深度をxxxに変更",
     "zh": "深度变更为xxx"
   },
+  "RES_DeputyChief": {
+    "en": "Executive Officer",
+    "ja": "副長",
+    "zh": "副舰长"
+  },
+  "RES_SinkingTons": {
+    "en": "Sank enemy ships totaling xxx tons",
+    "ja": "xxxトンの敵船を撃沈",
+    "zh": "击沉敌舰共xxx吨"
+  },
+  "RES_SinkingLeft": {
+    "en": "xxx tons remaining",
+    "ja": "残りxxxトン",
+    "zh": "剩余xxx吨"
+  },
   "RES_ArrivalTime": {
     "en": "ETA",
     "ja": "到達時間",

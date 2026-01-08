@@ -453,9 +453,14 @@ export class Game {
         // 撃沈トン数を加算
         this.sunkEnemyTonnage += tonnage;
         // メッセージパネルへ通知
-        this.messageController.showMessage("副長", tonnage + "トンの敵船を撃沈");
         const leftTonnage = this.clearTonnage - this.sunkEnemyTonnage;
-        this.messageController.showMessage("副長", "残り" + leftTonnage + "トン");
+
+        var deputyChief = $("#RES_DeputyChief").html();
+        var tonsMessage = $('#RES_SinkingTons').html().replace('xxx', tonnage)
+        var sinkingLeftMessage = $('#RES_SinkingLeft').html().replace('xxx', leftTonnage)
+        this.messageController.showMessage(deputyChief, tonsMessage);
+        this.messageController.showMessage(deputyChief, sinkingLeftMessage);
+
         // ゲームクリア判定
         if (this.sunkEnemyTonnage >= this.clearTonnage) {
             this.isGameClear = true;
