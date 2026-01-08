@@ -220,7 +220,8 @@ window.addEventListener('DOMContentLoaded', function () {
         glot.render();
     });
 
-    ImgTranslator.translate();
+    const language = navigator.language;
+    ImgTranslator.translate(language);
 
     // 言語切り替え時動作設定
     initUpdateLanguage();
@@ -230,7 +231,9 @@ window.addEventListener('DOMContentLoaded', function () {
 const initUpdateLanguage = () => {
   $('#languageSelect').on('change', function() {
     glot.import("resources/words.json").then(() => {
+        console.log("change language " + $(this).val());
         glot.render($(this).val());
+        ImgTranslator.translate($(this).val());
     });
   });
 }

@@ -1000,10 +1000,10 @@ export class ControllController {
         const fireButton = $('#fireButton');
         if (torpedoEnable) {
             fireButton.attr('disabled', false)
-            fireButton.attr('src', 'resources/img/fireOff.png');
+            fireButton.attr('src', 'resources/img/en/fireOff.png');
         } else {
             fireButton.attr('disabled', true)
-            fireButton.attr('src', 'resources/img/fireOn.png');
+            fireButton.attr('src', 'resources/img/en/fireOn.png');
         }
     }
 
