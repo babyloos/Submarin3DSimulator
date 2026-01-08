@@ -11,6 +11,10 @@ export class Main {
     main() {
         let game;   // ゲームインスタンス
 
+        // ゲーム画面からトップ画面に戻った際にすべてのイベントをリセットするため毎回ここで設定する
+        // 言語切り替え時動作設定
+        initUpdateLanguage();
+
         const audioManager = new AudioManager();
         audioManager.load('resources/audio/enter.mp3');
 
@@ -224,7 +228,7 @@ window.addEventListener('DOMContentLoaded', function () {
     ImgTranslator.translate(language);
 
     // 言語切り替え時動作設定
-    initUpdateLanguage();
+    // initUpdateLanguage();
 });
 
 // 言語切り替え時動作
