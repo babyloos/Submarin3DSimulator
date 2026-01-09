@@ -43,6 +43,10 @@
                 <button id="removeAdsButton" class="btn btn-danger" glot-model='RES_REMOVE_ADS' data-bs-toggle="modal"
                     data-bs-target="#removeAdsBuyModal"
                     style="position: absolute; right: 48px; bottom: 12px; width: 15%;">広告削除</button>
+                <div class="position-absolute bottom-0 start-0 mb-4 ms-4">
+                    <button id="languageButton" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#selectLanguageModal">Language</button>
+                </div>
             </div>
             <div id="gameModeSelectPage" class="absolutePage vignette hiddenPage">
                 <div class="menu text-center">
@@ -227,35 +231,35 @@
         <div id="inputBoad" class="container">
             <div class="row">
                 <div id="bearingContainer" class="col-4 inputPartsContainer">
-                    <img id="bearingBack" class="inputPanel" src="resources/img/bearingBack.png">
-                    <img id="bearingAllow" class="inputFront" src="resources/img/bearingAllow.png">
-                    <img class="inputPlate" translate src="resources/img/bearingPlate.png">
+                    <img id="bearingBack" class="inputPanel" src="resources/img/en/bearingBack.png">
+                    <img id="bearingAllow" class="inputFront" src="resources/img/en/bearingAllow.png">
+                    <img class="inputPlate" translate src="resources/img/en/bearingPlate.png">
                 </div>
                 <div id="speedContainer" class="col-4 inputPartsContainer">
-                    <img id="speedBack" class="inputPanel" src="resources/img/speedBack.png">
-                    <img id="speedAllow" class="inputFront" src="resources/img/speedAllow.png">
-                    <img class="inputPlate" translate src="resources/img/speedPlate.png">
+                    <img id="speedBack" class="inputPanel" src="resources/img/en/speedBack.png">
+                    <img id="speedAllow" class="inputFront" src="resources/img/en/speedAllow.png">
+                    <img class="inputPlate" translate src="resources/img/en/speedPlate.png">
                 </div>
                 <div id="gyroContainer" class="col-4 inputPartsContainer">
-                    <img id="gyroBack" class="inputPanel" src="resources/img/gyroBack.png">
-                    <img id="gyroAllow" class="inputFront" src="resources/img/gyroAllow.png">
-                    <img class="inputPlate" translate src="resources/img/gyroPlate.png">
+                    <img id="gyroBack" class="inputPanel" src="resources/img/en/gyroBack.png">
+                    <img id="gyroAllow" class="inputFront" src="resources/img/en/gyroAllow.png">
+                    <img class="inputPlate" translate src="resources/img/en/gyroPlate.png">
                 </div>
             </div>
             <div class="row">
                 <div id="rangeContainer" class="col-4 inputPartsContainer">
-                    <img id="rangeBack" class="inputPanel" src="resources/img/rangeBack.png">
-                    <img id="rangeAllow" class="inputFront" src="resources/img/rangeAllow.png">
-                    <img class="inputPlate" translate src="resources/img/rangePlate.png">
+                    <img id="rangeBack" class="inputPanel" src="resources/img/en/rangeBack.png">
+                    <img id="rangeAllow" class="inputFront" src="resources/img/en/rangeAllow.png">
+                    <img class="inputPlate" translate src="resources/img/en/rangePlate.png">
                 </div>
                 <div id="aOnBowContainer" class="col-4 inputPartsContainer">
-                    <img id="aOnBowBack" class="inputPanel" src="resources/img/aOnBowBack.png">
-                    <img id="aOnBowAllow" class="inputFront" src="resources/img/aOnBowAllow.png">
-                    <img class="inputPlate" translate src="resources/img/aOnBowPlate.png">
+                    <img id="aOnBowBack" class="inputPanel" src="resources/img/en/aOnBowBack.png">
+                    <img id="aOnBowAllow" class="inputFront" src="resources/img/en/aOnBowAllow.png">
+                    <img class="inputPlate" translate src="resources/img/en/aOnBowPlate.png">
                 </div>
                 <div id="fireContainer" class="col-4 inputPartsContainer">
-                    <img id="fireButton" class="inputPanel fireButton" src="resources/img/fireOff.png">
-                    <img class="inputPlate" translate class="fireButton" src="resources/img/firePlate.png">
+                    <img id="fireButton" class="inputPanel fireButton" src="resources/img/en/fireOff.png">
+                    <img class="inputPlate" translate class="fireButton" src="resources/img/en/firePlate.png">
                 </div>
             </div>
             <div class="row">
@@ -293,36 +297,36 @@
     <!-- Message Area -->
     <div id="messageArea2" class="absolutePanel hiddenPage">
         <div id="messageBox2" class="overflow-auto ms-3 mt-1"></div>
-        <img id="messageAreaCloseButton" class="panelCloseButton" src="resources/img/close_up.png" isClose="false">
+        <img id="messageAreaCloseButton" class="panelCloseButton" src="resources/img/en/close_up.png" isClose="false">
     </div>
 
     <!-- Controll Area -->
     <div id="controllArea2" class="absolutePanel hiddenPage">
         <div class="row">
             <div id="telegraphArea" class="col-4">
-                <img id="engineTelegraph" translate src="resources/img/telegraphBack.png">
-                <img id="telegraphAllow" class="frontImage" src="resources/img/telegraphAllow.png">
-                <img id="telegraphAllowShadow" class="frontImage shadowAllow" src="resources/img/telegraphAllow.png">
+                <img id="engineTelegraph" translate src="resources/img/en/telegraphBack.png">
+                <img id="telegraphAllow" class="frontImage" src="resources/img/en/telegraphAllow.png">
+                <img id="telegraphAllowShadow" class="frontImage shadowAllow" src="resources/img/en/telegraphAllow.png">
                 <p><span id="dispSpeed">000</span><span>kt</span></p>
             </div>
             <div id="compassArea" class="col-4">
-                <img id="compassBack" src="resources/img/compassBack.png">
-                <img id="compassFrame" src="resources/img/compassFrame.png">
-                <img id="compassFront" src="resources/img/compassCenter.png">
-                <img id="compassAllowShadow" src="resources/img/compassAllowShadow.png">
+                <img id="compassBack" src="resources/img/en/compassBack.png">
+                <img id="compassFrame" src="resources/img/en/compassFrame.png">
+                <img id="compassFront" src="resources/img/en/compassCenter.png">
+                <img id="compassAllowShadow" src="resources/img/en/compassAllowShadow.png">
                 <p><span id="dispCourse">000</span><span>°</span></p>
             </div>
             <div id="depthMeterArea" class="col-4">
                 <button type="button" class="btn btn-info" id="periscopeDepthButton"><img
-                        src="./resources/img/periscope_256x256.png" /></button>
-                <img id="depthMater" src="resources/img/depthMater.png">
-                <img id="depthMaterAllow" class="frontImage" src="resources/img/depthAllow.png">
+                        src="./resources/img/en/periscope_256x256.png" /></button>
+                <img id="depthMater" src="resources/img/en/depthMater.png">
+                <img id="depthMaterAllow" class="frontImage" src="resources/img/en/depthAllow.png">
                 <img id="depthMaterAllowShadow" class="frontImage shadowAllow" noupdate="false"
-                    src="resources/img/depthAllow.png">
+                    src="resources/img/en/depthAllow.png">
                 <p><span id="dispDepth">000</span><span>m</span></p>
             </div>
         </div>
-        <img id="controllAreaCloseButton" class="panelCloseButton" src="resources/img/close_down.png" isClose="false">
+        <img id="controllAreaCloseButton" class="panelCloseButton" src="resources/img/en/close_down.png" isClose="false">
     </div>
 
     <!-- Status Area -->
@@ -388,8 +392,8 @@
                 </p>
             </div>
         </div>
-        <img id="statusAreaCloseButton" class="panelCloseButton" src="resources/img/close_up.png" isClose="false">
-        <img id="exitButton" src="resources/img/exit.png">
+        <img id="statusAreaCloseButton" class="panelCloseButton" src="resources/img/en/close_up.png" isClose="false">
+        <img id="exitButton" src="resources/img/en/exit.png">
     </div>
 
     <!-- instruction Area -->
@@ -397,22 +401,22 @@
         <div class="row">
             <div class="col">
                 <button type="button" class="btn btn-danger" id="observeButton"><img
-                        src="./resources/img/binoculars_256x256.png" width="25" height="25" /></button>
+                        src="./resources/img/en/binoculars_256x256.png" width="25" height="25" /></button>
             </div>
             <div class="col">
                 <button type="button" class="btn btn-success" id="hydrophoneButton" disabled><img
-                        src="./resources/img/hydrophone_256x256.png" width="25" height="25" /></button>
+                        src="./resources/img/en/hydrophone_256x256.png" width="25" height="25" /></button>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-info" id="periscopeButton"><img src="./resources/img/target.png"
+                <button type="button" class="btn btn-info" id="periscopeButton"><img src="./resources/img/en/target.png"
                         width="25" height="25" /></button>
             </div>
         </div>
     </div>
 
     <!-- GameOver Dialog -->
-    <div class="modal fade gameOverDialog" id="gameOverDialog" data-bs-backdrop="static" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="gameOverDialogLabel" aria-hidden="true">
+    <div class="modal fade gameOverDialog" id="gameOverDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="gameOverDialogLabel" aria-hidden="true">
         <div id="gameOverMenu" class="modal-dialog position-absolute">
             <div class="modal-content">
                 <h1 id="gameOverMessage" glot-model='RES_Sinking'>撃沈…</h1>
@@ -423,13 +427,27 @@
     </div>
 
     <!-- GameClear Dialog -->
-    <div class="modal fade gameOverDialog" id="gameClearDialog" data-bs-backdrop="static" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="gameClearDialogLabel" aria-hidden="true">
+    <div class="modal fade gameOverDialog" id="gameClearDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="gameClearDialogLabel" aria-hidden="true">
         <div id="gameClearMenu" class="modal-dialog position-absolute">
             <div class="modal-content">
                 <h1 id="gameClearMessage" glot-model='RES_Clear'>ゲームクリア</h1>
                 <button class="backTitleButton btn btn-info" type="button" class="btn btn-info" data-bs-dismiss="modal"
                     glot-model='RES_BackToTitle'>タイトル画面に戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 言語切り替えダイアログ -->
+    <div class="modal fade" id="selectLanguageModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <select id="languageSelect" class="form-select">
+                    <option selected disabled>please select language</option>
+                    <option value="en">English</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh">中文</option>
+                </select>
             </div>
         </div>
     </div>
@@ -462,6 +480,9 @@
         <span id='RES_Navigator' glot-model='RES_Navigator'>航海長</span>
         <span id='RES_ChangeCourse' glot-model='RES_ChangeCourse'>針路をxxxに変更</span>
         <span id='RES_ChangeDepth' glot-model='RES_ChangeDepth'>深度をxxxに変更</span>
+        <span id='RES_DeputyChief' glot-model='RES_DeputyChief'>副長</span>
+        <span id='RES_SinkingTons' glot-model='RES_SinkingTons'>xxxトンの敵船を撃沈</span>
+        <span id='RES_SinkingLeft' glot-model='RES_SinkingLeft'>残りxxxトン</span>
     </div>
 
     <!-- 広告非表示購入ダイアログ -->
