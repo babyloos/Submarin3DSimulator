@@ -37,7 +37,7 @@
   "RES_REMOVE_ADS": {
     "en": "Go ad-free",
     "ja": "広告削除",
-    "zh-Hans": "广告去除"
+    "zh": "广告去除"
   },
   "RES_Easy": {
     "en": "Easy",
@@ -417,31 +417,31 @@
   "RES_BackToTitle": {
     "en": "Return to Main Menu",
     "ja": "タイトル画面に戻る",
-    "zh-Hans": "返回主菜单"
+    "zh": "返回主菜单"
   },
   "RES_AdsDeleteQuestion": {
     "en": "Do you want to remove ads?",
     "ja": "広告を削除しますか？",
-    "zh-Hans": "是否要删除广告？"
+    "zh": "是否要删除广告？"
   },
   "RES_AdsDeleteText": {
     "en": "Once purchased, ads will be permanently hidden.",
     "ja": "一度購入すると広告は永久に非表示になります。",
-    "zh-Hans": "购买后广告将永久隐藏。"
+    "zh": "购买后广告将永久隐藏。"
   },
   "RES_PurchaseProcessingInfo": {
     "en": "Purchases are securely processed by Apple.",
     "ja": "購入はAppleによって安全に処理されます。",
-    "zh-Hans": "购买由Apple安全处理。"
+    "zh": "购买由Apple安全处理。"
   },
   "RES_Cancel": {
     "en": "Cancel",
     "ja": "キャンセル",
-    "zh-Hans": "取消"
+    "zh": "取消"
   },
   "RES_Purchase": {
     "en": "Purchase",
     "ja": "購入する",
-    "zh-Hans": "购买"
+    "zh": "购买"
   }
 }
