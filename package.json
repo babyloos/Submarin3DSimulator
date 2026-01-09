@@ -14,7 +14,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/cordova": "^11.0.3",
-    "cordova-android": "^13.0.0",
+    "cordova-android": "^14.0.1",
     "cordova-browser": "^6.0.0",
     "cordova-ios": "^7.1.1",
     "cordova-plugin-browsersync-gen2": "^1.1.7",
@@ -28,8 +28,8 @@
   "cordova": {
     "platforms": [
       "browser",
-      "android",
-      "ios"
+      "ios",
+      "android"
     ],
     "plugins": {
       "cordova-plugin-browsersync-gen2": {},
