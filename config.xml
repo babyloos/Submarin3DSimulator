@@ -32,7 +32,7 @@
       <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
       <preference name="allowFileAccessFromFileURLs" value="true" />
       <preference name="allowUniversalAccessFromFileURLs" value="true" />
-      <preference name="deployment-target" value="13.0" />
+      <preference name="deployment-target" value="15.0" />
       <icon src="res/icon/ios/1024.png" width="1024" height="1024" />
       <edit-config file="*-Info.plist" mode="merge" target="CFBundleDisplayName">
           <string>潜水艦3Dシミュレーター</string>

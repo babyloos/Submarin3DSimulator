@@ -16,7 +16,7 @@
     "@types/cordova": "^11.0.3",
     "cordova-android": "^14.0.1",
     "cordova-browser": "^6.0.0",
-    "cordova-ios": "^8.0.0",
+    "cordova-ios": "^7.1.1",
     "cordova-plugin-browsersync-gen2": "^1.1.7",
     "cordova-plugin-buildinfo": "^4.0.0",
     "cordova-plugin-console": "^1.1.0",
@@ -27,8 +27,8 @@
   "cordova": {
     "platforms": [
       "browser",
-      "ios",
-      "android"
+      "android",
+      "ios"
     ],
     "plugins": {
       "cordova-plugin-browsersync-gen2": {},
