@@ -24,7 +24,7 @@ export class Main {
         // トップページの画面遷移
         // タイトル画面
         const newGameButton = $('#newGameButton');
-        const continueButton = $('#continueButton');
+        const continueButton = $('#continueButton')
         const manualButton = $('#manualButton');
 
         // ゲームモード選択画面
@@ -265,19 +265,9 @@ document.addEventListener('deviceready', async () => {
         // evt.ad
     })
 
-    // アプリ課金確認
-    // ローカル状態の反映（起動直後）
-    setRemoved(getRemoved());
-
-    initIAP();
 }, false);
 
 const showAd = async () => {
-    if (getRemoved()) {
-        // 広告削除課金を行っている場合は表示しない
-        return;
-    }
-
     console.log("showAd");
     try {
         await interstitial.load()
@@ -293,82 +283,5 @@ window.addEventListener('admob.ad.dismiss', async () => {
     await interstitial.load()
 });
 
-const SKU = 'com.babyloos.submarine3d.remove_ads1';
-// const isiOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent);
-
-// 状態
-const getRemoved = () => localStorage.getItem('adsRemoved') === '1';
-const setRemoved = (v) => {
-    console.log("課金状態取得: " + v);
-    localStorage.setItem('adsRemoved', v ? '1' : '0');
-};
-
-// IAP初期化
-function initIAP() {
-    console.log('onDeviceReady');
-
-    // 購入状態を復元
-    inAppPurchase.restorePurchases()
-        .then(function (purchase) {
-            console.log('購入済みか確認');
-            console.log(purchase);
-
-            const owned = purchase.some(p => p.productId === SKU);
-
-            if (owned) {
-                console.log("広告削除を購入済み");
-                // ストレージのフラグを立てる（例: localStorage に保存）
-                localStorage.setItem('adsRemoved', '1');
-                // 購入ボタンを非活性化 
-                $('#removeAdsButton').removeClass('btn-danger').addClass('btn-secondary');
-                $('#removeAdsButton').prop('disabled', true);
-            } else {
-                console.log("未購入");
-                localStorage.setItem('adsRemoved', '0');
-            }
-        })
-        .catch(function (err) {
-            console.log(err);
-        });
-
-    inAppPurchase
-        .getProducts([SKU])
-        .then(function (products) {
-            console.log(products);
-            const price = products[0].price;
-            console.log('price: ' + price);
-            // 金額をダイアログに設定
-            $('#iapPrice').text(price);
-            initRemoveAdsBuyButton();
-        })
-        .catch(function (err) {
-            console.log(err);
-        });
-}
-
-// 購入ボタン押下時処理
-const initRemoveAdsBuyButton = () => {
-    console.log('initAdRemoveButton');
-    $('#removeAdsBuyButton').on('click', function () {
-        inAppPurchase
-            .buy(SKU)
-            .then(function (data) {
-                console.log('購入完了');
-                console.log(data);
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
-    });
-};
-
-// 購入ダイアログを開いた際のイベント
-document.getElementById('removeAdsBuyModal')
-  .addEventListener('shown.bs.modal', function () {
-    console.log("show_purchase_dialog")
-    FirebasePlugin.logEvent("show_purchase_dialog");
-});
-
 const main = new Main();
 main.main();
-
