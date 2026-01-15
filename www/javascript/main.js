@@ -252,9 +252,9 @@ document.addEventListener('deviceready', async () => {
     let unitId;
     let platform = cordova.platformId;
     if (platform === 'android') {
-        unitId = isDebug ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-1479927029413242/6298498855';
+        unitId = isDebug ? '' : '';
     } else if (platform === 'ios') {
-        unitId = isDebug ? 'ca-app-pub-3940256099942544/4411468910' : 'ca-app-pub-1479927029413242/1802112503';
+        unitId = isDebug ? 'ca-app-pub-3940256099942544/4411468910' : 'ca-app-pub-1479927029413242/2243126080';
     }
 
     interstitial = new admob.InterstitialAd({
