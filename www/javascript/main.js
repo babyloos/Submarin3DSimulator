@@ -221,11 +221,12 @@ var glot;
 window.addEventListener('DOMContentLoaded', function () {
     glot = new Glottologist();
     glot.import("resources/words.json").then(() => {
-        glot.render();
+        // 初期選択言語は中国語
+        glot.render('zh');
     });
 
-    const language = navigator.language;
-    ImgTranslator.translate(language);
+    // const language = navigator.language;
+    ImgTranslator.translate('zh');
 
     // 言語切り替え時動作設定
     // initUpdateLanguage();
