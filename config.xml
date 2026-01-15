@@ -39,7 +39,7 @@
       <string>ca-app-pub-1479927029413242~9169488908</string>
     </config-file>
     <edit-config file="*-Info.plist" mode="merge" target="CFBundleDisplayName">
-      <string>潜水艦3Dシミュレーター</string>
+      <string>潜艇作战模拟</string>
     </edit-config>
   </platform>
   <platform name="android">
