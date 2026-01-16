@@ -99,10 +99,6 @@ export class Game {
      * @param {Function} gameClear ゲームクリア時処理
      */
     constructor(isNewgame, gameMode, difficulty, loadProgress, exitGame, gameOver, gameClear) {
-        if (cordova.platformId === 'android' || cordova.platformId === 'ios') {
-            FirebasePlugin.logEvent("start_game");
-        }
-
         this.isNewgame = isNewgame;
         this.gameMode = gameMode;
         this._exitGame = exitGame;
