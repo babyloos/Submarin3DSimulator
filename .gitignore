@@ -39,3 +39,6 @@ keystore/*
 
 # Mac
 ._*
+
+# firebase
+google-services.json
