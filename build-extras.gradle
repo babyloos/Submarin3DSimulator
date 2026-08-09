@@ -1,0 +1,3 @@
+// The legacy in-app purchase plugin ships an AIDL billing interface.
+// AGP 8 disables AIDL compilation by default, so enable it explicitly.
+android.buildFeatures.aidl = true
