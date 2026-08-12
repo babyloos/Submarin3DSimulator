@@ -307,58 +307,66 @@ const setRemoved = (v) => {
 function initIAP() {
     console.log('onDeviceReady');
 
-    // 購入状態を復元
-    inAppPurchase.restorePurchases()
-        .then(function (purchase) {
-            console.log('購入済みか確認');
-            console.log(purchase);
+    const store = CdvPurchase.store;
+    const purchasePlatform = cordova.platformId === 'android'
+        ? CdvPurchase.Platform.GOOGLE_PLAY
+        : CdvPurchase.Platform.APPLE_APPSTORE;
 
-            const owned = purchase.some(p => p.productId === SKU);
+    const updateOwnedState = () => {
+        if (!store.owned({ id: SKU, platform: purchasePlatform })) return;
 
-            if (owned) {
-                console.log("広告削除を購入済み");
-                // ストレージのフラグを立てる（例: localStorage に保存）
-                localStorage.setItem('adsRemoved', '1');
-                // 購入ボタンを非活性化 
-                $('#removeAdsButton').removeClass('btn-danger').addClass('btn-secondary');
-                $('#removeAdsButton').prop('disabled', true);
-            } else {
-                console.log("未購入");
-                localStorage.setItem('adsRemoved', '0');
-            }
+        setRemoved(true);
+        $('#removeAdsButton').removeClass('btn-danger').addClass('btn-secondary');
+        $('#removeAdsButton').prop('disabled', true);
+    };
+
+    store.register({
+        id: SKU,
+        type: CdvPurchase.ProductType.NON_CONSUMABLE,
+        platform: purchasePlatform,
+    });
+
+    store.when()
+        .productUpdated(function (product) {
+            if (product.id !== SKU || !product.pricing) return;
+            $('#iapPrice').text(product.pricing.price);
+            initRemoveAdsBuyButton(store, purchasePlatform);
         })
-        .catch(function (err) {
-            console.log(err);
+        .receiptUpdated(updateOwnedState)
+        .receiptsReady(updateOwnedState)
+        .approved(async function (transaction) {
+            const removesAds = transaction.products.some(product => product.id === SKU);
+            if (!removesAds) return;
+
+            setRemoved(true);
+            updateOwnedState();
+            await transaction.finish();
         });
 
-    inAppPurchase
-        .getProducts([SKU])
-        .then(function (products) {
-            console.log(products);
-            const price = products[0].price;
-            console.log('price: ' + price);
-            // 金額をダイアログに設定
-            $('#iapPrice').text(price);
-            initRemoveAdsBuyButton();
-        })
-        .catch(function (err) {
-            console.log(err);
-        });
+    store.initialize([purchasePlatform]).then(function (errors) {
+        errors.forEach(error => console.error('IAP initialization failed:', error));
+        return store.restorePurchases();
+    }).then(function (error) {
+        if (error) console.error('IAP restore failed:', error);
+        updateOwnedState();
+    }).catch(function (error) {
+        console.error('IAP failed:', error);
+    });
 }
 
 // 購入ボタン押下時処理
-const initRemoveAdsBuyButton = () => {
+const initRemoveAdsBuyButton = (store, purchasePlatform) => {
     console.log('initAdRemoveButton');
-    $('#removeAdsBuyButton').on('click', function () {
-        inAppPurchase
-            .buy(SKU)
-            .then(function (data) {
-                console.log('購入完了');
-                console.log(data);
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
+    $('#removeAdsBuyButton').off('click').on('click', async function () {
+        const product = store.get(SKU, purchasePlatform);
+        const offer = product && product.getOffer();
+        if (!offer) {
+            console.error('IAP offer is not available:', SKU);
+            return;
+        }
+
+        const error = await offer.order();
+        if (error) console.error('IAP purchase failed:', error);
     });
 };
 

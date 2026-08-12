@@ -58,10 +58,12 @@
         "GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS": "true",
         "IOS_USE_PRECOMPILED_FIRESTORE_POD": "false",
         "IOS_FCM_ENABLED": "true"
-      }
+      },
+      "cordova-plugin-purchase": {}
     }
   },
   "dependencies": {
+    "cordova-plugin-purchase": "13.18.0",
     "plist": "^3.1.0",
     "stats.js": "^0.17.0"
   }
