@@ -374,7 +374,7 @@ const initRemoveAdsBuyButton = (store, purchasePlatform) => {
 document.getElementById('removeAdsBuyModal')
   .addEventListener('shown.bs.modal', function () {
     console.log("show_purchase_dialog")
-    FirebasePlugin.logEvent("show_purchase_dialog");
+    FirebasePlugin.logEvent("show_purchase_dialog", {});
 });
 
 const main = new Main();
