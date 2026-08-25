@@ -27,15 +27,15 @@
                             <h1 glot-model='RES_Title'>潜水艦3Dシミュレータ</h1>
                         </div>
                         <div class="menuButtonWrapper">
-                            <div class="row">
-                                <button id="newGameButton" class="btn btn-info" glot-model='RES_NewGame'>ニューゲーム</button>
-                            </div>
-                            <div class="row">
-                                <button id="continueButton" class="btn btn-info"
+                            <div class="row menuButtonRow">
+                                <button id="newGameButton" class="btn btn-info btn-sm" glot-model='RES_NewGame'>ニューゲーム</button>
+                                <button id="continueButton" class="btn btn-info btn-sm"
                                     glot-model='RES_Continue'>コンティニュー</button>
+                                <button id="manualButton" class="btn btn-info btn-sm" glot-model='RES_Manual'>マニュアル</button>
                             </div>
-                            <div class="row">
-                                <button id="manualButton" class="btn btn-info" glot-model='RES_Manual'>マニュアル</button>
+                            <div class="row promoSubmarine2Row hiddenPage">
+                                <button id="promoSubmarine2Button" class="btn btn-warning btn-sm promoSubmarine2Button"
+                                    glot-model='RES_PromoSubmarine2'>潜水艦3Dシミュレータ2 好評配信中！</button>
                             </div>
                         </div>
                     </div>
@@ -422,6 +422,8 @@
                 <h1 id="gameOverMessage" glot-model='RES_Sinking'>撃沈…</h1>
                 <button class="backTitleButton btn btn-info" type="button" data-bs-dismiss="modal"
                     glot-model='RES_BackToTitle'>タイトル画面に戻る</button>
+                <button id="gameOverPromoButton" class="promoSubmarine2Button btn btn-warning hiddenPage"
+                    type="button" glot-model='RES_PromoSubmarine2'>潜水艦3Dシミュレータ2 好評配信中！</button>
             </div>
         </div>
     </div>
@@ -434,6 +436,8 @@
                 <h1 id="gameClearMessage" glot-model='RES_Clear'>ゲームクリア</h1>
                 <button class="backTitleButton btn btn-info" type="button" class="btn btn-info" data-bs-dismiss="modal"
                     glot-model='RES_BackToTitle'>タイトル画面に戻る</button>
+                <button id="gameClearPromoButton" class="promoSubmarine2Button btn btn-warning hiddenPage"
+                    type="button" glot-model='RES_PromoSubmarine2'>潜水艦3Dシミュレータ2 好評配信中！</button>
             </div>
         </div>
     </div>

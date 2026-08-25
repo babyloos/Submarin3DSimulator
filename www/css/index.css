@@ -98,6 +98,25 @@ img {
     margin-top: 20px;
 }
 
+/* タイトル画面メインメニュー（横並び） */
+.menuButtonRow {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+.menuButtonRow button {
+    flex: 1 1 0;
+    white-space: nowrap;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+#titlePage .menuButtonWrapper {
+    width: 90%;
+}
+
 /* マニュアル画面 */
 #manualTitle {
     margin-left: 34px;

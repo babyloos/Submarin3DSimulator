@@ -270,7 +270,28 @@ document.addEventListener('deviceready', async () => {
     setRemoved(getRemoved());
 
     initIAP();
+
+    // 潜水艦3Dシミュレータ2への誘導ボタン
+    initPromoSubmarine2(platform);
 }, false);
+
+// 潜水艦3Dシミュレータ2（Unity版）のストアURL
+const PROMO_SUBMARINE2_URL = {
+    android: 'https://play.google.com/store/apps/details?id=com.babyloos.submarine3dsimulator2',
+    // TODO: iOS版のApp Store公開後、App Store URLを設定する
+    ios: null,
+};
+
+function initPromoSubmarine2(platform) {
+    const url = PROMO_SUBMARINE2_URL[platform];
+    if (!url) {
+        return;
+    }
+    $('.promoSubmarine2Button, .promoSubmarine2Row').removeClass('hiddenPage');
+    $('.promoSubmarine2Button').on('click', () => {
+        window.open(url, '_system');
+    });
+}
 
 const showAd = async () => {
     if (getRemoved()) {
