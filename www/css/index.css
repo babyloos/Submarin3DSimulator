@@ -725,3 +725,8 @@ p.title {
 #dailyMissionCard {
     margin-top: 8px;
 }
+
+/* 潜望鏡画面では今日の任務HUDを隠す */
+.dmHiddenInPeriscope {
+    display: none !important;
+}

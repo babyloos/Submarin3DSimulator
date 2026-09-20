@@ -187,6 +187,8 @@ export class PeriscopeController extends InstructionController {
         const aimLine = $('.aimLine');
         const compass = $('#compass');
         const inputBoad = $('#inputBoad');
+        // 今日の任務HUDは潜望鏡画面では隠す(renderAllによる再表示と干渉しないよう専用クラスで制御)
+        $('#dailyMissionHud').toggleClass('dmHiddenInPeriscope', isShow);
         if (isShow) {
             // 潜望鏡上昇下降ボタン
             raiseDownArea.css('display', 'block');
