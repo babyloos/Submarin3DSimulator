@@ -100,7 +100,8 @@ export class Game {
      * @param {Function} gameClear ゲームクリア時処理
      */
     constructor(isNewgame, gameMode, difficulty, loadProgress, exitGame, gameOver, gameClear) {
-        FirebasePlugin.logEvent("start_game", {});
+        // 既存イベント(仕様維持のためvariantは付けない)。ブラウザ等でFirebasePluginが無くても止まらないようtrackEvent経由で送る
+        trackEvent("start_game", {}, false);
 
         this.isNewgame = isNewgame;
         this.gameMode = gameMode;

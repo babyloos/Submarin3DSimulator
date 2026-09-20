@@ -396,7 +396,7 @@ const initRemoveAdsBuyButton = (store, purchasePlatform) => {
 document.getElementById('removeAdsBuyModal')
   .addEventListener('shown.bs.modal', function () {
     console.log("show_purchase_dialog")
-    FirebasePlugin.logEvent("show_purchase_dialog", {});
+    trackEvent("show_purchase_dialog", {}, false);
     // 購入ダイアログは現状タイトル画面のボタンからのみ開く。将来automatic/after_mission/after_adを追加する場合はここでtriggerを切り替える
     trackEvent("purchase_dialog_shown", { trigger: "button", game_progress: getGameProgress() });
 });
