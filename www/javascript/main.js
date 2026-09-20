@@ -5,6 +5,7 @@ import { Util } from "./util.js";
 import { AudioManager } from "./controller/audioManager.js";
 import ImgTranslator from "./controller/imgTranslator.js";
 import { STORAGE_KEYS, getGameProgress, trackEvent, trackOnceEvent } from "./analytics.js";
+import { renderAll as renderDailyMission, showTitleCard as showDailyMissionTitleCard } from "./dailyMission.js";
 
 export class Main {
 
@@ -15,6 +16,9 @@ export class Main {
         // ゲーム画面からトップ画面に戻った際にすべてのイベントをリセットするため毎回ここで設定する
         // 言語切り替え時動作設定
         initUpdateLanguage();
+
+        // B群のみ: 今日の任務カードを表示(タイトル画面表示のたびに更新する)
+        showDailyMissionTitleCard();
 
         const audioManager = new AudioManager();
         audioManager.load('resources/audio/enter.mp3');
@@ -223,6 +227,8 @@ window.addEventListener('DOMContentLoaded', function () {
     glot = new Glottologist();
     glot.import("resources/words.json").then(() => {
         glot.render();
+        // 翻訳済みの文言でデイリーミッション表示を更新する
+        renderDailyMission();
     });
 
     const language = navigator.language;
@@ -239,6 +245,7 @@ const initUpdateLanguage = () => {
         console.log("change language " + $(this).val());
         glot.render($(this).val());
         ImgTranslator.translate($(this).val());
+        renderDailyMission();
     });
   });
 }

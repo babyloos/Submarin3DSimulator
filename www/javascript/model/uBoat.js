@@ -6,6 +6,7 @@ import { TDC } from "./TDC.js";
 import { Torpedo } from "./torpedo.js";
 import { AudioManager } from "../controller/audioManager.js";
 import { STORAGE_KEYS, trackOnceEvent } from "../analytics.js";
+import { onTorpedoFired as dailyMissionOnTorpedoFired } from "../dailyMission.js";
 
 /**
  * U-boatクラス
@@ -291,6 +292,8 @@ export class Uboat extends GameObject {
         this.torpedoElapsedTime = 0;
 
         trackOnceEvent('first_torpedo_fired', STORAGE_KEYS.firstTorpedoFired);
+        // B群のみ: デイリーミッション(制限付きミッションの魚雷数カウント)
+        dailyMissionOnTorpedoFired();
     }
 
     /**

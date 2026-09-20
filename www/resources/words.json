@@ -39,6 +39,61 @@
     "ja": "広告削除",
     "zh": "广告去除"
   },
+  "RES_DM_Title": {
+    "en": "TODAY'S MISSION",
+    "ja": "今日の任務",
+    "zh": "今日任务"
+  },
+  "RES_DM_Tonnage": {
+    "en": "Sink xxx tons of enemy ships",
+    "ja": "xxxトンの敵船を撃沈せよ",
+    "zh": "击沉总计xxx吨的敌舰"
+  },
+  "RES_DM_ShipCount": {
+    "en": "Sink xxx enemy ships",
+    "ja": "敵船をxxx隻撃沈せよ",
+    "zh": "击沉xxx艘敌舰"
+  },
+  "RES_DM_ShipTypeMerchant": {
+    "en": "Sink xxx merchant ships",
+    "ja": "商船をxxx隻撃沈せよ",
+    "zh": "击沉xxx艘商船"
+  },
+  "RES_DM_ShipTypeDestroyer": {
+    "en": "Sink xxx destroyer(s)",
+    "ja": "駆逐艦をxxx隻撃沈せよ",
+    "zh": "击沉xxx艘驱逐舰"
+  },
+  "RES_DM_TorpedoLimit": {
+    "en": "Sink xxx ships using yyy torpedoes or fewer",
+    "ja": "魚雷yyy発以内で敵船をxxx隻撃沈せよ",
+    "zh": "使用不超过yyy枚鱼雷击沉xxx艘敌舰"
+  },
+  "RES_DM_Torpedoes": {
+    "en": "Torpedoes",
+    "ja": "発射数",
+    "zh": "鱼雷发射数"
+  },
+  "RES_DM_RetryHint": {
+    "en": "Limit exceeded. Try again in a new game",
+    "ja": "制限超過。次のゲームで再挑戦",
+    "zh": "已超出限制，请在新游戏中重试"
+  },
+  "RES_DM_Complete": {
+    "en": "MISSION COMPLETE",
+    "ja": "任務完了",
+    "zh": "任务完成"
+  },
+  "RES_DM_NextTitle": {
+    "en": "NEXT MISSION",
+    "ja": "次の任務",
+    "zh": "下一个任务"
+  },
+  "RES_DM_NextBody": {
+    "en": "A new mission will be available tomorrow",
+    "ja": "明日、新しい任務が追加されます",
+    "zh": "明天将有新的任务"
+  },
   "RES_PromoSubmarine2": {
     "en": "Try Submarine 3D Simulator 2!",
     "ja": "潜水艦3Dシミュレータ2 好評配信中！",

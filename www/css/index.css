@@ -645,3 +645,83 @@ p.title {
   font-size: 1.8rem;
   color: #333;
 }
+
+/* 今日の任務(デイリーミッション: B群のみ表示) */
+.dailyMissionBox {
+    color: white;
+    font-size: 11px;
+    line-height: 1.3;
+    background-color: rgba(48, 80, 80, 0.75);
+    border: 1px solid #3399CC80;
+    border-radius: 5px;
+    padding: 5px 8px;
+    text-align: left;
+}
+
+#dailyMissionCard {
+    margin: 12px auto 0;
+    width: 75%;
+    text-align: center;
+}
+
+#dailyMissionHud {
+    position: absolute;
+    top: 150px;
+    right: 0px;
+    width: 35%;
+    z-index: 5;
+    background-color: rgba(64, 64, 64, 0.45);
+}
+
+.dailyMissionBox .dmHeader {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: #ffc107;
+}
+
+.dailyMissionBox .dmDescription {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.dailyMissionBox .dmProgressRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dailyMissionBox .dmProgress {
+    flex: 1;
+    height: 6px;
+}
+
+.dailyMissionBox .dmProgressText {
+    white-space: nowrap;
+}
+
+.dailyMissionBox .dmComplete {
+    color: #7dff9b;
+    font-weight: bold;
+}
+
+.dailyMissionBox .dmNext {
+    color: #c0d8ff;
+}
+
+.dailyMissionBox.dailyMissionCompleted {
+    border-color: #7dff9b80;
+}
+
+.dailyMissionBox .dmProgress {
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+}
+
+/* タイトル画面の縦スペースを確保するため、プロモーション行の余白を詰める */
+.menuButtonWrapper .promoSubmarine2Row {
+    margin-top: 8px;
+}
+
+#dailyMissionCard {
+    margin-top: 8px;
+}

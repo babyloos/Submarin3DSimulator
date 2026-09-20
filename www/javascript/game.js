@@ -17,6 +17,7 @@ import { EnemyShip } from "./model/enemyShip.js";
 import { ThreeViewController } from "./controller/threeViewController.js";
 import { PeriscopeController } from "./controller/periscopeController.js";
 import { STORAGE_KEYS, getExperimentVariant, getForegroundMs, markMissionClearedOnce, trackEvent, trackOnceEvent } from "./analytics.js";
+import * as DailyMission from "./dailyMission.js";
 
 /**
  * ゲーム全体を管理するクラス
@@ -161,18 +162,30 @@ export class Game {
             // コンティニュー時はミッション自体は開始ではないため送信しない
             if (this.isNewgame) {
                 trackEvent('mission_start', {
+                    mission_kind: 'standard',
                     mission_id: this.missionId,
                     mission_type: this.missionType,
                     mission_target: this.missionTarget,
                 });
             }
 
-            if (getExperimentVariant() === 'B') {
-                // future daily mission feature
-            }
         } catch (e) {
             console.error('[Analytics] game start tracking error', e);
         }
+
+        // B群のみ: デイリーミッション(A群ではisEnabled()がfalseのため何もしない)
+        DailyMission.onGameStart();
+    }
+
+    /**
+     * デイリーミッションへ撃沈を通知する(B群以外では何もしない)
+     * @param {number} tonnage 撃沈した船のトン数
+     * @param {ObjectType} objectType 撃沈した船の種類
+     */
+    #onSunkEnemyDailyMission(tonnage, objectType) {
+        DailyMission.onEnemySunk(tonnage, objectType, (speaker, text) => {
+            this.messageController.showMessage(speaker, text);
+        });
     }
 
     /**
@@ -235,9 +248,13 @@ export class Game {
             enemyShipsJson.forEach(function (enemyShipJson) {
                 let enemyShip;
                 const onHitTorpedo = this.threePageViewController.onHitTorpedo;
+                // B群のみ: コンティニュー後の撃沈もデイリーミッションに反映する(A群は従来どおり)
+                const onSunk = DailyMission.isEnabled()
+                    ? (tonnage, objectType) => this.#onSunkEnemyDailyMission(tonnage, objectType)
+                    : onHitTorpedo;
                 if (enemyShipJson.objectType === ObjectType.destoryer1) {
                     enemyShip = Destroyer.deserialize(enemyShipJson);
-                    enemyShip.initialize(this.playerBoat, onHitTorpedo);
+                    enemyShip.initialize(this.playerBoat, onSunk);
                     // depthChargeはplayerBoatの参照が必要なのでここで参照を渡す
                     enemyShip.depthCharges.forEach(function (depthCharge) {
                         if (depthCharge.isEnabled) {
@@ -247,7 +264,7 @@ export class Game {
                     this.enemyShips.push(enemyShip);
                 } else if (enemyShipJson.objectType === ObjectType.marchant1) {
                     enemyShip = Marchant.deserialize(enemyShipJson, onHitTorpedo);
-                    enemyShip.initialize(this.playerBoat, this.threePageViewController.onHitTorpedo);
+                    enemyShip.initialize(this.playerBoat, DailyMission.isEnabled() ? onSunk : this.threePageViewController.onHitTorpedo);
                     this.enemyShips.push(enemyShip);
                 }
             }.bind(this));
@@ -491,6 +508,9 @@ export class Game {
      * @param {number} tonnage 撃沈した船のトン数
      */
     onSunkEnemy(tonnage, objectType) {
+        // B群のみ: デイリーミッションの進捗更新(通常のクリア済み判定より前に行う)
+        this.#onSunkEnemyDailyMission(tonnage, objectType);
+
         if (this.isGameClear) {
             return;
         }
@@ -520,6 +540,7 @@ export class Game {
             try {
                 markMissionClearedOnce();
                 trackEvent('mission_complete', {
+                    mission_kind: 'standard',
                     mission_id: this.missionId,
                     mission_type: this.missionType,
                     mission_target: this.missionTarget,

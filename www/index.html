@@ -33,6 +33,21 @@
                                     glot-model='RES_Continue'>コンティニュー</button>
                                 <button id="manualButton" class="btn btn-info btn-sm" glot-model='RES_Manual'>マニュアル</button>
                             </div>
+                            <!-- 今日の任務(B群のみ表示) -->
+                            <div id="dailyMissionCard" class="dailyMissionBox hiddenPage">
+                                <div class="dmHeader" glot-model='RES_DM_Title'>今日の任務</div>
+                                <div class="dmDescription"></div>
+                                <div class="dmProgressRow">
+                                    <div class="progress dmProgress"><div class="progress-bar dmProgressBar bg-warning" role="progressbar" style="width: 0%"></div></div>
+                                    <span class="dmProgressText"></span>
+                                </div>
+                                <div class="dmRestriction"></div>
+                                <div class="dmComplete hiddenPage" glot-model='RES_DM_Complete'>任務完了</div>
+                                <div class="dmNext hiddenPage">
+                                    <span glot-model='RES_DM_NextTitle'>次の任務</span>:
+                                    <span glot-model='RES_DM_NextBody'>明日、新しい任務が追加されます</span>
+                                </div>
+                            </div>
                             <div class="row promoSubmarine2Row hiddenPage">
                                 <button id="promoSubmarine2Button" class="btn btn-warning btn-sm promoSubmarine2Button"
                                     glot-model='RES_PromoSubmarine2'>潜水艦3Dシミュレータ2 好評配信中！</button>
@@ -217,6 +232,21 @@
 
     <!-- 3d page -->
     <div id="threePage" class="hiddenPage">
+        <!-- 今日の任務(B群のみ表示) -->
+        <div id="dailyMissionHud" class="dailyMissionBox hiddenPage">
+            <div class="dmHeader" glot-model='RES_DM_Title'>今日の任務</div>
+            <div class="dmDescription"></div>
+            <div class="dmProgressRow">
+                <div class="progress dmProgress"><div class="progress-bar dmProgressBar bg-warning" role="progressbar" style="width: 0%"></div></div>
+                <span class="dmProgressText"></span>
+            </div>
+            <div class="dmRestriction"></div>
+            <div class="dmComplete hiddenPage" glot-model='RES_DM_Complete'>任務完了</div>
+            <div class="dmNext hiddenPage">
+                <span glot-model='RES_DM_NextTitle'>次の任務</span>:
+                <span glot-model='RES_DM_NextBody'>明日、新しい任務が追加されます</span>
+            </div>
+        </div>
         <!-- 拡大ボタン -->
         <div id="zoomButtonArea">
             <button id="zoomButton" class=" btn btn-info">1.6x</button>
@@ -487,6 +517,17 @@
         <span id='RES_DeputyChief' glot-model='RES_DeputyChief'>副長</span>
         <span id='RES_SinkingTons' glot-model='RES_SinkingTons'>xxxトンの敵船を撃沈</span>
         <span id='RES_SinkingLeft' glot-model='RES_SinkingLeft'>残りxxxトン</span>
+        <!-- デイリーミッション用 -->
+        <span id='RES_DM_Tonnage' glot-model='RES_DM_Tonnage'>xxxトンの敵船を撃沈せよ</span>
+        <span id='RES_DM_ShipCount' glot-model='RES_DM_ShipCount'>敵船をxxx隻撃沈せよ</span>
+        <span id='RES_DM_ShipTypeMerchant' glot-model='RES_DM_ShipTypeMerchant'>商船をxxx隻撃沈せよ</span>
+        <span id='RES_DM_ShipTypeDestroyer' glot-model='RES_DM_ShipTypeDestroyer'>駆逐艦をxxx隻撃沈せよ</span>
+        <span id='RES_DM_TorpedoLimit' glot-model='RES_DM_TorpedoLimit'>魚雷yyy発以内で敵船をxxx隻撃沈せよ</span>
+        <span id='RES_DM_Torpedoes' glot-model='RES_DM_Torpedoes'>発射数</span>
+        <span id='RES_DM_RetryHint' glot-model='RES_DM_RetryHint'>制限超過。次のゲームで再挑戦</span>
+        <span id='RES_DM_Complete' glot-model='RES_DM_Complete'>任務完了</span>
+        <span id='RES_DM_NextTitle' glot-model='RES_DM_NextTitle'>次の任務</span>
+        <span id='RES_DM_NextBody' glot-model='RES_DM_NextBody'>明日、新しい任務が追加されます</span>
     </div>
 
     <!-- 広告非表示購入ダイアログ -->
