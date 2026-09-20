@@ -41,8 +41,8 @@ const CANDIDATES = [
     { id: 'ship_type_merchant_2', type: MissionType.shipType, shipType: ShipType.merchant, target: 2 },
     { id: 'restricted_torpedo6_ship2', type: MissionType.restricted, restrictionType: RestrictionType.torpedoLimit, restrictionValue: 6, target: 2 },
     { id: 'ship_type_destroyer_1', type: MissionType.shipType, shipType: ShipType.destroyer, target: 1 },
-    // ゲーム内時間で240分(最大16倍速なら実時間15分)以内に8,000t(商船2隻ぶん)
-    { id: 'restricted_time240_tonnage8000', type: MissionType.restricted, restrictionType: RestrictionType.timeLimit, restrictionValue: 240, target: 8000 },
+    // ゲーム内時間で60分(最大16倍速なら実時間約4分)以内に8,000t(商船2隻ぶん)
+    { id: 'restricted_time60_tonnage8000', type: MissionType.restricted, restrictionType: RestrictionType.timeLimit, restrictionValue: 60, target: 8000 },
 ];
 
 const STORAGE_KEY_STATE = 'daily_mission_state';
