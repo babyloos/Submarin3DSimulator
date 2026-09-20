@@ -351,6 +351,8 @@ export class Game {
         // 時刻の更新
         this.time += elapsedTime / 1000;
         this.statusController.updateTime(this.initTime, this.time);
+        // B群のみ: 時間制限付きデイリーミッション用にゲーム内時間を通知(時間制限ミッション以外では即return)
+        DailyMission.onGameTime(this.time);
 
         // ゲーム内時間の1分ごとにデータセーブを行う
         if (Math.round(this.time) % 60 == 0 && Math.round(this.time - elapsedTime / 1000) % 60 != 0 && !this.isGameOver) {

@@ -26,7 +26,8 @@ const ShipType = {
 };
 
 const RestrictionType = {
-    torpedoLimit: 'torpedo_limit',
+    torpedoLimit: 'torpedo_limit',   // 魚雷N発以内でX隻撃沈
+    timeLimit: 'time_limit',         // ゲーム内N分以内にXトン撃沈
 };
 
 /**
@@ -40,6 +41,8 @@ const CANDIDATES = [
     { id: 'ship_type_merchant_2', type: MissionType.shipType, shipType: ShipType.merchant, target: 2 },
     { id: 'restricted_torpedo6_ship2', type: MissionType.restricted, restrictionType: RestrictionType.torpedoLimit, restrictionValue: 6, target: 2 },
     { id: 'ship_type_destroyer_1', type: MissionType.shipType, shipType: ShipType.destroyer, target: 1 },
+    // ゲーム内時間で240分(最大16倍速なら実時間15分)以内に8,000t(商船2隻ぶん)
+    { id: 'restricted_time240_tonnage8000', type: MissionType.restricted, restrictionType: RestrictionType.timeLimit, restrictionValue: 240, target: 8000 },
 ];
 
 const STORAGE_KEY_STATE = 'daily_mission_state';
@@ -181,7 +184,11 @@ export function isEnabled() {
 // #region 進捗管理
 
 // 1プレイ(1回のゲーム)中のみ有効な値
-let attempt = { torpedoesUsed: 0, startForegroundMs: 0, failed: false };
+let attempt = { torpedoesUsed: 0, startForegroundMs: 0, failed: false, gameTimeBase: null, gameElapsedSec: 0, shownRemainMin: null };
+
+// 現在のミッションが未達成の時間制限ミッションか(onGameTimeを毎フレーム軽くするためのキャッシュ)
+let timeLimitActive = false;
+let timeLimitSec = 0;   // 時間制限(ゲーム内秒)。毎フレームlocalStorageを読まないようキャッシュする
 
 function missionParams(state) {
     const params = {
@@ -208,19 +215,56 @@ export function onGameStart() {
         return;
     }
     try {
-        attempt = { torpedoesUsed: 0, startForegroundMs: getForegroundMs(), failed: false };
+        attempt = { torpedoesUsed: 0, startForegroundMs: getForegroundMs(), failed: false, gameTimeBase: null, gameElapsedSec: 0, shownRemainMin: null };
         const state = getState();
         // 制限付きミッションは1プレイごとにやり直し
         if (state.type === MissionType.restricted && !state.completed) {
             state.progress = 0;
             saveRaw(state);
         }
+        timeLimitActive = !state.completed && state.type === MissionType.restricted
+            && state.restrictionType === RestrictionType.timeLimit;
+        timeLimitSec = timeLimitActive ? state.restrictionValue * 60 : 0;
         if (!state.completed) {
             trackEvent('mission_start', missionParams(state));
         }
         renderAll();
     } catch (e) {
         console.error('[DailyMission] onGameStart error', e);
+    }
+}
+
+/**
+ * ゲーム内時間の更新時に呼ぶ(毎フレーム呼ばれるため、時間制限ミッション以外では即return)
+ * @param {number} gameTimeSec ゲーム内経過秒数
+ */
+export function onGameTime(gameTimeSec) {
+    if (!timeLimitActive) {
+        return;
+    }
+    try {
+        if (attempt.gameTimeBase === null) {
+            // コンティニュー時は読み込んだ時点を起点にする
+            attempt.gameTimeBase = gameTimeSec;
+        }
+        attempt.gameElapsedSec = gameTimeSec - attempt.gameTimeBase;
+
+        const remainMin = Math.max(0, Math.ceil((timeLimitSec - attempt.gameElapsedSec) / 60));
+        let needRender = false;
+        if (!attempt.failed && attempt.gameElapsedSec > timeLimitSec) {
+            attempt.failed = true;
+            needRender = true;
+        }
+        // 表示は残り時間(分)が変わったときと時間切れになったときだけ更新する(毎フレームの再描画を避ける)
+        if (remainMin !== attempt.shownRemainMin) {
+            attempt.shownRemainMin = remainMin;
+            needRender = true;
+        }
+        if (needRender) {
+            renderAll();
+        }
+    } catch (e) {
+        console.error('[DailyMission] onGameTime error', e);
     }
 }
 
@@ -274,7 +318,8 @@ export function onEnemySunk(tonnage, objectType, showMessage) {
                 break;
             case MissionType.restricted:
                 if (!attempt.failed) {
-                    state.progress += 1;
+                    // 魚雷制限は撃沈数、時間制限は撃沈トン数を進捗とする
+                    state.progress += state.restrictionType === RestrictionType.timeLimit ? tonnage : 1;
                 }
                 break;
         }
@@ -294,6 +339,7 @@ export function onEnemySunk(tonnage, objectType, showMessage) {
 }
 
 function onComplete(state, showMessage) {
+    timeLimitActive = false;
     const params = missionParams(state);
     params.elapsed_seconds = Math.round((getForegroundMs() - attempt.startForegroundMs) / 1000);
     // 既存イベント(mission_complete)と、デイリー専用イベントの両方を送る
@@ -333,6 +379,9 @@ function describe(state) {
             return tpl(state.shipType === ShipType.destroyer ? 'RES_DM_ShipTypeDestroyer' : 'RES_DM_ShipTypeMerchant')
                 .replace('xxx', state.target);
         case MissionType.restricted:
+            if (state.restrictionType === RestrictionType.timeLimit) {
+                return tpl('RES_DM_TimeLimit').replace('xxx', formatNumber(state.target)).replace('yyy', state.restrictionValue);
+            }
             return tpl('RES_DM_TorpedoLimit').replace('xxx', state.target).replace('yyy', state.restrictionValue);
     }
     return '';
@@ -342,7 +391,7 @@ function describe(state) {
  * 進捗の文言 (例: "1 / 3", "8,500 / 10,000 t")
  */
 function describeProgress(state) {
-    if (state.type === MissionType.tonnage) {
+    if (state.type === MissionType.tonnage || state.restrictionType === RestrictionType.timeLimit) {
         return formatNumber(state.progress) + ' / ' + formatNumber(state.target) + ' t';
     }
     return state.progress + ' / ' + state.target;
@@ -358,6 +407,13 @@ function progressPercent(state) {
 function describeRestriction(state) {
     if (state.type !== MissionType.restricted || state.completed) {
         return '';
+    }
+    if (state.restrictionType === RestrictionType.timeLimit) {
+        if (attempt.failed) {
+            return tpl('RES_DM_TimeUp') + ' - ' + tpl('RES_DM_RetryHint');
+        }
+        const remain = attempt.shownRemainMin !== null ? attempt.shownRemainMin : state.restrictionValue;
+        return tpl('RES_DM_TimeLeft').replace('xxx', remain);
     }
     const used = attempt.torpedoesUsed + ' / ' + state.restrictionValue;
     if (attempt.failed) {

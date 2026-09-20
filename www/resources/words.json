@@ -69,6 +69,21 @@
     "ja": "魚雷yyy発以内で敵船をxxx隻撃沈せよ",
     "zh": "使用不超过yyy枚鱼雷击沉xxx艘敌舰"
   },
+  "RES_DM_TimeLimit": {
+    "en": "Sink xxx tons of enemy ships within yyy in-game minutes",
+    "ja": "ゲーム内yyy分以内にxxxトンの敵船を撃沈せよ",
+    "zh": "在游戏内yyy分钟内击沉总计xxx吨的敌舰"
+  },
+  "RES_DM_TimeLeft": {
+    "en": "In-game time left: xxx min",
+    "ja": "ゲーム内残りxxx分",
+    "zh": "游戏内剩余xxx分钟"
+  },
+  "RES_DM_TimeUp": {
+    "en": "Time is up",
+    "ja": "時間切れ",
+    "zh": "时间到"
+  },
   "RES_DM_Torpedoes": {
     "en": "Torpedoes",
     "ja": "発射数",
