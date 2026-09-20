@@ -180,7 +180,7 @@ export class EnemyShip extends GameObject {
             this.distSpeed = 0;
             this.isEnabled = false;
             // 敵船撃沈時処理
-            this.onSunk(this.tonnage);
+            this.onSunk(this.tonnage, this.objectType);
         }
 
         this.onHitTorpedoCallback();

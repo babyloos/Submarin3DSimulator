@@ -5,6 +5,7 @@ import { GameObject } from "./gameObject.js";
 import { TDC } from "./TDC.js";
 import { Torpedo } from "./torpedo.js";
 import { AudioManager } from "../controller/audioManager.js";
+import { STORAGE_KEYS, trackOnceEvent } from "../analytics.js";
 
 /**
  * U-boatクラス
@@ -288,6 +289,8 @@ export class Uboat extends GameObject {
         this.torpedos.push(torpedo);
         this.torpedoCount--;
         this.torpedoElapsedTime = 0;
+
+        trackOnceEvent('first_torpedo_fired', STORAGE_KEYS.firstTorpedoFired);
     }
 
     /**

@@ -16,6 +16,7 @@ import { Destroyer } from "./model/destroyer.js";
 import { EnemyShip } from "./model/enemyShip.js";
 import { ThreeViewController } from "./controller/threeViewController.js";
 import { PeriscopeController } from "./controller/periscopeController.js";
+import { STORAGE_KEYS, getExperimentVariant, getForegroundMs, markMissionClearedOnce, trackEvent, trackOnceEvent } from "./analytics.js";
 
 /**
  * ゲーム全体を管理するクラス
@@ -126,6 +127,8 @@ export class Game {
                 break;
         }
 
+        this.#trackGameStart(difficulty);
+
         // デバッグ用
 
         this.debug = new Debug();
@@ -138,6 +141,44 @@ export class Game {
 
     dispose() {
         clearInterval(this.intervalId);
+    }
+
+    /**
+     * ゲーム開始時のAnalyticsイベント送信
+     * @param {GameDifficulty} difficulty ゲーム難易度
+     */
+    #trackGameStart(difficulty) {
+        try {
+            trackOnceEvent('first_game_start', STORAGE_KEYS.firstGameStart);
+
+            // 現状のミッションは「撃沈トン数の達成」のみ。将来のミッション種類追加(ship_count等)に備えmission_typeを持つ
+            this.missionType = 'tonnage';
+            this.missionTarget = this.clearTonnage;
+            this.missionId = this.#getMissionName(this.gameMode, GameMode) + '_' + this.#getMissionName(difficulty, GameDifficulty);
+            this.missionStartForegroundMs = getForegroundMs();
+
+            // コンティニュー時はミッション自体は開始ではないため送信しない
+            if (this.isNewgame) {
+                trackEvent('mission_start', {
+                    mission_id: this.missionId,
+                    mission_type: this.missionType,
+                    mission_target: this.missionTarget,
+                });
+            }
+
+            if (getExperimentVariant() === 'B') {
+                // future daily mission feature
+            }
+        } catch (e) {
+            console.error('[Analytics] game start tracking error', e);
+        }
+    }
+
+    /**
+     * enum値に対応するキー名を取得する
+     */
+    #getMissionName(value, enumObj) {
+        return Object.keys(enumObj).find(key => enumObj[key] === value) ?? String(value);
     }
 
     /**
@@ -448,12 +489,21 @@ export class Game {
      * 敵船撃沈時処理
      * @param {number} tonnage 撃沈した船のトン数
      */
-    onSunkEnemy(tonnage) {
+    onSunkEnemy(tonnage, objectType) {
         if (this.isGameClear) {
             return;
         }
         // 撃沈トン数を加算
         this.sunkEnemyTonnage += tonnage;
+
+        try {
+            trackOnceEvent('first_enemy_sunk', STORAGE_KEYS.firstEnemySunk, {
+                enemy_type: objectType === ObjectType.destoryer1 ? 'destroyer' : 'merchant',
+                enemy_tonnage: tonnage,
+            });
+        } catch (e) {
+            console.error('[Analytics] enemy sunk tracking error', e);
+        }
         // メッセージパネルへ通知
         const leftTonnage = this.clearTonnage - this.sunkEnemyTonnage;
 
@@ -466,6 +516,17 @@ export class Game {
         // ゲームクリア判定
         if (this.sunkEnemyTonnage >= this.clearTonnage) {
             this.isGameClear = true;
+            try {
+                markMissionClearedOnce();
+                trackEvent('mission_complete', {
+                    mission_id: this.missionId,
+                    mission_type: this.missionType,
+                    mission_target: this.missionTarget,
+                    elapsed_seconds: Math.round((getForegroundMs() - this.missionStartForegroundMs) / 1000),
+                });
+            } catch (e) {
+                console.error('[Analytics] mission complete tracking error', e);
+            }
             this._gameClear();
         }
     }

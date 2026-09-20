@@ -4,6 +4,7 @@ import { Game } from "./game.js";
 import { Util } from "./util.js";
 import { AudioManager } from "./controller/audioManager.js";
 import ImgTranslator from "./controller/imgTranslator.js";
+import { STORAGE_KEYS, getGameProgress, trackEvent, trackOnceEvent } from "./analytics.js";
 
 export class Main {
 
@@ -396,7 +397,16 @@ document.getElementById('removeAdsBuyModal')
   .addEventListener('shown.bs.modal', function () {
     console.log("show_purchase_dialog")
     FirebasePlugin.logEvent("show_purchase_dialog", {});
+    // 購入ダイアログは現状タイトル画面のボタンからのみ開く。将来automatic/after_mission/after_adを追加する場合はここでtriggerを切り替える
+    trackEvent("purchase_dialog_shown", { trigger: "button", game_progress: getGameProgress() });
 });
+
+// 広告が実際に表示された(インプレッションが記録された)タイミングで初回のみ送信
+const onAdImpression = () => {
+    trackOnceEvent("ad_first_impression", STORAGE_KEYS.adFirstImpression, { ad_type: "interstitial" });
+};
+window.addEventListener('admob.ad.impression', onAdImpression);
+window.addEventListener('admob.ad.show', onAdImpression);
 
 const main = new Main();
 main.main();
