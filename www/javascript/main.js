@@ -315,6 +315,9 @@ const showAd = async () => {
         await interstitial.show()
     } catch (error) {
         console.error('Ad failed to load:', error);
+        trackEvent('ad_show_failed', {
+            error_message: String(error && error.message ? error.message : error).slice(0, 100),
+        });
     }
 }
 
