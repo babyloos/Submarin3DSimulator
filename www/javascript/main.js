@@ -192,6 +192,7 @@ function gameClear() {
         keyboard: false
     });
     modal.show();
+    showAd();
 }
 
 /**
@@ -205,6 +206,7 @@ function gameOver() {
         keyboard: false
     });
     modal.show();
+    showAd();
 }
 
 export class LoadProgress {
