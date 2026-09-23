@@ -113,7 +113,7 @@ export class Game {
         // 難易度によって必要撃墜トン数, 敵船の数を設定する
         switch (difficulty) {
             case GameDifficulty.easy:
-                this.clearTonnage = 8000;
+                this.clearTonnage = 5000;
                 this.destroyerCount = 1;
                 this.merchantCount = 5;
                 break;
