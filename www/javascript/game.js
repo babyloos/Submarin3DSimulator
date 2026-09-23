@@ -18,6 +18,12 @@ import { ThreeViewController } from "./controller/threeViewController.js";
 import { PeriscopeController } from "./controller/periscopeController.js";
 import { STORAGE_KEYS, getExperimentVariant, getForegroundMs, markMissionClearedOnce, trackEvent, trackOnceEvent } from "./analytics.js";
 import * as DailyMission from "./dailyMission.js";
+import { showAd } from "./main.js";
+
+// プレイ中広告: 何隻撃沈するごとに広告を挟むか
+const AD_SUNK_COUNT_INTERVAL = 2;
+// プレイ中広告: 撃沈が無くても最大何ms(実時間)ごとに広告を挟むか(保険)
+const AD_TIME_INTERVAL_MS = 5 * 60 * 1000;
 
 /**
  * ゲーム全体を管理するクラス
@@ -90,6 +96,9 @@ export class Game {
 
     gameMode;
 
+    sunkCountSinceLastAd = 0; // 前回のプレイ中広告からの撃沈数
+    lastAdForegroundMs = 0;   // 前回プレイ中広告を表示した時点のフォアグラウンド時間
+
     /**
      * コンストラクタ
      * @param {boolean} isNewgame ニューゲームか否か
@@ -130,6 +139,9 @@ export class Game {
         }
 
         this.#trackGameStart(difficulty);
+
+        // プレイ中広告のタイマーをゲーム開始時点から起算する
+        this.lastAdForegroundMs = getForegroundMs();
 
         // デバッグ用
 
@@ -358,6 +370,21 @@ export class Game {
         if (Math.round(this.time) % 60 == 0 && Math.round(this.time - elapsedTime / 1000) % 60 != 0 && !this.isGameOver) {
             this.saveDatas();
         }
+
+        // プレイ中広告(時間ベースの保険): 撃沈が無くても一定時間ごとに広告を挟む
+        if (!this.isGameOver && !this.isGameClear
+            && getForegroundMs() - this.lastAdForegroundMs >= AD_TIME_INTERVAL_MS) {
+            this.#showInGameAd();
+        }
+    }
+
+    /**
+     * プレイ中広告を表示し、撃沈数/経過時間のカウンタをリセットする
+     */
+    #showInGameAd() {
+        this.sunkCountSinceLastAd = 0;
+        this.lastAdForegroundMs = getForegroundMs();
+        showAd();
     }
 
     /**
@@ -518,6 +545,13 @@ export class Game {
         }
         // 撃沈トン数を加算
         this.sunkEnemyTonnage += tonnage;
+
+        // プレイ中広告(撃沈数ベース): 一定数撃沈するごとに広告を挟む。
+        // ミッションクリアと同じタイミングではクリア時の広告と二重表示になるためスキップする
+        this.sunkCountSinceLastAd++;
+        if (this.sunkCountSinceLastAd >= AD_SUNK_COUNT_INTERVAL && this.sunkEnemyTonnage < this.clearTonnage) {
+            this.#showInGameAd();
+        }
 
         try {
             trackOnceEvent('first_enemy_sunk', STORAGE_KEYS.firstEnemySunk, {

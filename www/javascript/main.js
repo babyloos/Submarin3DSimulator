@@ -303,7 +303,7 @@ function initPromoSubmarine2(platform) {
     });
 }
 
-const showAd = async () => {
+export const showAd = async () => {
     if (getRemoved()) {
         // 広告削除課金を行っている場合は表示しない
         return;
