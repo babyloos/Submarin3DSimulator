@@ -61,6 +61,10 @@ export class Main {
                     throw "selected undefined game mode.";
             }
             selectDiffButton.attr('disabled', false);
+            // 選択と同時に難易度選択画面へ進む(ボタン押下を待たない)
+            diffSelector.prop('checked', false);
+            startButton.attr('disabled', true);
+            PageController.pageTransition('diffSelectPage');
         })
 
         // 難易度選択画面
@@ -95,6 +99,9 @@ export class Main {
                     throw "selected undefined game difficulty.";
             }
             startButton.attr('disabled', false);
+            // 選択と同時にゲームを開始する(ボタン押下を待たない)
+            showAd();
+            transitionThreePage(true, selectedDiff);
         })
 
         // マニュアル画面
