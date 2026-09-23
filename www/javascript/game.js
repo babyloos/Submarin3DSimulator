@@ -255,15 +255,21 @@ export class Game {
             // プレイヤボート
             const playerBoatJson = this.#loadFile('playerBoat');
             this.playerBoat = Uboat.deserialize(playerBoatJson);
+            // 標準ミッションの進捗を復元する(未保存の古いセーブデータの場合は現在の難易度設定のまま)
+            const missionState = this.#loadFile('missionState');
+            if (missionState) {
+                this.sunkEnemyTonnage = missionState.sunkEnemyTonnage ?? this.sunkEnemyTonnage;
+                this.clearTonnage = missionState.clearTonnage ?? this.clearTonnage;
+                this.missionType = missionState.missionType ?? this.missionType;
+                this.missionTarget = missionState.missionTarget ?? this.missionTarget;
+                this.missionId = missionState.missionId ?? this.missionId;
+            }
             // 敵船
             const enemyShipsJson = this.#loadFile('enemyShips');
             enemyShipsJson.forEach(function (enemyShipJson) {
                 let enemyShip;
-                const onHitTorpedo = this.threePageViewController.onHitTorpedo;
-                // B群のみ: コンティニュー後の撃沈もデイリーミッションに反映する(A群は従来どおり)
-                const onSunk = DailyMission.isEnabled()
-                    ? (tonnage, objectType) => this.#onSunkEnemyDailyMission(tonnage, objectType)
-                    : onHitTorpedo;
+                // 撃沈時処理は新規ゲームと同じonSunkEnemyを使う(標準ミッション進捗・デイリーミッション進捗の両方を更新する)
+                const onSunk = this.onSunkEnemy.bind(this);
                 if (enemyShipJson.objectType === ObjectType.destoryer1) {
                     enemyShip = Destroyer.deserialize(enemyShipJson);
                     enemyShip.initialize(this.playerBoat, onSunk);
@@ -275,8 +281,8 @@ export class Game {
                     }.bind(this));
                     this.enemyShips.push(enemyShip);
                 } else if (enemyShipJson.objectType === ObjectType.marchant1) {
-                    enemyShip = Marchant.deserialize(enemyShipJson, onHitTorpedo);
-                    enemyShip.initialize(this.playerBoat, DailyMission.isEnabled() ? onSunk : this.threePageViewController.onHitTorpedo);
+                    enemyShip = Marchant.deserialize(enemyShipJson);
+                    enemyShip.initialize(this.playerBoat, onSunk);
                     this.enemyShips.push(enemyShip);
                 }
             }.bind(this));
@@ -480,6 +486,14 @@ export class Game {
         // 現在時刻
         this.#saveFile(this.initTime, 'initTime');
         this.#saveFile(this.time, 'time');
+        // 標準ミッションの進捗(コンティニュー時に復元するため)
+        this.#saveFile({
+            sunkEnemyTonnage: this.sunkEnemyTonnage,
+            clearTonnage: this.clearTonnage,
+            missionType: this.missionType,
+            missionTarget: this.missionTarget,
+            missionId: this.missionId,
+        }, 'missionState');
     }
 
     /**
