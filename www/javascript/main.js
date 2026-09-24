@@ -144,6 +144,25 @@ export class Main {
             exitGame();
         });
 
+        // ゲームオーバー時: 広告視聴で同条件のミッションに再挑戦
+        const retryWithAdButton = $('#retryWithAdButton');
+        retryWithAdButton.on('click', async function () {
+            audioManager.play();
+            retryWithAdButton.prop('disabled', true);
+            const earned = await showRewardedAd();
+            retryWithAdButton.prop('disabled', false);
+            if (!earned) {
+                return;
+            }
+            trackEvent('rewarded_ad_retry', {}, false);
+            const modalEl = document.getElementById('gameOverDialog');
+            bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+            this.game.threePageViewControllerAbandon();
+            this.game.dispose();
+            this.game = null;
+            transitionThreePage(true, selectedDiff);
+        }.bind(this));
+
         // ゲーム開始画面遷移処理
         const transitionThreePage = function (isNewGame, selectedDiff) {
             // ロード画面表示
@@ -253,6 +272,7 @@ const initUpdateLanguage = () => {
 }
 
 let interstitial;
+let rewarded;
 
 document.addEventListener('deviceready', async () => {
     console.log('device ready');
@@ -260,11 +280,16 @@ document.addEventListener('deviceready', async () => {
     console.log(isDebug ? 'Debug build' : 'Release build');
 
     let unitId;
+    let rewardedUnitId;
     let platform = cordova.platformId;
     if (platform === 'android') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-1479927029413242/6298498855';
+        // TODO: AdMobコンソールでAndroid用リワード広告ユニットを作成し、本番IDに差し替える
+        rewardedUnitId = isDebug ? 'ca-app-pub-3940256099942544/5224354917' : 'ca-app-pub-1479927029413242/0000000000';
     } else if (platform === 'ios') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/4411468910' : 'ca-app-pub-1479927029413242/1802112503';
+        // TODO: AdMobコンソールでiOS用リワード広告ユニットを作成し、本番IDに差し替える
+        rewardedUnitId = isDebug ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-1479927029413242/0000000000';
     }
 
     interstitial = new admob.InterstitialAd({
@@ -273,6 +298,10 @@ document.addEventListener('deviceready', async () => {
 
     interstitial.on('load', (evt) => {
         // evt.ad
+    })
+
+    rewarded = new admob.RewardedAd({
+        adUnitId: rewardedUnitId,
     })
 
     // 表示時に待たずに済むよう、起動時に1本先読みしておく
@@ -388,6 +417,39 @@ export const showAd = async () => {
         adShowing = false;
         preloadAd();
     }
+}
+
+/**
+ * リワード広告を表示し、視聴完了(報酬獲得)まで完了したかを返す
+ * @return {Promise<boolean>} 報酬を獲得できた場合true
+ */
+const showRewardedAd = () => {
+    return new Promise((resolve) => {
+        if (getRemoved() || !rewarded) {
+            resolve(false);
+            return;
+        }
+        let earned = false;
+        const offReward = rewarded.on('reward', () => {
+            earned = true;
+        });
+        const offDismiss = rewarded.on('dismiss', () => {
+            offReward();
+            offDismiss();
+            resolve(earned);
+        });
+        rewarded.load()
+            .then(() => rewarded.show())
+            .catch((error) => {
+                console.error('Rewarded ad failed:', error);
+                trackEvent('rewarded_ad_show_failed', {
+                    error_message: formatAdError(error).slice(0, 100),
+                });
+                offReward();
+                offDismiss();
+                resolve(false);
+            });
+    });
 }
 
 // admob-plusのイベントはdocumentに非バブリングで発火されるため、windowではなくdocumentで受け取る

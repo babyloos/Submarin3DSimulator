@@ -494,6 +494,11 @@
     "ja": "タイトル画面に戻る",
     "zh": "返回主菜单"
   },
+  "RES_RetryWithAd": {
+    "en": "Watch Ad to Retry",
+    "ja": "広告を見てもう一度挑戦",
+    "zh": "观看广告重新挑战"
+  },
   "RES_AdsDeleteQuestion": {
     "en": "Do you want to remove ads?",
     "ja": "広告を削除しますか？",
