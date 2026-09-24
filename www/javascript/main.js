@@ -275,6 +275,11 @@ document.addEventListener('deviceready', async () => {
         // evt.ad
     })
 
+    // 表示時に待たずに済むよう、起動時に1本先読みしておく
+    if (!getRemoved()) {
+        preloadAd();
+    }
+
     // アプリ課金確認
     // ローカル状態の反映（起動直後）
     setRemoved(getRemoved());
@@ -303,28 +308,82 @@ function initPromoSubmarine2(platform) {
     });
 }
 
+// 広告の状態(load/showの多重呼び出しを防ぐ)
+let adLoaded = false;   // 表示可能な広告を読み込み済みか
+let adLoading = null;   // 読み込み中のPromise(読み込み中でなければnull)
+let adShowing = false;  // 広告を表示中か
+
+/**
+ * 次に表示する広告を読み込む。読み込み済み/読み込み中なら何もせず、その完了を待つ
+ */
+const loadAd = () => {
+    if (adLoaded) {
+        return Promise.resolve();
+    }
+    if (!adLoading) {
+        adLoading = interstitial.load()
+            .then(() => { adLoaded = true; })
+            .finally(() => { adLoading = null; });
+    }
+    return adLoading;
+}
+
+/**
+ * 広告をバックグラウンドで先読みする(失敗しても次回表示時に再読み込みする)
+ */
+const preloadAd = () => {
+    loadAd().catch((error) => console.error('Ad preload failed:', error));
+}
+
+const trackAdShowFailed = (stage, error) => {
+    trackEvent('ad_show_failed', {
+        stage: stage,
+        error_message: String(error && error.message ? error.message : error).slice(0, 100),
+    });
+}
+
 export const showAd = async () => {
     if (getRemoved()) {
         // 広告削除課金を行っている場合は表示しない
         return;
     }
+    if (!interstitial || adShowing) {
+        // 初期化前、または別の広告を表示中(ゲームオーバーとプレイ中広告の同時発生など)は表示しない
+        return;
+    }
 
     console.log("showAd");
+    // 先読みが済んでいなければここで読み込む
     try {
-        await interstitial.load()
-        await interstitial.show()
+        await loadAd();
     } catch (error) {
         console.error('Ad failed to load:', error);
-        trackEvent('ad_show_failed', {
-            error_message: String(error && error.message ? error.message : error).slice(0, 100),
-        });
+        trackAdShowFailed('load', error);
+        return;
+    }
+    // 読み込みを待っている間に別の呼び出しが表示を始めていれば何もしない
+    if (adShowing) {
+        return;
+    }
+
+    adShowing = true;
+    // 一度表示した広告は再表示できないため、表示前に読み込み済みフラグを落とす
+    adLoaded = false;
+    try {
+        await interstitial.show();
+    } catch (error) {
+        console.error('Ad failed to show:', error);
+        trackAdShowFailed('show', error);
+        adShowing = false;
+        preloadAd();
     }
 }
 
-window.addEventListener('admob.ad.dismiss', async () => {
+window.addEventListener('admob.ad.dismiss', () => {
     // Once a interstitial ad is shown, it cannot be shown again.
     // Starts loading the next interstitial ad as soon as it is dismissed.
-    await interstitial.load()
+    adShowing = false;
+    preloadAd();
 });
 
 const SKU = 'com.babyloos.submarine3d.remove_ads1';
