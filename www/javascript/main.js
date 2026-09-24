@@ -161,6 +161,7 @@ export class Main {
                     // 3D画面表示
                     PageController.pageTransition('threePage');
                     $('.absolutePanel').removeClass('hiddenPage');
+                    showBanner();
                 }
             });
             this.game = new Game(isNewGame, selectGameMode, selectedDiff, loadProgress, exitGame, gameOver, gameClear);
@@ -178,6 +179,7 @@ function exitGame() {
     main.game.dispose();
     main.game = null;
     PageController.pageTransition('titlePage');
+    hideBanner();
     main.main();
 }
 
@@ -253,6 +255,7 @@ const initUpdateLanguage = () => {
 }
 
 let interstitial;
+let banner;
 
 document.addEventListener('deviceready', async () => {
     console.log('device ready');
@@ -260,11 +263,16 @@ document.addEventListener('deviceready', async () => {
     console.log(isDebug ? 'Debug build' : 'Release build');
 
     let unitId;
+    let bannerUnitId;
     let platform = cordova.platformId;
     if (platform === 'android') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-1479927029413242/6298498855';
+        // TODO: AdMobコンソールでAndroid用バナー広告ユニットを作成し、本番IDに差し替える
+        bannerUnitId = isDebug ? 'ca-app-pub-3940256099942544/6300978111' : 'ca-app-pub-1479927029413242/0000000000';
     } else if (platform === 'ios') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/4411468910' : 'ca-app-pub-1479927029413242/1802112503';
+        // TODO: AdMobコンソールでiOS用バナー広告ユニットを作成し、本番IDに差し替える
+        bannerUnitId = isDebug ? 'ca-app-pub-3940256099942544/2934735716' : 'ca-app-pub-1479927029413242/0000000000';
     }
 
     interstitial = new admob.InterstitialAd({
@@ -279,6 +287,14 @@ document.addEventListener('deviceready', async () => {
     if (!getRemoved()) {
         preloadAd();
     }
+
+    // 3D画面(ゲームプレイ中)のみ表示するバナー広告。プレイ時間が長く常時表示による収益効果が高い一方、UIへの影響が少ない画面のため
+    // 操作UI(魚雷発射・深度調整等)が画面下部に集中しているため、干渉を避け上部に配置する
+    banner = new admob.BannerAd({
+        adUnitId: bannerUnitId,
+        position: 'top',
+        size: { adaptive: 'anchored', orientation: 'landscape' },
+    })
 
     // アプリ課金確認
     // ローカル状態の反映（起動直後）
@@ -390,6 +406,36 @@ export const showAd = async () => {
     }
 }
 
+/**
+ * 3D画面用バナー広告を表示する(広告削除課金済みの場合は何もしない)
+ */
+const showBanner = async () => {
+    if (getRemoved() || !banner) {
+        return;
+    }
+    try {
+        await banner.load();
+        await banner.show();
+    } catch (error) {
+        console.error('Banner ad failed to show:', error);
+        trackEvent('banner_ad_show_failed', {
+            error_message: formatAdError(error).slice(0, 100),
+        });
+    }
+}
+
+/**
+ * バナー広告を非表示にする
+ */
+const hideBanner = () => {
+    if (!banner) {
+        return;
+    }
+    banner.hide().catch((error) => {
+        console.error('Banner ad failed to hide:', error);
+    });
+}
+
 // admob-plusのイベントはdocumentに非バブリングで発火されるため、windowではなくdocumentで受け取る
 document.addEventListener('admob.ad.dismiss', () => {
     // Once a interstitial ad is shown, it cannot be shown again.
@@ -428,6 +474,7 @@ function initIAP() {
         if (!store.owned({ id: SKU, platform: purchasePlatform })) return;
 
         setRemoved(true);
+        hideBanner();
         $('#removeAdsButton').removeClass('btn-danger').addClass('btn-secondary');
         $('#removeAdsButton').prop('disabled', true);
     };
