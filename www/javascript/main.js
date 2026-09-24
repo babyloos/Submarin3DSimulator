@@ -332,7 +332,10 @@ const loadAd = () => {
  * 広告をバックグラウンドで先読みする(失敗しても次回表示時に再読み込みする)
  */
 const preloadAd = () => {
-    loadAd().catch((error) => console.error('Ad preload failed:', error));
+    loadAd().catch((error) => {
+        console.error('Ad preload failed:', error);
+        trackAdShowFailed('load', error);
+    });
 }
 
 const trackAdShowFailed = (stage, error) => {
@@ -367,16 +370,10 @@ export const showAd = async () => {
     }
 
     console.log("showAd");
-    // 先読みが済んでいなければここで読み込む
-    try {
-        await loadAd();
-    } catch (error) {
-        console.error('Ad failed to load:', error);
-        trackAdShowFailed('load', error);
-        return;
-    }
-    // 読み込みを待っている間に別の呼び出しが表示を始めていれば何もしない
-    if (adShowing) {
+    if (!adLoaded) {
+        // 先読みが済んでいない場合は待たずにスキップする(読み込み完了を待つとプレイ中に遅れて広告が割り込むため)
+        trackEvent('ad_show_failed', { stage: 'not_ready', error_message: adLoading ? 'loading' : 'not_loaded' });
+        preloadAd();
         return;
     }
 
