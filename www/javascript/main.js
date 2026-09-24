@@ -338,8 +338,22 @@ const preloadAd = () => {
 const trackAdShowFailed = (stage, error) => {
     trackEvent('ad_show_failed', {
         stage: stage,
-        error_message: String(error && error.message ? error.message : error).slice(0, 100),
+        error_message: formatAdError(error).slice(0, 100),
     });
+}
+
+const formatAdError = (error) => {
+    if (error && error.message) {
+        return String(error.message);
+    }
+    if (error && typeof error === 'object') {
+        try {
+            return JSON.stringify(error);
+        } catch (e) {
+            // 循環参照などで文字列化できない場合は下のString()に任せる
+        }
+    }
+    return String(error);
 }
 
 export const showAd = async () => {
@@ -379,9 +393,17 @@ export const showAd = async () => {
     }
 }
 
-window.addEventListener('admob.ad.dismiss', () => {
+// admob-plusのイベントはdocumentに非バブリングで発火されるため、windowではなくdocumentで受け取る
+document.addEventListener('admob.ad.dismiss', () => {
     // Once a interstitial ad is shown, it cannot be shown again.
     // Starts loading the next interstitial ad as soon as it is dismissed.
+    adShowing = false;
+    preloadAd();
+});
+
+// show()が成功扱いでも表示に失敗した場合は、表示中のまま固まらないよう状態を戻す
+document.addEventListener('admob.ad.showfail', (evt) => {
+    trackAdShowFailed('showfail', evt && evt.error ? evt.error : evt);
     adShowing = false;
     preloadAd();
 });
@@ -476,8 +498,8 @@ document.getElementById('removeAdsBuyModal')
 const onAdImpression = () => {
     trackOnceEvent("ad_first_impression", STORAGE_KEYS.adFirstImpression, { ad_type: "interstitial" });
 };
-window.addEventListener('admob.ad.impression', onAdImpression);
-window.addEventListener('admob.ad.show', onAdImpression);
+document.addEventListener('admob.ad.impression', onAdImpression);
+document.addEventListener('admob.ad.show', onAdImpression);
 
 const main = new Main();
 main.main();
