@@ -267,8 +267,7 @@ document.addEventListener('deviceready', async () => {
     let platform = cordova.platformId;
     if (platform === 'android') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-1479927029413242/6298498855';
-        // TODO: AdMobコンソールでAndroid用バナー広告ユニットを作成し、本番IDに差し替える
-        bannerUnitId = isDebug ? 'ca-app-pub-3940256099942544/6300978111' : 'ca-app-pub-1479927029413242/0000000000';
+        bannerUnitId = isDebug ? 'ca-app-pub-3940256099942544/6300978111' : 'ca-app-pub-1479927029413242/2334436098';
     } else if (platform === 'ios') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/4411468910' : 'ca-app-pub-1479927029413242/1802112503';
         // TODO: AdMobコンソールでiOS用バナー広告ユニットを作成し、本番IDに差し替える
@@ -290,10 +289,13 @@ document.addEventListener('deviceready', async () => {
 
     // 3D画面(ゲームプレイ中)のみ表示するバナー広告。プレイ時間が長く常時表示による収益効果が高い一方、UIへの影響が少ない画面のため
     // 操作UI(魚雷発射・深度調整等)が画面下部に集中しているため、干渉を避け上部に配置する
+    // offsetを指定することで、WebView(3D描画中)を再親子付けしない別経路(オーバーレイ表示)を使う。
+    // offset無しだとWebViewをLinearLayoutへ再構築する処理が走り、3D描画中に実機クラッシュする問題があったため
     banner = new admob.BannerAd({
         adUnitId: bannerUnitId,
         position: 'top',
         size: { adaptive: 'anchored', orientation: 'landscape' },
+        offset: 0,
     })
 
     // アプリ課金確認
