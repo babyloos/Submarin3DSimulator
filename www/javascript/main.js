@@ -388,6 +388,9 @@ const formatAdError = (error) => {
     return String(error);
 }
 
+// 先読みが間に合っていない場合に待つ上限時間(ms)。全画面広告の表示自体が既に大きな中断なので、この程度の遅延は体感に影響しにくい
+const AD_READY_WAIT_MS = 1500;
+
 export const showAd = async () => {
     if (getRemoved()) {
         // 広告削除課金を行っている場合は表示しない
@@ -400,7 +403,14 @@ export const showAd = async () => {
 
     console.log("showAd");
     if (!adLoaded) {
-        // 先読みが済んでいない場合は待たずにスキップする(読み込み完了を待つとプレイ中に遅れて広告が割り込むため)
+        // 先読みが間に合っていない場合、短時間だけ読み込み完了を待ってから判断する
+        // (プレイ中広告の追加でリクエスト間隔が短くなり、先読みが追いつかず不要にスキップされるケースが増えたため)
+        await Promise.race([
+            loadAd().catch(() => { }),
+            new Promise((resolve) => setTimeout(resolve, AD_READY_WAIT_MS)),
+        ]);
+    }
+    if (!adLoaded) {
         trackEvent('ad_show_failed', { stage: 'not_ready', error_message: adLoading ? 'loading' : 'not_loaded' });
         preloadAd();
         return;
