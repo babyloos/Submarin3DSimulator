@@ -341,6 +341,7 @@ function initPromoSubmarine2(platform) {
 let adLoaded = false;   // 表示可能な広告を読み込み済みか
 let adLoading = null;   // 読み込み中のPromise(読み込み中でなければnull)
 let adShowing = false;  // 広告を表示中か
+let adPendingShow = false; // 表示タイミングでは間に合わなかったが、読み込み完了次第表示したい状態か
 
 /**
  * 次に表示する広告を読み込む。読み込み済み/読み込み中なら何もせず、その完了を待つ
@@ -351,7 +352,14 @@ const loadAd = () => {
     }
     if (!adLoading) {
         adLoading = interstitial.load()
-            .then(() => { adLoaded = true; })
+            .then(() => {
+                adLoaded = true;
+                // 表示待ちだった場合、プレイの状況によらず読み込み完了次第すぐ表示する(広告表示を優先する方針のため)
+                if (adPendingShow) {
+                    adPendingShow = false;
+                    displayLoadedAd();
+                }
+            })
             .finally(() => { adLoading = null; });
     }
     return adLoading;
@@ -411,11 +419,26 @@ export const showAd = async () => {
         ]);
     }
     if (!adLoaded) {
+        // それでも間に合わなかった場合は、広告表示を優先する方針のため諦めずに読み込み完了を待つ。
+        // プレイが先に進んでいても、読み込みが終わり次第そのタイミングで表示する
         trackEvent('ad_show_failed', { stage: 'not_ready', error_message: adLoading ? 'loading' : 'not_loaded' });
+        adPendingShow = true;
         preloadAd();
         return;
     }
 
+    await displayLoadedAd();
+}
+
+/**
+ * 読み込み済みの広告を表示する
+ */
+const displayLoadedAd = async () => {
+    if (adShowing) {
+        // 別の広告を表示中なら重複表示しない(次の読み込み完了時に改めて表示を試みる)
+        adPendingShow = true;
+        return;
+    }
     adShowing = true;
     // 一度表示した広告は再表示できないため、表示前に読み込み済みフラグを落とす
     adLoaded = false;
@@ -500,6 +523,7 @@ function initIAP() {
         if (!store.owned({ id: SKU, platform: purchasePlatform })) return;
 
         setRemoved(true);
+        adPendingShow = false;
         $('#removeAdsButton').removeClass('btn-danger').addClass('btn-secondary');
         $('#removeAdsButton').prop('disabled', true);
     };
