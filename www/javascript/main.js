@@ -151,7 +151,8 @@ export class Main {
             retryWithAdButton.prop('disabled', true);
             const earned = await showRewardedAd();
             retryWithAdButton.prop('disabled', false);
-            if (!earned) {
+            if (!earned || !this.game) {
+                // 広告視聴を待っている間にタイトルへ戻る等で既にゲームが破棄されている場合は何もしない
                 return;
             }
             trackEvent('rewarded_ad_retry', {}, false);
@@ -458,15 +459,18 @@ const displayLoadedAd = async () => {
  */
 const showRewardedAd = () => {
     return new Promise((resolve) => {
-        if (getRemoved() || !rewarded) {
+        if (getRemoved() || !rewarded || adShowing) {
+            // 他の全画面広告(インタースティシャル)を表示中の場合は同時表示によるクラッシュを避けるため表示しない
             resolve(false);
             return;
         }
+        adShowing = true;
         let earned = false;
         const offReward = rewarded.on('reward', () => {
             earned = true;
         });
         const offDismiss = rewarded.on('dismiss', () => {
+            adShowing = false;
             offReward();
             offDismiss();
             resolve(earned);
@@ -478,6 +482,7 @@ const showRewardedAd = () => {
                 trackEvent('rewarded_ad_show_failed', {
                     error_message: formatAdError(error).slice(0, 100),
                 });
+                adShowing = false;
                 offReward();
                 offDismiss();
                 resolve(false);
