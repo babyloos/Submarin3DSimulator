@@ -652,6 +652,21 @@ export class ThreeViewController {
         */
         this.loadProgress.updateProgress(0);
 
+        // ロード対象モデル数(以下の4本)がすべて完了(成功/失敗問わず)したらreadyPromiseを解決する
+        const totalModelCount = 4;
+        const onModelSettled = () => {
+            this.loadCount++;
+            if (this.loadCount >= totalModelCount) {
+                this.loadProgress.updateProgress(100);
+                this.loadProgress.markModelsReady();
+            }
+        };
+
+        const onModelLoadError = (error) => {
+            this.onError(error);
+            onModelSettled();
+        };
+
         const gltfLoader = new GLTFLoader();
         gltfLoader.load('resources/model/uboatType7C41.glb', function (obj) {
             // プレイヤボート
@@ -672,14 +687,16 @@ export class ThreeViewController {
                     action.play();
                 }
             }
-        }.bind(this), this.onProgress.bind(this), this.onError);
+            onModelSettled();
+        }.bind(this), this.onProgress.bind(this), onModelLoadError);
         gltfLoader.load('resources/model/torpedo.gltf', function (obj) {
             // 魚雷
             obj.scene.name = "torpedo";
             obj.scene.visible = false;
             this.gameObjects.push(obj.scene);
             this.scene.add(obj.scene);
-        }.bind(this), this.onProgress.bind(this), this.onError);
+            onModelSettled();
+        }.bind(this), this.onProgress.bind(this), onModelLoadError);
         gltfLoader.load('resources/model/cargoShip.glb', function (obj) {
             // 商船
             for (var i = 0; i < this.enemyShips.length; i++) {
@@ -704,7 +721,8 @@ export class ThreeViewController {
                 //     }
                 // }
             }
-        }.bind(this), this.onProgress.bind(this), this.onError);
+            onModelSettled();
+        }.bind(this), this.onProgress.bind(this), onModelLoadError);
         gltfLoader.load('resources/model/destroyer.glb', function (obj) {
             // 駆逐艦
             for (var i = 0; i < this.enemyShips.length; i++) {
@@ -729,7 +747,8 @@ export class ThreeViewController {
                     }
                 }
             }
-        }.bind(this), this.onProgress.bind(this), this.onError);
+            onModelSettled();
+        }.bind(this), this.onProgress.bind(this), onModelLoadError);
         // 砲弾
         const sphereGeometry = new THREE.SphereGeometry(0.5);
         const sphereMaterial = new THREE.MeshPhongMaterial({ color: 0x050505 });

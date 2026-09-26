@@ -298,11 +298,19 @@ export class Game {
         this.periscopeController.threeViewController = this.threePageViewController;
         this.periscopeController.initialize(this.playerBoat, this.enemyShips, this.messageController, this.pageController);
 
-        // ゲーム更新処理設定
-        this.#initializeUpdate();
-
         // 終了ボタン設定
         this.#exitButtonInitialize();
+    }
+
+    /**
+     * ゲーム時間・更新処理を開始する(開始時広告の表示が終わるまで呼び出し元で待つ)
+     */
+    start() {
+        if (this.intervalId) {
+            return;
+        }
+        this.beforeRealTime = new Date();
+        this.#initializeUpdate();
     }
 
     /**
@@ -390,7 +398,7 @@ export class Game {
     #showInGameAd() {
         this.sunkCountSinceLastAd = 0;
         this.lastAdForegroundMs = getForegroundMs();
-        showAd();
+        showAd('ingame');
     }
 
     /**

@@ -265,6 +265,39 @@ function initSessionTimer() {
 
 // #endregion
 
+// #region 未捕捉エラーの計測
+
+/**
+ * エラーのメッセージ+スタック先頭行を100文字までに整形する
+ */
+function formatExceptionMessage(error) {
+    if (!error) {
+        return '';
+    }
+    let message = String((error && error.message) || error);
+    if (error && error.stack) {
+        const firstStackLine = String(error.stack).split('\n')[0];
+        if (firstStackLine && firstStackLine !== message) {
+            message += ' | ' + firstStackLine;
+        }
+    }
+    return message.slice(0, 100);
+}
+
+window.addEventListener('error', (event) => {
+    trackEvent('app_exception', {
+        error_message: formatExceptionMessage(event.error || event.message),
+    }, false);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+    trackEvent('app_exception', {
+        error_message: formatExceptionMessage(event.reason),
+    }, false);
+});
+
+// #endregion
+
 // 初回起動時にvariantを割り当てる
 getExperimentVariant();
 setVariantUserProperty();

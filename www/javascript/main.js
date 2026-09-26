@@ -40,6 +40,7 @@ export class Main {
             diffSelector.prop('checked', false);
             startButton.attr('disabled', true);
             PageController.pageTransition('diffSelectPage');
+            preloadAd();
         });
         const gameModeSelectBackButton = $('#gameModeSelectBackbutton');
         gameModeSelectBackButton.on('click', () => {
@@ -75,7 +76,6 @@ export class Main {
         });
         startButton.on('click', () => {
             audioManager.play();
-            showAd();
             transitionThreePage(true, selectedDiff);
         });
         diffSelector.on('change', function () {
@@ -118,13 +118,13 @@ export class Main {
             gameModeSelector.prop('checked', false);
             selectDiffButton.attr('disabled', true);
             PageController.pageTransition('gameModeSelectPage');
+            preloadAd();
         });
 
         // コンティニュー
         continueButton.on('click', function () {
             // TODO: ゲームモードを取得する
             audioManager.play();
-            showAd();
             transitionThreePage(false, selectedDiff);
         });
 
@@ -165,25 +165,62 @@ export class Main {
         }.bind(this));
 
         // ゲーム開始画面遷移処理
-        const transitionThreePage = function (isNewGame, selectedDiff) {
+        // ロード画面の間に「3Dシーンの読み込み」と「開始時広告の準備」を並行して待ち、
+        // 両方終わってから(広告が準備できていれば表示してから)threePageへ遷移する
+        const transitionThreePage = async function (isNewGame, selectedDiff) {
             // ロード画面表示
             PageController.pageTransition('loadPage');
-            const maxCount = 0;
+            setAdScene('transition');
             const progressBar = $('#loadProgressBar');
             progressBar.css('width', 0 + '%');
             const loadProgress = new LoadProgress(function (progress) {
-                if (progress != maxCount) {
-                    // 進捗更新
-                    var progressVal = progress / maxCount * 100;
-                    progressBar.css('width', progressVal + '%');
-                }
-                if (progress >= maxCount) {
-                    // 3D画面表示
-                    PageController.pageTransition('threePage');
-                    $('.absolutePanel').removeClass('hiddenPage');
-                }
+                // 進捗バー表示のみ(ページ遷移はここでは行わない。読み込み完了はreadyPromiseで判定する)
+                const progressVal = Math.max(0, Math.min(progress, 100));
+                progressBar.css('width', progressVal + '%');
             });
             this.game = new Game(isNewGame, selectGameMode, selectedDiff, loadProgress, exitGame, gameOver, gameClear);
+
+            const waitStartedAt = Date.now();
+            const removed = getRemoved();
+            const adReadyPromise = removed
+                ? Promise.resolve(false)
+                : Promise.race([
+                    startAdLoad().then(() => true).catch(() => false),
+                    new Promise((resolve) => setTimeout(() => resolve(false), AD_START_WAIT_MS)),
+                ]);
+
+            await Promise.all([loadProgress.readyPromise, adReadyPromise]);
+
+            let adResult;
+            if (removed) {
+                adResult = 'removed';
+            } else if (isAdFresh() && !adShowing) {
+                adResult = 'shown';
+                await new Promise((resolve) => {
+                    let resolved = false;
+                    const finish = () => {
+                        if (resolved) return;
+                        resolved = true;
+                        document.removeEventListener('admob.ad.dismiss', finish);
+                        document.removeEventListener('admob.ad.showfail', finish);
+                        resolve();
+                    };
+                    document.addEventListener('admob.ad.dismiss', finish);
+                    document.addEventListener('admob.ad.showfail', finish);
+                    // 保険: show()呼び出し自体が失敗しネイティブイベントが来ないケースに備え、一定時間で強制的に進める
+                    setTimeout(finish, 10000);
+                    displayLoadedAd('start');
+                });
+            } else {
+                adResult = adLoading ? 'timeout' : 'no_fill';
+            }
+            trackEvent('ad_start_gate', { result: adResult, wait_ms: Date.now() - waitStartedAt });
+
+            // 3D画面表示
+            PageController.pageTransition('threePage');
+            $('.absolutePanel').removeClass('hiddenPage');
+            setAdScene('ingame');
+            this.game.start();
         }.bind(this);
     }
 }
@@ -197,6 +234,7 @@ function exitGame() {
     main.game.threePageViewControllerAbandon();
     main.game.dispose();
     main.game = null;
+    setAdScene('title');
     PageController.pageTransition('titlePage');
     main.main();
 }
@@ -207,12 +245,13 @@ function exitGame() {
 function gameClear() {
     // パネルを全て消す
     $('.absolutePanel').addClass('hiddenPage');
+    setAdScene('clear');
     // ゲームクリア画面表示
     var modal = new bootstrap.Modal(document.getElementById('gameClearDialog'), {
         keyboard: false
     });
     modal.show();
-    showAd();
+    showAd('clear');
 }
 
 /**
@@ -221,25 +260,41 @@ function gameClear() {
 function gameOver() {
     // パネルを全て消す
     $('.absolutePanel').addClass('hiddenPage');
+    setAdScene('gameover');
     // ゲームオーバー画面表示
     var modal = new bootstrap.Modal(document.getElementById('gameOverDialog'), {
         keyboard: false
     });
     modal.show();
-    showAd();
+    showAd('gameover');
 }
 
 export class LoadProgress {
     progress = 0;
     onUpdateProgress;   // 進捗更新時処理
+    modelsReady = false;
+    readyPromise;
+    #resolveReady;
 
     constructor(onUpdateProgress) {
         this.onUpdateProgress = onUpdateProgress;
+        this.readyPromise = new Promise((resolve) => { this.#resolveReady = resolve; });
     }
 
     updateProgress(nowProgress) {
-        this.progress;
+        this.progress = nowProgress;
         this.onUpdateProgress(nowProgress);
+    }
+
+    /**
+     * 3Dシーン(モデル)の読み込みが完了(または失敗により打ち切り)したことを通知する
+     */
+    markModelsReady() {
+        if (this.modelsReady) {
+            return;
+        }
+        this.modelsReady = true;
+        this.#resolveReady();
     }
 }
 
@@ -340,40 +395,116 @@ function initPromoSubmarine2(platform) {
 
 // 広告の状態(load/showの多重呼び出しを防ぐ)
 let adLoaded = false;   // 表示可能な広告を読み込み済みか
+let adLoadedAt = 0;     // 読み込みが完了した時刻(期限管理用)
 let adLoading = null;   // 読み込み中のPromise(読み込み中でなければnull)
 let adShowing = false;  // 広告を表示中か
-let adPendingShow = false; // 表示タイミングでは間に合わなかったが、読み込み完了次第表示したい状態か
+
+// 読み込み済み広告の期限。AdMobの仕様上インタースティシャルは概ね1時間で失効するため、余裕を見て55分で読み直す
+const AD_EXPIRY_MS = 55 * 60 * 1000;
+const isAdFresh = () => adLoaded && (Date.now() - adLoadedAt) < AD_EXPIRY_MS;
+
+// 読み込み失敗時の再読み込み間隔(No fill/Network errorとも共通)。成功したら最初の間隔に戻す
+const RELOAD_BACKOFF_MS = [30000, 60000, 120000, 300000];
+let backoffIndex = 0;
+let retryCount = 0;         // 連続失敗回数(計測用。成功でリセット)
+let reloadTimer = null;     // 次回再読み込みのタイマー
+let onlineWaitHandler = null; // オフライン時、オンライン復帰を待つハンドラ
+let reloadSuspended = false;   // バックグラウンド中は再読み込みタイマーを止める
+let reloadPendingOnResume = false; // フォアグラウンド復帰時に再読み込みを再開すべきか
+
+const isReloadWaiting = () => !!(reloadTimer || onlineWaitHandler);
+
+const clearReloadWait = () => {
+    if (reloadTimer) {
+        clearTimeout(reloadTimer);
+        reloadTimer = null;
+    }
+    if (onlineWaitHandler) {
+        window.removeEventListener('online', onlineWaitHandler);
+        onlineWaitHandler = null;
+    }
+};
 
 /**
- * 次に表示する広告を読み込む。読み込み済み/読み込み中なら何もせず、その完了を待つ
+ * 読み込み失敗後、間隔を空けて再読み込みを予約する。
+ * オフライン中はタイマーではなくonlineイベントを待つ
  */
-const loadAd = () => {
-    if (adLoaded) {
+const scheduleReload = () => {
+    clearReloadWait();
+    if (getRemoved()) {
+        return;
+    }
+    if (reloadSuspended) {
+        reloadPendingOnResume = true;
+        return;
+    }
+    if (navigator.onLine === false) {
+        onlineWaitHandler = () => {
+            window.removeEventListener('online', onlineWaitHandler);
+            onlineWaitHandler = null;
+            startAdLoad();
+        };
+        window.addEventListener('online', onlineWaitHandler);
+        return;
+    }
+    const idx = Math.min(backoffIndex, RELOAD_BACKOFF_MS.length - 1);
+    reloadTimer = setTimeout(() => {
+        reloadTimer = null;
+        startAdLoad();
+    }, RELOAD_BACKOFF_MS[idx]);
+};
+
+/**
+ * 実際に広告読み込みリクエストを行う。読み込み中/バックオフ待機中/読み込み済み(期限内)なら何もしない
+ */
+const startAdLoad = () => {
+    if (getRemoved()) {
         return Promise.resolve();
     }
-    if (!adLoading) {
-        adLoading = interstitial.load()
-            .then(() => {
-                adLoaded = true;
-                // 表示待ちだった場合、プレイの状況によらず読み込み完了次第すぐ表示する(広告表示を優先する方針のため)
-                if (adPendingShow) {
-                    adPendingShow = false;
-                    displayLoadedAd();
-                }
-            })
-            .finally(() => { adLoading = null; });
+    if (adLoading) {
+        return adLoading;
     }
+    if (isReloadWaiting()) {
+        // バックオフ/オンライン待ち中はここでは読み込み直さない。タイマー/onlineイベント任せにする
+        return Promise.reject(new Error('ad_reload_waiting'));
+    }
+    if (isAdFresh()) {
+        return Promise.resolve();
+    }
+    adLoaded = false;
+    adLoading = interstitial.load()
+        .then(() => {
+            adLoaded = true;
+            adLoadedAt = Date.now();
+            backoffIndex = 0;
+            retryCount = 0;
+            clearReloadWait();
+            tryShowPending();
+        })
+        .catch((error) => {
+            adLoaded = false;
+            trackEvent('ad_show_failed', {
+                stage: 'load',
+                error_message: formatAdError(error).slice(0, 100),
+                retry_count: retryCount,
+            });
+            retryCount++;
+            scheduleReload();
+            backoffIndex = Math.min(backoffIndex + 1, RELOAD_BACKOFF_MS.length - 1);
+            throw error;
+        })
+        .finally(() => { adLoading = null; });
     return adLoading;
 }
 
 /**
- * 広告をバックグラウンドで先読みする(失敗しても次回表示時に再読み込みする)
+ * 広告をバックグラウンドで先読みする(読み込み中/バックオフ待機中なら何もしない)
  */
 const preloadAd = () => {
-    loadAd().catch((error) => {
-        console.error('Ad preload failed:', error);
-        trackAdShowFailed('load', error);
-    });
+    if (getRemoved()) {
+        return;
+    }
+    startAdLoad().catch(() => { });
 }
 
 const trackAdShowFailed = (stage, error) => {
@@ -399,8 +530,50 @@ const formatAdError = (error) => {
 
 // 先読みが間に合っていない場合に待つ上限時間(ms)。全画面広告の表示自体が既に大きな中断なので、この程度の遅延は体感に影響しにくい
 const AD_READY_WAIT_MS = 1500;
+// ゲーム開始/コンティニュー時、ロード画面内で広告の準備を待つ上限時間(ms)
+const AD_START_WAIT_MS = 3500;
+// 表示チャンスを逃した広告を、読み込み完了後にどれだけの間なら表示していいか(ms)
+const AD_PENDING_MAX_MS = 5000;
+// pendingShowを表示してよい「区切り」の場面。それ以外(プレイ中/タイトル等)ならpendingは捨てる
+const AD_PENDING_ALLOWED_SCENES = new Set(['gameover', 'clear', 'transition']);
 
-export const showAd = async () => {
+let currentAdScene = 'title'; // 現在の場面(pending show判定に使う)
+let pendingShow = null;       // { placement, requestedAt } | null
+let lastAdPlacement = null;   // 直近表示した広告のplacement(impression計測用)
+
+/**
+ * 現在の場面を記録する。ページ遷移/ダイアログ表示のたびに呼び出す
+ */
+const setAdScene = (scene) => {
+    currentAdScene = scene;
+}
+
+/**
+ * 表示チャンスを逃した広告(pendingShow)の読み込みが完了したので、まだ表示してよいか判定する
+ */
+const tryShowPending = () => {
+    if (!pendingShow) {
+        return;
+    }
+    const { placement, requestedAt } = pendingShow;
+    pendingShow = null;
+    if (getRemoved() || adShowing) {
+        return;
+    }
+    const waitMs = Date.now() - requestedAt;
+    if (waitMs > AD_PENDING_MAX_MS) {
+        trackEvent('ad_pending_dropped', { reason: 'expired', placement });
+        return;
+    }
+    if (!AD_PENDING_ALLOWED_SCENES.has(currentAdScene)) {
+        trackEvent('ad_pending_dropped', { reason: 'context_changed', placement });
+        return;
+    }
+    trackEvent('ad_pending_shown', { wait_ms: waitMs, placement });
+    displayLoadedAd(placement);
+}
+
+export const showAd = async (placement) => {
     if (getRemoved()) {
         // 広告削除課金を行っている場合は表示しない
         return;
@@ -410,39 +583,46 @@ export const showAd = async () => {
         return;
     }
 
-    console.log("showAd");
-    if (!adLoaded) {
+    console.log("showAd", placement);
+    if (!isAdFresh()) {
         // 先読みが間に合っていない場合、短時間だけ読み込み完了を待ってから判断する
-        // (プレイ中広告の追加でリクエスト間隔が短くなり、先読みが追いつかず不要にスキップされるケースが増えたため)
         await Promise.race([
-            loadAd().catch(() => { }),
+            startAdLoad().catch(() => { }),
             new Promise((resolve) => setTimeout(resolve, AD_READY_WAIT_MS)),
         ]);
     }
-    if (!adLoaded) {
-        // それでも間に合わなかった場合は、広告表示を優先する方針のため諦めずに読み込み完了を待つ。
-        // プレイが先に進んでいても、読み込みが終わり次第そのタイミングで表示する
-        trackEvent('ad_show_failed', { stage: 'not_ready', error_message: adLoading ? 'loading' : 'not_loaded' });
-        adPendingShow = true;
-        preloadAd();
+    if (isAdFresh() && !adShowing) {
+        await displayLoadedAd(placement);
         return;
     }
 
-    await displayLoadedAd();
+    // それでも間に合わなかった場合
+    const reason = adLoading ? 'loading' : (isReloadWaiting() ? 'backoff' : 'not_loaded');
+    trackEvent('ad_show_failed', { stage: 'not_ready', error_message: reason });
+    if (placement !== 'ingame') {
+        // プレイ中広告以外は、読み込み完了後に「区切り」の場面がまだ続いていれば表示する
+        pendingShow = { placement, requestedAt: Date.now() };
+    }
+    // 読み込み中/バックオフ待機中でなければ読み込みを試みる(バックオフ中なら何もしない)
+    preloadAd();
 }
 
 /**
  * 読み込み済みの広告を表示する
+ * @param {string} placement 表示箇所(gameover/clear/ingame/start)
  */
-const displayLoadedAd = async () => {
+const displayLoadedAd = async (placement) => {
     if (adShowing) {
         // 別の広告を表示中なら重複表示しない(次の読み込み完了時に改めて表示を試みる)
-        adPendingShow = true;
+        if (placement !== 'ingame') {
+            pendingShow = { placement, requestedAt: Date.now() };
+        }
         return;
     }
     adShowing = true;
     // 一度表示した広告は再表示できないため、表示前に読み込み済みフラグを落とす
     adLoaded = false;
+    lastAdPlacement = placement;
     try {
         await interstitial.show();
     } catch (error) {
@@ -505,6 +685,22 @@ document.addEventListener('admob.ad.showfail', (evt) => {
     preloadAd();
 });
 
+// アプリがバックグラウンドの間は再読み込みのバックオフタイマーを止め、フォアグラウンド復帰時に再開する
+document.addEventListener('pause', () => {
+    reloadSuspended = true;
+    if (isReloadWaiting()) {
+        reloadPendingOnResume = true;
+    }
+    clearReloadWait();
+}, false);
+document.addEventListener('resume', () => {
+    reloadSuspended = false;
+    if (reloadPendingOnResume) {
+        reloadPendingOnResume = false;
+        scheduleReload();
+    }
+}, false);
+
 const SKU = 'com.babyloos.submarine3d.remove_ads1';
 // const isiOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent);
 
@@ -528,7 +724,8 @@ function initIAP() {
         if (!store.owned({ id: SKU, platform: purchasePlatform })) return;
 
         setRemoved(true);
-        adPendingShow = false;
+        pendingShow = null;
+        clearReloadWait();
         $('#removeAdsButton').removeClass('btn-danger').addClass('btn-secondary');
         $('#removeAdsButton').prop('disabled', true);
     };
@@ -592,9 +789,11 @@ document.getElementById('removeAdsBuyModal')
     trackEvent("purchase_dialog_shown", { trigger: "button", game_progress: getGameProgress() });
 });
 
-// 広告が実際に表示された(インプレッションが記録された)タイミングで初回のみ送信
+// 広告が実際に表示された(インプレッションが記録された)タイミングで送信
 const onAdImpression = () => {
     trackOnceEvent("ad_first_impression", STORAGE_KEYS.adFirstImpression, { ad_type: "interstitial" });
+    // showAdに渡されたplacementを付けて毎回送る(ad_impressionはAdMob連携によるGA4自動収集イベント名と衝突するため使わない)
+    trackEvent("ad_impression_shown", { placement: lastAdPlacement || 'unknown' });
 };
 document.addEventListener('admob.ad.impression', onAdImpression);
 document.addEventListener('admob.ad.show', onAdImpression);
