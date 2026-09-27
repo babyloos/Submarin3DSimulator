@@ -33,15 +33,8 @@ export class Main {
         const manualButton = $('#manualButton');
 
         // ゲームモード選択画面
+        // 選択したらその場で次の画面へ進む(確認ボタンは廃止)
         var selectGameMode = GameMode.mission;
-        const selectDiffButton = $('#selectDiffButton');
-        selectDiffButton.on('click', () => {
-            audioManager.play();
-            diffSelector.prop('checked', false);
-            startButton.attr('disabled', true);
-            PageController.pageTransition('diffSelectPage');
-            preloadAd();
-        });
         const gameModeSelectBackButton = $('#gameModeSelectBackbutton');
         gameModeSelectBackButton.on('click', () => {
             audioManager.play();
@@ -61,22 +54,20 @@ export class Main {
                 default:
                     throw "selected undefined game mode.";
             }
-            selectDiffButton.attr('disabled', false);
+            diffSelector.prop('checked', false);
+            PageController.pageTransition('diffSelectPage');
+            preloadAd();
         })
 
         // 難易度選択画面
+        // 選択したらその場でゲームを開始する(確認ボタンは廃止)
         var selectedDiff = GameDifficulty.easy;
         const diffSelectBackbutton = $('#diffSelectBackbutton');
-        const startButton = $('#startButton');
         const diffSelector = $('#diffSelectPage input:radio[name="diffSelect"]');
 
         diffSelectBackbutton.on('click', function () {
             audioManager.play();
             PageController.pageTransition('gameModeSelectPage');
-        });
-        startButton.on('click', () => {
-            audioManager.play();
-            transitionThreePage(true, selectedDiff);
         });
         diffSelector.on('change', function () {
             audioManager.play();
@@ -94,7 +85,7 @@ export class Main {
                 default:
                     throw "selected undefined game difficulty.";
             }
-            startButton.attr('disabled', false);
+            transitionThreePage(true, selectedDiff);
         })
 
         // マニュアル画面
@@ -116,7 +107,6 @@ export class Main {
         newGameButton.on('click', function () {
             audioManager.play();
             gameModeSelector.prop('checked', false);
-            selectDiffButton.attr('disabled', true);
             PageController.pageTransition('gameModeSelectPage');
             preloadAd();
         });
