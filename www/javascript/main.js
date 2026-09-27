@@ -38,7 +38,7 @@ export class Main {
         const gameModeSelectBackButton = $('#gameModeSelectBackbutton');
         gameModeSelectBackButton.on('click', () => {
             audioManager.play();
-            PageController.pageTransition('titlePage');
+            goToTitlePage();
         });
         const gameModeSelector = $('#gameModeSelectPage input:radio[name="gameModeSelect"]');
         gameModeSelector.on('change', function () {
@@ -85,6 +85,8 @@ export class Main {
                 default:
                     throw "selected undefined game difficulty.";
             }
+            // v1.1.39でSTARTボタンを廃止したため、難易度選択の確定操作をstart_button_tap相当として扱う
+            trackEvent('start_button_tap');
             transitionThreePage(true, selectedDiff);
         })
 
@@ -125,7 +127,7 @@ export class Main {
         });
         manualBackButton.on('click', function () {
             audioManager.play();
-            PageController.pageTransition('titlePage');
+            goToTitlePage();
         });
 
         // ゲームオーバー/ゲームクリアダイアログ
@@ -170,7 +172,10 @@ export class Main {
             });
             this.game = new Game(isNewGame, selectGameMode, selectedDiff, loadProgress, exitGame, gameOver, gameClear);
 
-            const waitStartedAt = Date.now();
+            // ゲーム開始時の広告表示判定処理へ入った時点(結果の内訳はad_request/ad_loaded/ad_show_attempt/
+            // ad_impression_shown/ad_closed/ad_show_failed/ad_pending_droppedの組み合わせから追える)
+            trackEvent('ad_start_gate', adCommonParams('game_start'));
+
             const removed = getRemoved();
             const adReadyPromise = removed
                 ? Promise.resolve(false)
@@ -181,11 +186,7 @@ export class Main {
 
             await Promise.all([loadProgress.readyPromise, adReadyPromise]);
 
-            let adResult;
-            if (removed) {
-                adResult = 'removed';
-            } else if (isAdFresh() && !adShowing) {
-                adResult = 'shown';
+            if (!removed && isAdFresh() && !adShowing) {
                 await new Promise((resolve) => {
                     let resolved = false;
                     const finish = () => {
@@ -201,10 +202,7 @@ export class Main {
                     setTimeout(finish, 10000);
                     displayLoadedAd('start');
                 });
-            } else {
-                adResult = adLoading ? 'timeout' : 'no_fill';
             }
-            trackEvent('ad_start_gate', { result: adResult, wait_ms: Date.now() - waitStartedAt });
 
             // 3D画面表示
             PageController.pageTransition('threePage');
@@ -225,8 +223,16 @@ function exitGame() {
     main.game.dispose();
     main.game = null;
     setAdScene('title');
-    PageController.pageTransition('titlePage');
+    goToTitlePage();
     main.main();
+}
+
+/**
+ * タイトル画面へ遷移し、表示イベントを送信する
+ */
+function goToTitlePage() {
+    PageController.pageTransition('titlePage');
+    trackEvent('title_screen_view');
 }
 
 /**
@@ -319,6 +325,7 @@ const initUpdateLanguage = () => {
 
 let interstitial;
 let rewarded;
+let adAppVersion = 'unknown'; // 広告イベント計測用のアプリバージョン(deviceready時にBuildInfoから取得)
 
 document.addEventListener('deviceready', async () => {
     console.log('device ready');
@@ -337,6 +344,8 @@ document.addEventListener('deviceready', async () => {
         // TODO: AdMobコンソールでiOS用リワード広告ユニットを作成し、本番IDに差し替える
         rewardedUnitId = isDebug ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-1479927029413242/0000000000';
     }
+
+    adAppVersion = (typeof BuildInfo !== 'undefined' && BuildInfo.version) || 'unknown';
 
     interstitial = new admob.InterstitialAd({
         adUnitId: unitId,
@@ -462,6 +471,9 @@ const startAdLoad = () => {
         return Promise.resolve();
     }
     adLoaded = false;
+    // 実際の読み込み要求元となった場面をplacementの代わりに使う(先読みは特定のplacementに紐付かないため)
+    const requestPlacement = currentAdScene;
+    trackEvent('ad_request', adCommonParams(requestPlacement));
     adLoading = interstitial.load()
         .then(() => {
             adLoaded = true;
@@ -469,14 +481,15 @@ const startAdLoad = () => {
             backoffIndex = 0;
             retryCount = 0;
             clearReloadWait();
+            trackEvent('ad_loaded', adCommonParams(requestPlacement));
             tryShowPending();
         })
         .catch((error) => {
             adLoaded = false;
-            trackEvent('ad_show_failed', {
-                stage: 'load',
-                error_message: formatAdError(error).slice(0, 100),
+            trackAdShowFailed('load', error, {
                 retry_count: retryCount,
+                is_ad_loaded: false,
+                ...adCommonParams(requestPlacement),
             });
             retryCount++;
             scheduleReload();
@@ -497,11 +510,28 @@ const preloadAd = () => {
     startAdLoad().catch(() => { });
 }
 
-const trackAdShowFailed = (stage, error) => {
-    trackEvent('ad_show_failed', {
+/**
+ * インタースティシャル広告イベント共通パラメータ
+ */
+const adCommonParams = (placement) => ({
+    placement: placement || 'unknown',
+    ad_format: 'interstitial',
+    app_version: adAppVersion,
+});
+
+const adErrorCode = (error) => {
+    if (error && typeof error === 'object' && error.code !== undefined && error.code !== null) {
+        return error.code;
+    }
+    return null;
+}
+
+const trackAdShowFailed = (stage, error, extra = {}) => {
+    trackEvent('ad_show_failed', Object.assign({
         stage: stage,
         error_message: formatAdError(error).slice(0, 100),
-    });
+        error_code: adErrorCode(error),
+    }, extra));
 }
 
 const formatAdError = (error) => {
@@ -552,11 +582,11 @@ const tryShowPending = () => {
     }
     const waitMs = Date.now() - requestedAt;
     if (waitMs > AD_PENDING_MAX_MS) {
-        trackEvent('ad_pending_dropped', { reason: 'expired', placement });
+        trackEvent('ad_pending_dropped', { reason: 'expired', placement, wait_ms: waitMs });
         return;
     }
     if (!AD_PENDING_ALLOWED_SCENES.has(currentAdScene)) {
-        trackEvent('ad_pending_dropped', { reason: 'context_changed', placement });
+        trackEvent('ad_pending_dropped', { reason: 'context_changed', placement, wait_ms: waitMs });
         return;
     }
     trackEvent('ad_pending_shown', { wait_ms: waitMs, placement });
@@ -588,7 +618,7 @@ export const showAd = async (placement) => {
 
     // それでも間に合わなかった場合
     const reason = adLoading ? 'loading' : (isReloadWaiting() ? 'backoff' : 'not_loaded');
-    trackEvent('ad_show_failed', { stage: 'not_ready', error_message: reason });
+    trackAdShowFailed('not_ready', reason, { is_ad_loaded: false, ...adCommonParams(placement) });
     if (placement !== 'ingame') {
         // プレイ中広告以外は、読み込み完了後に「区切り」の場面がまだ続いていれば表示する
         pendingShow = { placement, requestedAt: Date.now() };
@@ -613,11 +643,12 @@ const displayLoadedAd = async (placement) => {
     // 一度表示した広告は再表示できないため、表示前に読み込み済みフラグを落とす
     adLoaded = false;
     lastAdPlacement = placement;
+    trackEvent('ad_show_attempt', adCommonParams(placement));
     try {
         await interstitial.show();
     } catch (error) {
         console.error('Ad failed to show:', error);
-        trackAdShowFailed('show', error);
+        trackAdShowFailed('show', error, { is_ad_loaded: true, ...adCommonParams(placement) });
         adShowing = false;
         preloadAd();
     }
@@ -664,13 +695,14 @@ const showRewardedAd = () => {
 document.addEventListener('admob.ad.dismiss', () => {
     // Once a interstitial ad is shown, it cannot be shown again.
     // Starts loading the next interstitial ad as soon as it is dismissed.
+    trackEvent('ad_closed', adCommonParams(lastAdPlacement));
     adShowing = false;
     preloadAd();
 });
 
 // show()が成功扱いでも表示に失敗した場合は、表示中のまま固まらないよう状態を戻す
 document.addEventListener('admob.ad.showfail', (evt) => {
-    trackAdShowFailed('showfail', evt && evt.error ? evt.error : evt);
+    trackAdShowFailed('showfail', evt && evt.error ? evt.error : evt, { is_ad_loaded: true, ...adCommonParams(lastAdPlacement) });
     adShowing = false;
     preloadAd();
 });
@@ -780,14 +812,17 @@ document.getElementById('removeAdsBuyModal')
 });
 
 // 広告が実際に表示された(インプレッションが記録された)タイミングで送信
+// (ad_impressionという名前はAdMob連携によるGA4自動収集イベントと衝突するため、
+//  このad_impression_shownを実質的な"ad_impression"として扱う)
 const onAdImpression = () => {
     trackOnceEvent("ad_first_impression", STORAGE_KEYS.adFirstImpression, { ad_type: "interstitial" });
-    // showAdに渡されたplacementを付けて毎回送る(ad_impressionはAdMob連携によるGA4自動収集イベント名と衝突するため使わない)
-    trackEvent("ad_impression_shown", { placement: lastAdPlacement || 'unknown' });
+    trackEvent("ad_impression_shown", adCommonParams(lastAdPlacement));
 };
 document.addEventListener('admob.ad.impression', onAdImpression);
 document.addEventListener('admob.ad.show', onAdImpression);
 
 const main = new Main();
 main.main();
+// 起動直後はJS側で明示的にtitlePageへ遷移しない(初期状態で表示済み)ため、ここで1回だけ計測する
+trackEvent('title_screen_view');
 

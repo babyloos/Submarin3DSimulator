@@ -311,6 +311,8 @@ export class Game {
         }
         this.beforeRealTime = new Date();
         this.#initializeUpdate();
+        // 実際にゲーム画面(更新ループ)が利用可能になった時点で送信(intervalIdガードにより多重送信されない)
+        trackEvent('game_loaded');
     }
 
     /**
