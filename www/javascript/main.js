@@ -295,32 +295,84 @@ export class LoadProgress {
 }
 
 var glot;
+let glotReady = false;
+
+// 対応言語(words.jsonの言語キー)
+const SUPPORTED_LANGUAGES = ['en', 'ja', 'zh', 'zh-TW', 'ko', 'de', 'fr', 'es', 'pt', 'ru', 'id', 'th', 'vi'];
+const LANGUAGE_STORAGE_KEY = 'language';
+
+/**
+ * 端末の言語コード(ja-JP, zh-Hant-TW等)や選択された言語をwords.jsonの言語キーに変換する。未対応の言語は英語にする
+ */
+const resolveLanguage = (rawLanguage) => {
+    const lang = String(rawLanguage || '').toLowerCase();
+    const base = lang.split('-')[0];
+    if (base === 'zh') {
+        // 繁体字(台湾・香港・マカオ/Hant)とそれ以外(簡体字)を分ける
+        return /-(tw|hk|mo|hant)(-|$)/.test(lang) ? 'zh-TW' : 'zh';
+    }
+    if (base === 'in') {
+        // 古いAndroidではインドネシア語が"in"になる
+        return 'id';
+    }
+    return SUPPORTED_LANGUAGES.includes(base) ? base : 'en';
+};
+
+const getStoredLanguage = () => {
+    try {
+        return localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    } catch (e) {
+        return null;
+    }
+};
+
+let currentLanguage = resolveLanguage(getStoredLanguage() || navigator.language);
+
+// 購入処理の案内文言をプラットフォームに合わせる(HTMLの初期値はApple向け)
+const updatePurchaseProcessingInfoModel = () => {
+    if (window.cordova && cordova.platformId === 'android') {
+        $('[glot-model="RES_PurchaseProcessingInfo"]').attr('glot-model', 'RES_PurchaseProcessingInfoGoogle');
+    }
+};
+
+// 現在の言語で文言・画像を描画する
+const applyLanguage = () => {
+    if (!glotReady) {
+        return;
+    }
+    updatePurchaseProcessingInfoModel();
+    glot.render(currentLanguage);
+    ImgTranslator.translate(currentLanguage);
+    document.documentElement.lang = currentLanguage;
+    $('#languageSelect').val(currentLanguage);
+    // 翻訳済みの文言でデイリーミッション表示を更新する
+    renderDailyMission();
+};
 
 window.addEventListener('DOMContentLoaded', function () {
     glot = new Glottologist();
     glot.import("resources/words.json").then(() => {
-        glot.render();
-        // 翻訳済みの文言でデイリーミッション表示を更新する
-        renderDailyMission();
+        glotReady = true;
+        applyLanguage();
     });
-
-    const language = navigator.language;
-    ImgTranslator.translate(language);
-
-    // 言語切り替え時動作設定
-    // initUpdateLanguage();
 });
 
-// 言語切り替え時動作
+// Cordovaの準備完了後にプラットフォーム依存の文言を反映し直す
+document.addEventListener('deviceready', () => applyLanguage());
+
+// 言語切り替え時動作(タイトル画面表示のたびに呼ばれるため、既存のハンドラを外してから設定する)
 const initUpdateLanguage = () => {
-  $('#languageSelect').on('change', function() {
-    glot.import("resources/words.json").then(() => {
-        console.log("change language " + $(this).val());
-        glot.render($(this).val());
-        ImgTranslator.translate($(this).val());
-        renderDailyMission();
+    $('#languageSelect').off('change').on('change', function () {
+        currentLanguage = resolveLanguage($(this).val());
+        console.log("change language " + currentLanguage);
+        try {
+            localStorage.setItem(LANGUAGE_STORAGE_KEY, currentLanguage);
+        } catch (e) {
+            // 保存できなくても今回の表示は切り替える
+        }
+        applyLanguage();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('selectLanguageModal')).hide();
     });
-  });
 }
 
 let interstitial;

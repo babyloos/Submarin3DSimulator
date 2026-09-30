@@ -2,16 +2,17 @@
  * 言語ごとの画像リソースに置換するためのクラス
  */
 export default class ImgTranslator {
+    /**
+     * @param {string} language words.jsonの言語キー(en, ja, zh, zh-TW, ko, ...)
+     */
     static async translate(language) {
         console.log(language);
 
-        if (language !== 'en' && language !== 'ja' && language !== 'zh' && language !== 'zh-CN' && language !== 'zh-TW') {
-            // 登録されている言語でない場合は何もしない
-            return;
-        }
-
-        let languageImgPath = language;
-        if (languageImgPath === 'zh-CN' || languageImgPath === 'zh-TW') {
+        // 画像はen/ja/zhのみ用意している。繁体字は中国語画像、それ以外の言語は英語画像を使う
+        let languageImgPath = 'en';
+        if (language === 'ja') {
+            languageImgPath = 'ja';
+        } else if (language === 'zh' || language === 'zh-TW') {
             languageImgPath = 'zh';
         }
 
