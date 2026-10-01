@@ -14,6 +14,10 @@ export class Torpedo extends GameObject {
 
     depth = 0;
 
+    // 行動分析用: このプレイで何本目の魚雷か / 命中したか(命中で無効化されたのか、航走距離切れで無効化されたのかの判別用)
+    shotNo = 0;
+    hasHit = false;
+
     /**
      * コンストラクタ
      * @param {double} pointX X座標
@@ -94,6 +98,7 @@ export class Torpedo extends GameObject {
      */
     onHitTorpedo() {
         super.onHitTorpedo();
+        this.hasHit = true;
         this.isEnabled = false;
     }
 

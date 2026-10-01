@@ -70,13 +70,16 @@
                             <h1 glot-model='RES_Title'>潜水艦3Dシミュレーター</h1>
                         </div>
                         <div class="menuButtonWrapper">
-                            <p>
+                            <!-- 初回プレイ時のおすすめ表示(firstPlayRecommendクラスが付いた時だけ表示) -->
+                            <p class="firstPlayHint" glot-model='RES_RecommendHint'>初めての方は「スカーミッシュ」がおすすめ！敵船団のすぐそばから始まります</p>
+                            <p class="recommendTarget">
                                 <input type="radio" class="btn-check" name="gameModeSelect" id="gameModeSquamish"
                                     autocomplete="off">
                                 <label class="btn btn-info btn-sm" for="gameModeSquamish"
                                     glot-model='RES_squamish'>スカーミッシュ</label>
+                                <span class="recommendBadge" glot-model='RES_Recommended'>おすすめ</span>
                             </p>
-                            <p>
+                            <p class="notRecommended">
                                 <input type="radio" class="btn-check" name="gameModeSelect" id="gameModeMission"
                                     autocomplete="off">
                                 <label class="btn btn-info btn-sm" for="gameModeMission"
@@ -193,17 +196,20 @@
                             <h1 glot-model='RES_Title'>潜水艦3Dシミュレーター</h1>
                         </div>
                         <div class="menuButtonWrapper">
-                            <p>
+                            <!-- 初回プレイ時のおすすめ表示(firstPlayRecommendクラスが付いた時だけ表示) -->
+                            <p class="firstPlayHint" glot-model='RES_RecommendHintDiff'>最初は「簡単」がおすすめです</p>
+                            <p class="recommendTarget">
                                 <input type="radio" class="btn-check" name="diffSelect" id="diffEasy"
                                     autocomplete="off">
                                 <label class="btn btn-info btn-sm" for="diffEasy" glot-model='RES_Easy'>簡単</label>
+                                <span class="recommendBadge" glot-model='RES_Recommended'>おすすめ</span>
                             </p>
-                            <p>
+                            <p class="notRecommended">
                                 <input type="radio" class="btn-check" name="diffSelect" id="diffNormal"
                                     autocomplete="off">
                                 <label class="btn btn-info btn-sm" for="diffNormal" glot-model='RES_Normal'>普通</label>
                             </p>
-                            <p>
+                            <p class="notRecommended">
                                 <input type="radio" class="btn-check" name="diffSelect" id="diffHard"
                                     autocomplete="off">
                                 <label class="btn btn-info btn-sm" for="diffHard" glot-model='RES_Difficult'>難しい</label>
@@ -496,6 +502,10 @@
 
     <!-- メッセージ翻訳用 -->
     <div style="display: none">
+        <span id='RES_TUT_Periscope' glot-model='RES_TUT_Periscope'>まずは潜望鏡ボタンをタップして攻撃画面を開こう</span>
+        <span id='RES_TUT_Fire' glot-model='RES_TUT_Fire'>画面を左右にドラッグして照準を敵船に合わせ、発射ボタンで魚雷を撃とう！</span>
+        <span id='RES_TUT_Fired' glot-model='RES_TUT_Fired'>魚雷発射！命中を待とう。外れたら照準を合わせ直して再発射しよう</span>
+        <span id='RES_TUT_Skip' glot-model='RES_TUT_Skip'>スキップ</span>
         <span id='RES_Hydrophone' glot-model='RES_Hydrophone'>聴音員</span>
         <span id='RES_HydrophoneDiscover' glot-model='RES_HydrophoneDiscover'>船音をxxx隻確認！</span>
         <span id='RES_EnemyShip' glot-model='RES_EnemyShip'>敵船</span>

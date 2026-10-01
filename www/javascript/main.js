@@ -6,6 +6,13 @@ import { AudioManager } from "./controller/audioManager.js";
 import ImgTranslator from "./controller/imgTranslator.js";
 import { STORAGE_KEYS, getGameProgress, trackEvent, trackOnceEvent } from "./analytics.js";
 import { renderAll as renderDailyMission, showTitleCard as showDailyMissionTitleCard } from "./dailyMission.js";
+import * as GameAnalytics from "./gameAnalytics.js";
+import { GA_EVENT, GA_PARAM } from "./gameAnalytics.js";
+import * as FirstPlayGuide from "./firstPlayGuide.js";
+
+// 初回プレイ時におすすめするモード/難易度
+const RECOMMENDED_MODE = GameMode.skirmish;
+const RECOMMENDED_DIFFICULTY = GameDifficulty.easy;
 
 export class Main {
 
@@ -35,6 +42,31 @@ export class Main {
         // ゲームモード選択画面
         // 選択したらその場で次の画面へ進む(確認ボタンは廃止)
         var selectGameMode = GameMode.mission;
+        // 初回プレイのおすすめ表示を出したか(mode_selected/mission_selectedのis_recommended判定用)
+        var modeRecommendationShown = false;
+        var difficultyRecommendationShown = false;
+
+        // モード選択画面へ遷移する(初回プレイならスカーミッシュをおすすめ表示する)
+        const showGameModeSelectPage = function () {
+            gameModeSelector.prop('checked', false);
+            modeRecommendationShown = FirstPlayGuide.applyModeRecommendation();
+            PageController.pageTransition('gameModeSelectPage');
+            GameAnalytics.trackFlow(GA_EVENT.MODE_SELECT_VIEW, {
+                [GA_PARAM.RECOMMENDATION_SHOWN]: modeRecommendationShown ? 1 : 0,
+            });
+        };
+
+        // 難易度選択画面へ遷移する(初回プレイなら簡単をおすすめ表示する)
+        const showDiffSelectPage = function () {
+            diffSelector.prop('checked', false);
+            difficultyRecommendationShown = FirstPlayGuide.applyDifficultyRecommendation();
+            PageController.pageTransition('diffSelectPage');
+            GameAnalytics.trackFlow(GA_EVENT.MISSION_SELECT_VIEW, {
+                [GA_PARAM.MODE]: modeName(selectGameMode),
+                [GA_PARAM.RECOMMENDATION_SHOWN]: difficultyRecommendationShown ? 1 : 0,
+            });
+        };
+
         const gameModeSelectBackButton = $('#gameModeSelectBackbutton');
         gameModeSelectBackButton.on('click', () => {
             audioManager.play();
@@ -54,8 +86,12 @@ export class Main {
                 default:
                     throw "selected undefined game mode.";
             }
-            diffSelector.prop('checked', false);
-            PageController.pageTransition('diffSelectPage');
+            GameAnalytics.trackFlow(GA_EVENT.MODE_SELECTED, {
+                [GA_PARAM.MODE]: modeName(selectGameMode),
+                [GA_PARAM.IS_RECOMMENDED]: selectGameMode === RECOMMENDED_MODE ? 1 : 0,
+                [GA_PARAM.RECOMMENDATION_SHOWN]: modeRecommendationShown ? 1 : 0,
+            });
+            showDiffSelectPage();
             preloadAd();
         })
 
@@ -67,7 +103,7 @@ export class Main {
 
         diffSelectBackbutton.on('click', function () {
             audioManager.play();
-            PageController.pageTransition('gameModeSelectPage');
+            showGameModeSelectPage();
         });
         diffSelector.on('change', function () {
             audioManager.play();
@@ -85,7 +121,14 @@ export class Main {
                 default:
                     throw "selected undefined game difficulty.";
             }
-            // v1.1.39でSTARTボタンを廃止したため、難易度選択の確定操作をstart_button_tap相当として扱う
+            GameAnalytics.trackFlow(GA_EVENT.MISSION_SELECTED, {
+                [GA_PARAM.MODE]: modeName(selectGameMode),
+                [GA_PARAM.MISSION_ID]: modeName(selectGameMode) + '_' + difficultyName(selectedDiff),
+                [GA_PARAM.DIFFICULTY]: difficultyName(selectedDiff),
+                [GA_PARAM.IS_RECOMMENDED]: (selectGameMode === RECOMMENDED_MODE && selectedDiff === RECOMMENDED_DIFFICULTY) ? 1 : 0,
+                [GA_PARAM.RECOMMENDATION_SHOWN]: difficultyRecommendationShown ? 1 : 0,
+            });
+            // v1.1.39でSTARTボタンを廃止したため、難易度選択の確定操作をstart_button_tap相当として扱う(既存イベント)
             trackEvent('start_button_tap');
             transitionThreePage(true, selectedDiff);
         })
@@ -108,8 +151,8 @@ export class Main {
         // ニューゲーム
         newGameButton.on('click', function () {
             audioManager.play();
-            gameModeSelector.prop('checked', false);
-            PageController.pageTransition('gameModeSelectPage');
+            GameAnalytics.trackFlow(GA_EVENT.START_TAP, { [GA_PARAM.ENTRY]: 'new_game' });
+            showGameModeSelectPage();
             preloadAd();
         });
 
@@ -117,6 +160,7 @@ export class Main {
         continueButton.on('click', function () {
             // TODO: ゲームモードを取得する
             audioManager.play();
+            GameAnalytics.trackFlow(GA_EVENT.START_TAP, { [GA_PARAM.ENTRY]: 'continue' });
             transitionThreePage(false, selectedDiff);
         });
 
@@ -133,6 +177,7 @@ export class Main {
         // ゲームオーバー/ゲームクリアダイアログ
         backTitleButton.on('click', function () {
             audioManager.play();
+            GameAnalytics.onReturnTitleSelected();
             exitGame();
         });
 
@@ -148,6 +193,7 @@ export class Main {
                 return;
             }
             trackEvent('rewarded_ad_retry', {}, false);
+            GameAnalytics.onRetrySelected();
             const modalEl = document.getElementById('gameOverDialog');
             bootstrap.Modal.getOrCreateInstance(modalEl).hide();
             this.game.threePageViewControllerAbandon();
@@ -214,6 +260,20 @@ export class Main {
 }
 
 /**
+ * 分析用のモード名(mission / skirmish)
+ */
+function modeName(gameMode) {
+    return gameMode === GameMode.skirmish ? 'skirmish' : 'mission';
+}
+
+/**
+ * 分析用の難易度名(easy / normal / hard)
+ */
+function difficultyName(difficulty) {
+    return Object.keys(GameDifficulty).find(key => GameDifficulty[key] === difficulty) ?? String(difficulty);
+}
+
+/**
  * ゲーム終了時処理
  */
 function exitGame() {
@@ -247,6 +307,7 @@ function gameClear() {
         keyboard: false
     });
     modal.show();
+    GameAnalytics.onResultView(true);
     showAd('clear');
 }
 
@@ -262,6 +323,7 @@ function gameOver() {
         keyboard: false
     });
     modal.show();
+    GameAnalytics.onResultView(false);
     showAd('gameover');
 }
 

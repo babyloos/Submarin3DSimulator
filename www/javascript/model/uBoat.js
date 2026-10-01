@@ -7,6 +7,8 @@ import { Torpedo } from "./torpedo.js";
 import { AudioManager } from "../controller/audioManager.js";
 import { STORAGE_KEYS, trackOnceEvent } from "../analytics.js";
 import { onTorpedoFired as dailyMissionOnTorpedoFired } from "../dailyMission.js";
+import * as GameAnalytics from "../gameAnalytics.js";
+import * as FirstPlayGuide from "../firstPlayGuide.js";
 
 /**
  * U-boatクラス
@@ -25,6 +27,8 @@ export class Uboat extends GameObject {
 
     torpedoLoadingTime = 5000;                       // 魚雷の再発射に必要な時間(ms)
     torpedoElapsedTime = this.torpedoLoadingTime;    // 前回魚雷発射時からの経過時間(ms)
+
+    analyticsEnemies;           // 行動分析(照準先の推定)用に参照する敵船配列
 
     beforeEngineOut;            // バッテリーが切れる以前のエンジン出力
     beforeDistSpeed;            // バッテリーが切れる以前の目標速度
@@ -106,6 +110,8 @@ export class Uboat extends GameObject {
 
         const engineerText = $('#RES_ChiefEngineer').html()
         this.messageController.showMessage(engineerText, engineOutStr);
+        // 行動分析: 前進/後進/停止の区分が変わった時のみ送信される(ユーザーのテレグラフ操作からのみ呼ばれる)
+        GameAnalytics.onEngineChanged(engineOut);
         this.beforeEngineOut = engineOut;
         this.beforeDistSpeed = this.distSpeed;
     }
@@ -128,6 +134,8 @@ export class Uboat extends GameObject {
      */
     updateDistDepth(distDepth) {
         this.distDepth = distDepth;
+        // 行動分析: 浮上/潜望鏡深度/潜航の区分が変わった時のみ送信される(深度計・潜望鏡深度ボタン操作からのみ呼ばれる)
+        GameAnalytics.onDepthOrdered(distDepth);
         let distDepthStr = Util.numbToNDigitsStr(distDepth, 3);
         const navigatorText = $('#RES_Navigator').html()
         const distDepthText = $('#RES_ChangeDepth').html().replace('xxx', distDepthStr)
@@ -170,8 +178,11 @@ export class Uboat extends GameObject {
         // 深度200以上はダメージが入る
         if (this.depth >= 200) {
             const diffDepth = this.depth - 200;
-            if (diffDepth != 0)
+            if (diffDepth != 0) {
                 this.damage += diffDepth / 1000 * (elapsedTime / 1000);
+                // 行動分析: 撃沈原因の記録のみ(毎フレーム発生するためイベントは送らない)
+                GameAnalytics.markDamageCause('depth');
+            }
         }
     }
 
@@ -194,6 +205,7 @@ export class Uboat extends GameObject {
         if (this.o2 < 0) {
             this.o2 = 0;
             this.damage = 100; 
+            GameAnalytics.markDamageCause('oxygen');
         }
         if (this.o2 > 100) {
             this.o2 = 100;
@@ -243,6 +255,10 @@ export class Uboat extends GameObject {
         this.torpedos.forEach(function (torpedo) {
             if (torpedo.isEnabled) {
                 torpedo.update(elapsedTime);
+                // 命中せずに航走距離を使い切った(=明確に外れた)
+                if (!torpedo.isEnabled && !torpedo.hasHit) {
+                    GameAnalytics.onTorpedoMiss(torpedo);
+                }
             }
         });
     }
@@ -280,6 +296,9 @@ export class Uboat extends GameObject {
      */
     fireTorpedo() {
         if (!this.canFireTorpedo()) {
+            // 発射ボタンの画像は押せてしまうため、撃てなかった理由を計測する(挙動は従来どおり)
+            const reason = this.torpedoCount <= 0 ? 'empty' : (this.depth > 14 ? 'too_deep' : 'reloading');
+            GameAnalytics.onTorpedoFireBlocked(reason);
             // 魚雷発射ボタンは非活性になっているはず
             throw new Error("invalid operation.");
         }
@@ -291,7 +310,11 @@ export class Uboat extends GameObject {
         this.torpedoCount--;
         this.torpedoElapsedTime = 0;
 
+        // torpedo_fired: プレイ内の発射ごと(shot_no付き)。first_torpedo_fired: ユーザー単位で初回のみ(既存)。
+        // 役割が異なるため初回発射時は両方送る
+        torpedo.shotNo = GameAnalytics.onTorpedoFired(this, this.analyticsEnemies);
         trackOnceEvent('first_torpedo_fired', STORAGE_KEYS.firstTorpedoFired);
+        FirstPlayGuide.onTorpedoFired();
         // B群のみ: デイリーミッション(制限付きミッションの魚雷数カウント)
         dailyMissionOnTorpedoFired();
     }
@@ -320,7 +343,9 @@ export class Uboat extends GameObject {
      */
     onHitShell() {
         super.onHitShell();
+        const beforeDamage = this.damage;
         this.damage += Util.getRandomArbitrary(30, 50);
+        GameAnalytics.onPlayerDamaged('shell', this.damage - beforeDamage);
     }
 
     /**

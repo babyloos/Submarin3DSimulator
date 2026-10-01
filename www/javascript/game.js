@@ -19,11 +19,15 @@ import { PeriscopeController } from "./controller/periscopeController.js";
 import { STORAGE_KEYS, getExperimentVariant, getForegroundMs, markMissionClearedOnce, trackEvent, trackOnceEvent } from "./analytics.js";
 import * as DailyMission from "./dailyMission.js";
 import { showAd } from "./main.js";
+import * as GameAnalytics from "./gameAnalytics.js";
+import * as FirstPlayGuide from "./firstPlayGuide.js";
 
 // プレイ中広告: 何隻撃沈するごとに広告を挟むか
 const AD_SUNK_COUNT_INTERVAL = 2;
 // プレイ中広告: 撃沈が無くても最大何ms(実時間)ごとに広告を挟むか(保険)
 const AD_TIME_INTERVAL_MS = 5 * 60 * 1000;
+// 行動分析用の定期チェック間隔(ms, 実時間)。毎フレームは重いため間引く
+const ANALYTICS_CHECK_INTERVAL_MS = 1000;
 
 /**
  * ゲーム全体を管理するクラス
@@ -98,6 +102,7 @@ export class Game {
 
     sunkCountSinceLastAd = 0; // 前回のプレイ中広告からの撃沈数
     lastAdForegroundMs = 0;   // 前回プレイ中広告を表示した時点のフォアグラウンド時間
+    lastAnalyticsCheckAt = 0; // 前回の行動分析用チェック時刻(実時間)
 
     /**
      * コンストラクタ
@@ -138,6 +143,15 @@ export class Game {
                 break;
         }
 
+        // 行動分析用のプレイコンテキスト開始(mission_id等の共通パラメータ付与・集計値のリセット)
+        // コンティニュー時のmode/mission_idはセーブデータ読み込み後に#initialize内で上書きする
+        GameAnalytics.beginGame({
+            mode: this.#getMissionName(gameMode, GameMode),
+            missionId: this.#getMissionName(gameMode, GameMode) + '_' + this.#getMissionName(difficulty, GameDifficulty),
+            difficulty: this.#getMissionName(difficulty, GameDifficulty),
+            isContinue: !isNewgame,
+        });
+
         this.#trackGameStart(difficulty);
 
         // プレイ中広告のタイマーをゲーム開始時点から起算する
@@ -173,7 +187,8 @@ export class Game {
 
             // コンティニュー時はミッション自体は開始ではないため送信しない
             if (this.isNewgame) {
-                trackEvent('mission_start', {
+                // 既存イベント。mode/attempt_no等の共通パラメータを追加するためGameAnalytics経由で送る
+                GameAnalytics.trackGame('mission_start', {
                     mission_kind: 'standard',
                     mission_id: this.missionId,
                     mission_type: this.missionType,
@@ -264,6 +279,11 @@ export class Game {
                 this.missionTarget = missionState.missionTarget ?? this.missionTarget;
                 this.missionId = missionState.missionId ?? this.missionId;
             }
+            // コンティニュー時はセーブデータ側のmission_idを分析用コンテキストへ反映する
+            if (this.missionId) {
+                const parsed = GameAnalytics.parseMissionId(this.missionId);
+                GameAnalytics.updateGameInfo({ missionId: this.missionId, mode: parsed.mode, difficulty: parsed.difficulty });
+            }
             // 敵船
             const enemyShipsJson = this.#loadFile('enemyShips');
             enemyShipsJson.forEach(function (enemyShipJson) {
@@ -288,6 +308,9 @@ export class Game {
             }.bind(this));
         }
 
+        // 行動分析(照準先の推定)用に敵船配列を参照させる
+        this.playerBoat.analyticsEnemies = this.enemyShips;
+
         // 各クラスのInitialize
         this.controllController.initialize(this.playerBoat, this.timeManager);
         this.playerBoat.initialize(this.messageController, this.controllController, this.statusController);
@@ -311,8 +334,11 @@ export class Game {
         }
         this.beforeRealTime = new Date();
         this.#initializeUpdate();
-        // 実際にゲーム画面(更新ループ)が利用可能になった時点で送信(intervalIdガードにより多重送信されない)
-        trackEvent('game_loaded');
+        // 実際にゲーム画面(更新ループ)が利用可能になった時点で送信(intervalIdガードと1プレイ1回フラグにより多重送信されない)
+        // 既存のgame_loadedに、mode/mission_id/load_ms等のパラメータを追加して送る(仕様書のgame_readyに相当)
+        GameAnalytics.onGameReady();
+        // 魚雷をまだ撃ったことがないユーザーには「潜望鏡を開く→魚雷を撃つ」を案内する
+        FirstPlayGuide.startGuide(this.periscopeController.isActivePeriscopeView);
     }
 
     /**
@@ -343,6 +369,13 @@ export class Game {
         // ゲームオーバー状態更新
         this.#updateIsGameOver();
 
+        // 行動分析用の定期チェック(最大深度・近距離の敵船)。実時間で間引いて行う
+        const nowMs = now.getTime();
+        if (nowMs - this.lastAnalyticsCheckAt >= ANALYTICS_CHECK_INTERVAL_MS) {
+            this.lastAnalyticsCheckAt = nowMs;
+            GameAnalytics.onPeriodicCheck(this.playerBoat, this.enemyShips);
+        }
+
         // 3D画面更新
         this.threePageViewController.animate();
     }
@@ -355,6 +388,9 @@ export class Game {
             if (!this.playerBoat.isEnabled) {
                 // ゲームオーバー時処理
                 this.isGameOver = true;
+                GameAnalytics.onPlayerSunk();
+                GameAnalytics.endGame('gameover');
+                FirstPlayGuide.stop();
                 this._gameOver();
             }
         }
@@ -539,6 +575,9 @@ export class Game {
      * ゲーム終了時処理
      */
     #exitGame() {
+        // プレイ中に終了ボタンで抜けた(クリア/ゲームオーバー後はendGame済みのため送られない)
+        GameAnalytics.endGame('abandoned', 'quit_button');
+        FirstPlayGuide.stop();
         // ゲームの保存
         this.saveDatas();
         // threePage削除
@@ -567,6 +606,7 @@ export class Game {
         if (this.isGameClear) {
             return;
         }
+        GameAnalytics.onEnemySunk(objectType, tonnage);
         // 撃沈トン数を加算
         this.sunkEnemyTonnage += tonnage;
 
@@ -599,7 +639,8 @@ export class Game {
             this.isGameClear = true;
             try {
                 markMissionClearedOnce();
-                trackEvent('mission_complete', {
+                // 既存イベント。mode/attempt_no等の共通パラメータを追加するためGameAnalytics経由で送る
+                GameAnalytics.trackGame('mission_complete', {
                     mission_kind: 'standard',
                     mission_id: this.missionId,
                     mission_type: this.missionType,
@@ -609,6 +650,8 @@ export class Game {
             } catch (e) {
                 console.error('[Analytics] mission complete tracking error', e);
             }
+            GameAnalytics.endGame('clear');
+            FirstPlayGuide.stop();
             this._gameClear();
         }
     }

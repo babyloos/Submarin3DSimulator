@@ -2,6 +2,7 @@ import { SurfaceStatus } from "../constants.js";
 import { Util } from "../util.js";
 import { AudioManager } from "./audioManager.js";
 import { InstructionController } from "./instructionController.js";
+import * as GameAnalytics from "../gameAnalytics.js";
 
 /**
  * 聴音手コントローラ
@@ -33,6 +34,8 @@ export class HydrophoneController extends InstructionController {
             this.audioManager.play();
             const results = this.#listen();
             this.#showResultMessage(results);
+            // 行動分析: 聴音報告(view_action)と初回の敵発見(enemy_first_detected)
+            GameAnalytics.onEnemiesReported('sonar', this.uboat, results);
             this.closeMenu();
         }.bind(this));
 

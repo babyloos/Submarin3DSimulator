@@ -2,6 +2,7 @@ import { SurfaceStatus } from "../constants.js";
 import { Util } from "../util.js";
 import { AudioManager } from "./audioManager.js";
 import { InstructionController } from "./instructionController.js";
+import * as GameAnalytics from "../gameAnalytics.js";
 
 /**
  * 監視員コントローラ
@@ -33,6 +34,8 @@ export class ObserverController extends InstructionController {
             this.audioManager.play();
             const results = this.#observation();
             this.#showResultMessage(results);
+            // 行動分析: 見張り報告(view_action)と初回の敵発見(enemy_first_detected)
+            GameAnalytics.onEnemiesReported('lookout', this.uboat, results);
             this.closeMenu();
         }.bind(this));
 

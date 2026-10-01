@@ -4,6 +4,7 @@ import { Water } from '../../javascript/lib/Water.js';
 import { Sky } from '../../javascript/lib/Sky.js';
 import { GLTFLoader } from '../../javascript/lib/GLTFLoader.js';
 import { Util } from '../util.js';
+import * as GameAnalytics from '../gameAnalytics.js';
 import { EnemyShipStatus, EngineOut, ObjectType } from '../constants.js';
 import { LoadProgress } from '../main.js';
 import { EnemyShip } from '../model/enemyShip.js';
@@ -471,6 +472,8 @@ export class ThreeViewController {
                     const bearingDeg = Util.radianToDegree(-this.periscopeRad);
                     const tdc = this.playerBoat.tdc;
                     this.playerBoat.tdc.setSpec(bearingDeg, tdc.range, tdc.angleOnBow, tdc.targetSpeed);
+                    // 行動分析: 潜望鏡の旋回による照準開始(前回の発射以降で最初の操作時のみ送信される)
+                    GameAnalytics.onAimInput('periscope', this.playerBoat, this.playerBoat.analyticsEnemies);
                     this.periscopeXRad += radXDiff;
                 } else {
                     this.targetRad += radDiff;

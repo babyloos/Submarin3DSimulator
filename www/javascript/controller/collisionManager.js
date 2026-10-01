@@ -5,6 +5,8 @@ import { Rectangle } from "../model/rectangle.js";
 import { Uboat } from "../model/uBoat.js";
 import { Util } from "../util.js";
 import { ThreeViewController } from "./threeViewController.js";
+import * as GameAnalytics from "../gameAnalytics.js";
+import * as FirstPlayGuide from "../firstPlayGuide.js";
 
 /**
  * 当たり判定計算クラス
@@ -59,6 +61,9 @@ export class CollisionManager {
                     continue;
                 if (this.#checkCollTorpedo(torpedo, enemyShip)) {
                     // 衝突時
+                    // 撃沈→ミッションクリアで計測コンテキストが終了する前に命中を記録する
+                    GameAnalytics.onTorpedoHit(torpedo, enemyShip);
+                    FirstPlayGuide.onTorpedoHit();
                     torpedo.onHitTorpedo();
                     enemyShip.onHitTorpedo();
                     this.threeViewController.onHitTorpedo(torpedo);
@@ -102,6 +107,7 @@ export class CollisionManager {
                     if (rangeToUboat <= 100) {
                         const damage = 100 / (rangeToUboat / 10);
                         this.uboat.damage += damage;
+                        GameAnalytics.onPlayerDamaged('depth_charge', damage);
                     }
                     depthCharge.isEnabled = false;
                 }

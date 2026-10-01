@@ -4,6 +4,7 @@ import { Uboat } from "../model/uBoat.js";
 import { Util } from "../util.js";
 import { TimeManager } from "./timeManger.js";
 import { AudioManager } from "./audioManager.js";
+import * as GameAnalytics from "../gameAnalytics.js";
 
 /**
  * ユーザ入力可能なパネル用コントローラ
@@ -172,6 +173,7 @@ export class ControllController {
         const getClickDeg = this.#getClickDeg;
 
         bearingBack.on('touchstart', function (event) {
+            self.#trackAimInput('tdc_bearing');
             const touchObject = event.changedTouches[0];
             const clickX = touchObject.pageX;
             const clickY = touchObject.pageY;
@@ -307,6 +309,7 @@ export class ControllController {
         }
 
         rangeBack.on('touchstart', function (event) {
+            self.#trackAimInput('tdc_range');
             const touchObject = event.changedTouches[0];
             const clickX = touchObject.pageX;
             const clickY = touchObject.pageY;
@@ -365,6 +368,7 @@ export class ControllController {
         }
 
         speedBack.on('touchstart', function (event) {
+            self.#trackAimInput('tdc_speed');
             const touchObject = event.changedTouches[0];
             const clickX = touchObject.pageX;
             const clickY = touchObject.pageY;
@@ -424,6 +428,7 @@ export class ControllController {
         }
 
         aOnBowBack.on('touchstart', function (event) {
+            self.#trackAimInput('tdc_aob');
             const touchObject = event.changedTouches[0];
             const clickX = touchObject.pageX;
             const clickY = touchObject.pageY;
@@ -454,6 +459,14 @@ export class ControllController {
             self.angleOnBow = getAngle(clickDeg);
             self.#updateTdc();
         });
+    }
+
+    /**
+     * 行動分析: 照準(TDC諸元入力)の開始。前回の発射以降で最初の操作時のみtorpedo_aim_beginが送られる
+     * @param {string} input 操作した入力盤
+     */
+    #trackAimInput(input) {
+        GameAnalytics.onAimInput(input, this.uBoat, this.uBoat.analyticsEnemies);
     }
 
     /**
@@ -554,6 +567,7 @@ export class ControllController {
         const parent = this;
         $('.speedChangeButton').on('click', function() {
             parent.enterSound.play();
+            const beforeGameSpeed = timeManager.gameSpeed;
             // 押下時動作
             switch (this.getAttribute('id')) {
                 case speedMinButton.attr('id'):
@@ -569,6 +583,8 @@ export class ControllController {
                     timeManager.gameSpeed = 16;
                     break;
             }
+            // 行動分析: 時間倍率の上げ下げ(最大倍率はmission_summaryに記録)
+            GameAnalytics.onTimeScaleChanged(beforeGameSpeed, timeManager.gameSpeed);
             // 活性非活性切り替え
             updateDisabled(timeManager);
             // 速度表示更新
@@ -730,6 +746,8 @@ export class ControllController {
 
             const resultCourse = Util.arrangeCourseDig(uBoat.course + clickDeg);
             uBoat.updateDistCourse(resultCourse);
+            // 行動分析: 左右どちらへの転舵か(同じ向きの連続操作は間引かれる)
+            GameAnalytics.onCourseOrdered(clickDeg);
             allowShadow.attr('noupdate', 'false');
         });
     }

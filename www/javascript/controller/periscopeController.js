@@ -1,5 +1,7 @@
 import { InstructionController } from "./instructionController.js";
 import { AudioManager } from "./audioManager.js";
+import * as GameAnalytics from "../gameAnalytics.js";
+import * as FirstPlayGuide from "../firstPlayGuide.js";
 
 /**
  * 潜望鏡画面用コントローラ
@@ -96,6 +98,9 @@ export class PeriscopeController extends InstructionController {
         this.#switchPeriscopeArea(true);
         // 指示パネルの活性状態切り替え
         this.#switchInstruction(true);
+
+        GameAnalytics.onView('periscope');
+        FirstPlayGuide.onPeriscopeChanged(true);
     }
 
     /**
@@ -114,6 +119,8 @@ export class PeriscopeController extends InstructionController {
         this.#switchPeriscopeArea(false);
         // 指示パネルの活性状態切り替え
         this.#switchInstruction(false);
+
+        FirstPlayGuide.onPeriscopeChanged(false);
     }
 
     /**

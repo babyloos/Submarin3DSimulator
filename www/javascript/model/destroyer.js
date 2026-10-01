@@ -4,6 +4,7 @@ import { DepthCharge } from "./depthCharge.js";
 import { EnemyShip } from "./enemyShip.js";
 import { Point } from "./point.js";
 import { Shell } from "./shell.js";
+import * as GameAnalytics from "../gameAnalytics.js";
 
 /**
  * 駆逐艦クラス
@@ -144,6 +145,8 @@ export class Destroyer extends EnemyShip {
         const shell = new Shell(this.pointX, this.pointY - 5, fireCourse, fireAngle);
         this.shells.push(shell);
         this.fireShellElapsedTime = 0;
+        // 行動分析: 敵からの初攻撃(1プレイ1回のみ送信)
+        GameAnalytics.onEnemyAttack('shell');
     }
 
     #canFireShell() {
@@ -174,6 +177,8 @@ export class Destroyer extends EnemyShip {
         const depthCharge = new DepthCharge(pointX, pointY, course, fireDepth, this.playerBoat);
         this.depthCharges.push(depthCharge);
         this.fireDepthChargeElapsedTime = 0;
+        // 行動分析: 敵からの初攻撃(1プレイ1回のみ送信)
+        GameAnalytics.onEnemyAttack('depth_charge');
         if (this.depthCharges.length % 20 === 0) {
             this.depthChargeFireRate = 30000;
         } else {
