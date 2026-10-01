@@ -266,33 +266,49 @@ function initSessionTimer() {
 // #endregion
 
 // #region 未捕捉エラーの計測
+//
+// 注意: イベント名は"app_exception"ではなく"js_error"を使う。
+// FirebaseでCrashlytics連携(FIREBASE_CRASHLYTICS_COLLECTION_ENABLED)が有効な場合、
+// ネイティブのクラッシュはCrashlytics側からも"app_exception"という同名のGA4イベントが
+// 自動送信される可能性があり(Firebaseの仕様)、こちらのJS側の値と混ざって
+// error_messageが正しく追えなくなるおそれがあるため、名前を分けて衝突を避ける。
 
 /**
- * エラーのメッセージ+スタック先頭行を100文字までに整形する
+ * エラーのメッセージ+スタック先頭行を100文字までに整形する。
+ * 中身が空になる場合(event.errorがnull、reasonがundefined等)は必ず判別可能な文字列を返す
  */
 function formatExceptionMessage(error) {
-    if (!error) {
-        return '';
-    }
-    let message = String((error && error.message) || error);
-    if (error && error.stack) {
-        const firstStackLine = String(error.stack).split('\n')[0];
-        if (firstStackLine && firstStackLine !== message) {
-            message += ' | ' + firstStackLine;
+    let message = '';
+    if (error) {
+        message = String((error && error.message) || error).trim();
+        if (error && error.stack) {
+            const firstStackLine = String(error.stack).split('\n')[0].trim();
+            if (firstStackLine && firstStackLine !== message) {
+                message += ' | ' + firstStackLine;
+            }
         }
+    }
+    if (!message) {
+        message = 'empty';
     }
     return message.slice(0, 100);
 }
 
 window.addEventListener('error', (event) => {
-    trackEvent('app_exception', {
+    const params = {
         error_message: formatExceptionMessage(event.error || event.message),
-    }, false);
+        error_source: 'error',
+    };
+    if (event.filename) {
+        params.error_location = (event.filename + ':' + (event.lineno || 0)).slice(0, 100);
+    }
+    trackEvent('js_error', params, false);
 });
 
 window.addEventListener('unhandledrejection', (event) => {
-    trackEvent('app_exception', {
+    trackEvent('js_error', {
         error_message: formatExceptionMessage(event.reason),
+        error_source: 'unhandledrejection',
     }, false);
 });
 

@@ -180,7 +180,7 @@ export class Main {
             const adReadyPromise = removed
                 ? Promise.resolve(false)
                 : Promise.race([
-                    startAdLoad().then(() => true).catch(() => false),
+                    startAdLoad({ force: true }).then(() => true).catch(() => false),
                     new Promise((resolve) => setTimeout(() => resolve(false), AD_START_WAIT_MS)),
                 ]);
 
@@ -455,13 +455,17 @@ const AD_EXPIRY_MS = 55 * 60 * 1000;
 const isAdFresh = () => adLoaded && (Date.now() - adLoadedAt) < AD_EXPIRY_MS;
 
 // 読み込み失敗時の再読み込み間隔(No fill/Network errorとも共通)。成功したら最初の間隔に戻す
-const RELOAD_BACKOFF_MS = [30000, 60000, 120000, 300000];
+const RELOAD_BACKOFF_MS = [15000, 30000, 60000];
 let backoffIndex = 0;
 let retryCount = 0;         // 連続失敗回数(計測用。成功でリセット)
 let reloadTimer = null;     // 次回再読み込みのタイマー
 let onlineWaitHandler = null; // オフライン時、オンライン復帰を待つハンドラ
 let reloadSuspended = false;   // バックグラウンド中は再読み込みタイマーを止める
 let reloadPendingOnResume = false; // フォアグラウンド復帰時に再読み込みを再開すべきか
+
+// 強制読み込み(backoff無視)の連打防止。前回の実際のリクエストからこの間隔は空ける
+const MIN_AD_REQUEST_INTERVAL_MS = 10000;
+let lastAdRequestAt = 0;
 
 const isReloadWaiting = () => !!(reloadTimer || onlineWaitHandler);
 
@@ -507,25 +511,35 @@ const scheduleReload = () => {
 
 /**
  * 実際に広告読み込みリクエストを行う。読み込み中/バックオフ待機中/読み込み済み(期限内)なら何もしない
+ * @param {object} options
+ * @param {boolean} options.force backoff待機中でも、直近のリクエストから十分間隔が空いていれば強制的に読み込み直す
+ *   (showAdの表示チャンスやゲーム開始時など、表示の機会を逃したくない場面で使う。先読みでは使わない)
  */
-const startAdLoad = () => {
+const startAdLoad = (options = {}) => {
+    const force = !!options.force;
     if (getRemoved()) {
         return Promise.resolve();
     }
     if (adLoading) {
         return adLoading;
     }
-    if (isReloadWaiting()) {
-        // バックオフ/オンライン待ち中はここでは読み込み直さない。タイマー/onlineイベント任せにする
-        return Promise.reject(new Error('ad_reload_waiting'));
-    }
     if (isAdFresh()) {
         return Promise.resolve();
+    }
+    if (isReloadWaiting()) {
+        if (!force || (Date.now() - lastAdRequestAt) < MIN_AD_REQUEST_INTERVAL_MS) {
+            // バックオフ/オンライン待ち中はここでは読み込み直さない。タイマー/onlineイベント任せにする
+            // (forceでも、直近のリクエストから間隔が空いていなければ連打を避けて見送る)
+            return Promise.reject(new Error('ad_reload_waiting'));
+        }
+        // 表示の機会を逃さないよう、backoff待機を解除してすぐ読み込み直す
+        clearReloadWait();
     }
     adLoaded = false;
     // 実際の読み込み要求元となった場面をplacementの代わりに使う(先読みは特定のplacementに紐付かないため)
     const requestPlacement = currentAdScene;
-    trackEvent('ad_request', adCommonParams(requestPlacement));
+    lastAdRequestAt = Date.now();
+    trackEvent('ad_request', { force, ...adCommonParams(requestPlacement) });
     adLoading = interstitial.load()
         .then(() => {
             adLoaded = true;
@@ -612,6 +626,7 @@ const AD_PENDING_ALLOWED_SCENES = new Set(['gameover', 'clear', 'transition']);
 let currentAdScene = 'title'; // 現在の場面(pending show判定に使う)
 let pendingShow = null;       // { placement, requestedAt } | null
 let lastAdPlacement = null;   // 直近表示した広告のplacement(impression計測用)
+let adImpressionSentForCurrentShow = false; // 今回の表示につきad_impression_shownを送信済みか
 
 /**
  * 現在の場面を記録する。ページ遷移/ダイアログ表示のたびに呼び出す
@@ -658,8 +673,9 @@ export const showAd = async (placement) => {
     console.log("showAd", placement);
     if (!isAdFresh()) {
         // 先読みが間に合っていない場合、短時間だけ読み込み完了を待ってから判断する
+        // (backoff待機中でも、表示のチャンスを逃さないよう強制的に読み込み直す)
         await Promise.race([
-            startAdLoad().catch(() => { }),
+            startAdLoad({ force: true }).catch(() => { }),
             new Promise((resolve) => setTimeout(resolve, AD_READY_WAIT_MS)),
         ]);
     }
@@ -695,6 +711,8 @@ const displayLoadedAd = async (placement) => {
     // 一度表示した広告は再表示できないため、表示前に読み込み済みフラグを落とす
     adLoaded = false;
     lastAdPlacement = placement;
+    // admob.ad.impression/admob.ad.showの二重発火でad_impression_shownが2重送信されるのを防ぐためのフラグ
+    adImpressionSentForCurrentShow = false;
     trackEvent('ad_show_attempt', adCommonParams(placement));
     try {
         await interstitial.show();
@@ -702,6 +720,7 @@ const displayLoadedAd = async (placement) => {
         console.error('Ad failed to show:', error);
         trackAdShowFailed('show', error, { is_ad_loaded: true, ...adCommonParams(placement) });
         adShowing = false;
+        adImpressionSentForCurrentShow = false;
         preloadAd();
     }
 }
@@ -749,6 +768,7 @@ document.addEventListener('admob.ad.dismiss', () => {
     // Starts loading the next interstitial ad as soon as it is dismissed.
     trackEvent('ad_closed', adCommonParams(lastAdPlacement));
     adShowing = false;
+    adImpressionSentForCurrentShow = false;
     preloadAd();
 });
 
@@ -756,6 +776,7 @@ document.addEventListener('admob.ad.dismiss', () => {
 document.addEventListener('admob.ad.showfail', (evt) => {
     trackAdShowFailed('showfail', evt && evt.error ? evt.error : evt, { is_ad_loaded: true, ...adCommonParams(lastAdPlacement) });
     adShowing = false;
+    adImpressionSentForCurrentShow = false;
     preloadAd();
 });
 
@@ -866,8 +887,13 @@ document.getElementById('removeAdsBuyModal')
 // 広告が実際に表示された(インプレッションが記録された)タイミングで送信
 // (ad_impressionという名前はAdMob連携によるGA4自動収集イベントと衝突するため、
 //  このad_impression_shownを実質的な"ad_impression"として扱う)
+// admob.ad.impressionとadmob.ad.showの両方に登録しているため、1回の表示につき1回だけ送るようガードする
 const onAdImpression = () => {
     trackOnceEvent("ad_first_impression", STORAGE_KEYS.adFirstImpression, { ad_type: "interstitial" });
+    if (adImpressionSentForCurrentShow) {
+        return;
+    }
+    adImpressionSentForCurrentShow = true;
     trackEvent("ad_impression_shown", adCommonParams(lastAdPlacement));
 };
 document.addEventListener('admob.ad.impression', onAdImpression);

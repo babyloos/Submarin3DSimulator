@@ -930,7 +930,7 @@
     "vi": "Giờ hiện tại"
   },
   "RES_TimeMag": {
-    "en": "Time Compression",
+    "en": "Time Scale",
     "ja": "時間倍率",
     "zh": "时间倍率",
     "zh-TW": "時間倍率",
@@ -942,7 +942,7 @@
     "ru": "Ускорение",
     "id": "Percepatan",
     "th": "อัตราเร่งเวลา",
-    "vi": "Tốc độ thời gian"
+    "vi": "Tua nhanh"
   },
   "RES_Observer": {
     "en": "Lookout",
