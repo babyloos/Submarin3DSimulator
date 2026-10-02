@@ -279,9 +279,12 @@ function difficultyName(difficulty) {
 function exitGame() {
     // 全てのイベントを削除
     $('*').off();
-    main.game.threePageViewControllerAbandon();
-    main.game.dispose();
-    main.game = null;
+    // ボタンの連打等で二重に呼ばれた場合、ゲームは破棄済み(null)になっている
+    if (main.game) {
+        main.game.threePageViewControllerAbandon();
+        main.game.dispose();
+        main.game = null;
+    }
     setAdScene('title');
     goToTitlePage();
     main.main();
@@ -516,8 +519,12 @@ let adShowing = false;  // 広告を表示中か
 const AD_EXPIRY_MS = 55 * 60 * 1000;
 const isAdFresh = () => adLoaded && (Date.now() - adLoadedAt) < AD_EXPIRY_MS;
 
-// 読み込み失敗時の再読み込み間隔(No fill/Network errorとも共通)。成功したら最初の間隔に戻す
-const RELOAD_BACKOFF_MS = [15000, 30000, 60000];
+// 読み込み失敗時の再読み込み間隔(No fill/Network errorとも共通)。失敗が続くほど指数的に延ばし、成功したら最初の間隔に戻す
+const RELOAD_BACKOFF_MS = [15000, 30000, 60000, 120000, 300000];
+// 連続でこの回数失敗したら(No fillが続く地域等)、そのセッションでは自動の再読み込みをやめる
+const MAX_AUTO_RELOAD_FAILURES = 6;
+// 上記の上限到達後、表示チャンス時の強制読み込みも最低この間隔を空ける
+const RETRY_LIMITED_REQUEST_INTERVAL_MS = 5 * 60 * 1000;
 let backoffIndex = 0;
 let retryCount = 0;         // 連続失敗回数(計測用。成功でリセット)
 let reloadTimer = null;     // 次回再読み込みのタイマー
@@ -530,6 +537,10 @@ const MIN_AD_REQUEST_INTERVAL_MS = 10000;
 let lastAdRequestAt = 0;
 
 const isReloadWaiting = () => !!(reloadTimer || onlineWaitHandler);
+
+// 連続失敗の上限に達していて、直近のリクエストからまだ十分な間隔が空いていないか
+const isRetryLimited = () => retryCount >= MAX_AUTO_RELOAD_FAILURES
+    && (Date.now() - lastAdRequestAt) < RETRY_LIMITED_REQUEST_INTERVAL_MS;
 
 const clearReloadWait = () => {
     if (reloadTimer) {
@@ -555,11 +566,16 @@ const scheduleReload = () => {
         reloadPendingOnResume = true;
         return;
     }
+    if (retryCount >= MAX_AUTO_RELOAD_FAILURES) {
+        // 失敗が続いている(No fill等)ので、このセッションでは自動の再読み込みをやめる(表示チャンス時のみ間隔を空けて試す)
+        return;
+    }
     if (navigator.onLine === false) {
         onlineWaitHandler = () => {
             window.removeEventListener('online', onlineWaitHandler);
             onlineWaitHandler = null;
-            startAdLoad();
+            // 失敗はstartAdLoad内でad_show_failed(stage=load)として計測済みのため、ここでは握りつぶすだけ
+            startAdLoad().catch(() => { });
         };
         window.addEventListener('online', onlineWaitHandler);
         return;
@@ -567,7 +583,8 @@ const scheduleReload = () => {
     const idx = Math.min(backoffIndex, RELOAD_BACKOFF_MS.length - 1);
     reloadTimer = setTimeout(() => {
         reloadTimer = null;
-        startAdLoad();
+        // 失敗はstartAdLoad内でad_show_failed(stage=load)として計測済みのため、ここでは握りつぶすだけ
+        startAdLoad().catch(() => { });
     }, RELOAD_BACKOFF_MS[idx]);
 };
 
@@ -587,6 +604,10 @@ const startAdLoad = (options = {}) => {
     }
     if (isAdFresh()) {
         return Promise.resolve();
+    }
+    if (isRetryLimited()) {
+        // 連続失敗の上限到達後は、強制読み込みでも一定間隔を空ける
+        return Promise.reject(new Error('ad_retry_limited'));
     }
     if (isReloadWaiting()) {
         if (!force || (Date.now() - lastAdRequestAt) < MIN_AD_REQUEST_INTERVAL_MS) {
@@ -747,7 +768,7 @@ export const showAd = async (placement) => {
     }
 
     // それでも間に合わなかった場合
-    const reason = adLoading ? 'loading' : (isReloadWaiting() ? 'backoff' : 'not_loaded');
+    const reason = adLoading ? 'loading' : (isReloadWaiting() ? 'backoff' : (isRetryLimited() ? 'retry_limit' : 'not_loaded'));
     trackAdShowFailed('not_ready', reason, { is_ad_loaded: false, ...adCommonParams(placement) });
     if (placement !== 'ingame') {
         // プレイ中広告以外は、読み込み完了後に「区切り」の場面がまだ続いていれば表示する

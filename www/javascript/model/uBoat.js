@@ -296,11 +296,8 @@ export class Uboat extends GameObject {
      */
     fireTorpedo() {
         if (!this.canFireTorpedo()) {
-            // 発射ボタンの画像は押せてしまうため、撃てなかった理由を計測する(挙動は従来どおり)
-            const reason = this.torpedoCount <= 0 ? 'empty' : (this.depth > 14 ? 'too_deep' : 'reloading');
-            GameAnalytics.onTorpedoFireBlocked(reason);
-            // 魚雷発射ボタンは非活性になっているはず
-            throw new Error("invalid operation.");
+            // 呼び出し側でcanFireTorpedo()を確認している。念のため例外にはせず何もしない
+            return false;
         }
 
         this.torpedoFire.play();
@@ -317,6 +314,15 @@ export class Uboat extends GameObject {
         FirstPlayGuide.onTorpedoFired();
         // B群のみ: デイリーミッション(制限付きミッションの魚雷数カウント)
         dailyMissionOnTorpedoFired();
+        return true;
+    }
+
+    /**
+     * 発射できない状態で発射ボタンが押された理由を計測する
+     */
+    trackFireBlocked() {
+        const reason = this.torpedoCount <= 0 ? 'empty' : (this.depth > 14 ? 'too_deep' : 'reloading');
+        GameAnalytics.onTorpedoFireBlocked(reason);
     }
 
     /**

@@ -112,7 +112,11 @@ export class DepthCharge extends GameObject {
     }
 
     onExplosion() {
-        this.onExplosionCallback();
+        // コールバック(爆発音)は3D画面側で爆雷の3Dオブジェクト生成時に設定される。
+        // 3Dモデルの読み込み失敗等で未設定のまま爆発することがあるため、関数の場合のみ呼ぶ
+        if (typeof this.onExplosionCallback === 'function') {
+            this.onExplosionCallback();
+        }
     }
 
     /**

@@ -183,7 +183,10 @@ export class EnemyShip extends GameObject {
             this.onSunk(this.tonnage, this.objectType);
         }
 
-        this.onHitTorpedoCallback();
+        // コールバック(命中音)は音声の読み込み完了時に設定されるため、読み込み前・失敗時は未設定のことがある
+        if (typeof this.onHitTorpedoCallback === 'function') {
+            this.onHitTorpedoCallback();
+        }
     }
 
     setOnHitTorpedoCallback(callback) {

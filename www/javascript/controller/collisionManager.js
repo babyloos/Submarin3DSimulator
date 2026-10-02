@@ -100,6 +100,8 @@ export class CollisionManager {
                     continue;
                 }
                 if (depthCharge.depth >= depthCharge.fireDepth) {
+                    // 先に無効化しておく(以降の爆発演出で例外が起きても、同じ爆雷が毎フレーム爆発し続けないようにする)
+                    depthCharge.isEnabled = false;
                     depthCharge.onExplosion();
                     this.threeViewController.onExplosionDepthCharge(depthCharge);
                     // 爆雷とuBoatの距離が300m以内の場合にダメージ
@@ -109,7 +111,6 @@ export class CollisionManager {
                         this.uboat.damage += damage;
                         GameAnalytics.onPlayerDamaged('depth_charge', damage);
                     }
-                    depthCharge.isEnabled = false;
                 }
             }
         }

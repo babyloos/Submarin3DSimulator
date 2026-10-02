@@ -14,6 +14,54 @@ import { ShellHitWaterParticle } from '../model/shellHitWaterParticle.js';
 import { DepthChageParticle } from '../model/depthChargeParticle.js';
 
 /**
+ * 音声ファイルの読み込み(THREE.AudioLoaderの代替)
+ * three.js r141のAudioLoaderはdecodeAudioDataのPromiseをcatchしておらず、
+ * 端末によってデコードに失敗するとunhandledrejection("Unable to decode audio data")になるため、
+ * 失敗はログに出すだけにして音なしで続行する
+ */
+class SafeAudioLoader {
+    fileLoader = new THREE.FileLoader();
+
+    constructor() {
+        this.fileLoader.setResponseType('arraybuffer');
+    }
+
+    /**
+     * @param {string} url 音声ファイルのパス
+     * @param {Function} onLoad デコード成功時のコールバック(AudioBufferを受け取る)
+     */
+    load(url, onLoad) {
+        this.fileLoader.load(url, (buffer) => {
+            // 古いWebView(Safari)はdecodeAudioDataがPromiseを返さずコールバックのみのため、両方で受けて1回だけ処理する
+            let settled = false;
+            const onDecoded = (audioBuffer) => {
+                if (settled) return;
+                settled = true;
+                onLoad(audioBuffer);
+            };
+            const onDecodeError = (error) => {
+                if (settled) return;
+                settled = true;
+                console.warn('[Audio] decode failed: ' + url, error);
+            };
+            try {
+                // decodeAudioDataは渡したバッファを使用不可にするため、コピーを渡す
+                const bufferCopy = buffer.slice(0);
+                const context = THREE.AudioContext.getContext();
+                const result = context.decodeAudioData(bufferCopy, onDecoded, onDecodeError);
+                if (result && typeof result.then === 'function') {
+                    result.then(onDecoded, onDecodeError);
+                }
+            } catch (error) {
+                onDecodeError(error);
+            }
+        }, undefined, (error) => {
+            console.warn('[Audio] load failed: ' + url, error);
+        });
+    }
+}
+
+/**
  * 3D表示用コントローラ
  */
 export class ThreeViewController {
@@ -174,7 +222,10 @@ export class ThreeViewController {
         if (userAgent.indexOf("iPhone") >= 0 || userAgent.indexOf("iPad") >= 0 || userAgent.indexOf("Android") >= 0) {
             resizeEventName = "orientationchange";
         }
-        window.addEventListener(resizeEventName, this.#onWindowResize.bind(this));
+        // 画面破棄(abandon)時にリスナーを外せるよう、bindした関数を保持する
+        this.resizeEventName = resizeEventName;
+        this.onWindowResizeHandler = this.#onWindowResize.bind(this);
+        window.addEventListener(resizeEventName, this.onWindowResizeHandler);
 
         // レンダラー
         this.renderer = new THREE.WebGLRenderer({
@@ -197,7 +248,7 @@ export class ThreeViewController {
         // 音声
         this.listener = new THREE.AudioListener();
         this.camera.add(this.listener);
-        this.audioLoader = new THREE.AudioLoader();
+        this.audioLoader = new SafeAudioLoader();
 
         // 環境音
         // 水中音
@@ -255,8 +306,11 @@ export class ThreeViewController {
                 merchantEngineSound.setLoop(true);
                 merchantEngineSound.play();
 
+                // 音声の読み込みより先にモデルの読み込みが終わっていない、または画面が破棄済みの場合は付けない
                 const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
-                otherShipObj.add(merchantEngineSound);
+                if (otherShipObj) {
+                    otherShipObj.add(merchantEngineSound);
+                }
             }
         });
 
@@ -782,6 +836,12 @@ export class ThreeViewController {
     onError() { console.log("model load faild."); }
 
     abandon() {
+        // 破棄後にresizeイベントでcamera(null)を参照しないよう、リスナーを外す
+        if (this.onWindowResizeHandler) {
+            window.removeEventListener(this.resizeEventName, this.onWindowResizeHandler);
+            this.onWindowResizeHandler = null;
+        }
+
         // 全オブジェクト削除
         for (let i = this.scene.children.length - 1; i >= 0; i--) {
             this.scene.remove(this.scene.children[i]);
@@ -1201,6 +1261,10 @@ export class ThreeViewController {
     }
 
     #onWindowResize() {
+        if (!this.camera || !this.renderer) {
+            // 破棄済み
+            return;
+        }
         var innerWidth = window.innerWidth;
         var innerHeight = window.innerHeight;
         this.camera.aspect = innerWidth / innerHeight;

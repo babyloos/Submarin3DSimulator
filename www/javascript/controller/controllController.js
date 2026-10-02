@@ -159,6 +159,12 @@ export class ControllController {
      */
     #fireButtonInitialize() {
         $('#fireButton').on('click', function () {
+            // 発射ボタンは画像のためdisabled属性ではクリックを止められず、装填中・深度超過・残弾なしでも押せてしまう。
+            // 発射できない時は理由を計測して何もしない
+            if (!this.uBoat.canFireTorpedo()) {
+                this.uBoat.trackFireBlocked();
+                return;
+            }
             this.uBoat.fireTorpedo();
         }.bind(this));
     }
