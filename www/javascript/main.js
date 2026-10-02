@@ -178,6 +178,8 @@ export class Main {
         backTitleButton.on('click', function () {
             audioManager.play();
             GameAnalytics.onReturnTitleSelected();
+            // ゲーム終了時の広告は結果ダイアログ表示時ではなく「タイトルへ戻る」押下時に出す(裏でタイトル画面へ戻す)
+            showAd('return_title');
             exitGame();
         });
 
@@ -223,14 +225,13 @@ export class Main {
             trackEvent('ad_start_gate', adCommonParams('game_start'));
 
             const removed = getRemoved();
-            const adReadyPromise = removed
-                ? Promise.resolve(false)
-                : Promise.race([
-                    startAdLoad({ force: true }).then(() => true).catch(() => false),
-                    new Promise((resolve) => setTimeout(() => resolve(false), AD_START_WAIT_MS)),
-                ]);
+            if (!removed && !isAdFresh()) {
+                // 先読みが無い場合はロード画面の間に読み込んでおく(ロード完了を広告のために待たせることはしない)
+                startAdLoad({ force: true }).catch(() => { });
+            }
 
-            await Promise.all([loadProgress.readyPromise, adReadyPromise]);
+            // 広告はロード完了のタイミングで、準備できていれば表示する
+            await loadProgress.readyPromise;
 
             if (!removed && isAdFresh() && !adShowing) {
                 await new Promise((resolve) => {
@@ -311,7 +312,8 @@ function gameClear() {
     });
     modal.show();
     GameAnalytics.onResultView(true);
-    showAd('clear');
+    // 広告は「タイトルへ戻る」押下時に表示するため、ここでは先読みだけしておく
+    preloadAd();
 }
 
 /**
@@ -327,7 +329,8 @@ function gameOver() {
     });
     modal.show();
     GameAnalytics.onResultView(false);
-    showAd('gameover');
+    // 広告は「タイトルへ戻る」押下時に表示するため、ここでは先読みだけしておく
+    preloadAd();
 }
 
 export class LoadProgress {
@@ -728,12 +731,11 @@ const formatAdError = (error) => {
 
 // 先読みが間に合っていない場合に待つ上限時間(ms)。全画面広告の表示自体が既に大きな中断なので、この程度の遅延は体感に影響しにくい
 const AD_READY_WAIT_MS = 1500;
-// ゲーム開始/コンティニュー時、ロード画面内で広告の準備を待つ上限時間(ms)
-const AD_START_WAIT_MS = 3500;
 // 表示チャンスを逃した広告を、読み込み完了後にどれだけの間なら表示していいか(ms)
 const AD_PENDING_MAX_MS = 5000;
-// pendingShowを表示してよい「区切り」の場面。それ以外(プレイ中/タイトル等)ならpendingは捨てる
-const AD_PENDING_ALLOWED_SCENES = new Set(['gameover', 'clear', 'transition']);
+// pendingShowを表示してよい「区切り」の場面。それ以外(プレイ中/タイトル/ロード中等)ならpendingは捨てる
+// (ロード中に遅れて広告が出ると、開始時広告の「ロード完了時に表示」とずれるため含めない)
+const AD_PENDING_ALLOWED_SCENES = new Set(['gameover', 'clear']);
 
 let currentAdScene = 'title'; // 現在の場面(pending show判定に使う)
 let pendingShow = null;       // { placement, requestedAt } | null
