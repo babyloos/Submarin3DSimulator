@@ -250,6 +250,18 @@ export class ThreeViewController {
         this.camera.add(this.listener);
         this.audioLoader = new SafeAudioLoader();
 
+        // iOSではWeb AudioのAudioContextが一時停止(suspended/interrupted)のままになり、環境音・命中音が鳴らないことがある。
+        // 生成直後とタップのたびに再開を試みる(ユーザー操作内でのresumeは確実に通る)
+        const audioContext = this.listener.context;
+        this.resumeAudioHandler = () => {
+            if (audioContext.state !== 'running') {
+                audioContext.resume().catch(() => { });
+            }
+        };
+        this.resumeAudioHandler();
+        document.addEventListener('touchend', this.resumeAudioHandler, { passive: true });
+        document.addEventListener('click', this.resumeAudioHandler);
+
         // 環境音
         // 水中音
         this.underSeaSound = new THREE.Audio(this.listener);
@@ -856,6 +868,11 @@ export class ThreeViewController {
         if (this.onWindowResizeHandler) {
             window.removeEventListener(this.resizeEventName, this.onWindowResizeHandler);
             this.onWindowResizeHandler = null;
+        }
+        if (this.resumeAudioHandler) {
+            document.removeEventListener('touchend', this.resumeAudioHandler);
+            document.removeEventListener('click', this.resumeAudioHandler);
+            this.resumeAudioHandler = null;
         }
 
         // 全オブジェクト削除

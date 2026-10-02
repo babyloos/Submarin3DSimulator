@@ -444,6 +444,16 @@ let interstitial;
 let rewarded;
 let adAppVersion = 'unknown'; // 広告イベント計測用のアプリバージョン(deviceready時にBuildInfoから取得)
 
+// iOSのWeb Audio(環境音・命中音など)は消音スイッチ(マナーモード)で無音になる一方、<audio>要素(号令音声など)は鳴るため、
+// 音声セッションを<audio>と同じplaybackにして揃える(iOS 16.4以降のAudio Session API。未対応環境では何もしない)
+try {
+    if (navigator.audioSession) {
+        navigator.audioSession.type = 'playback';
+    }
+} catch (e) {
+    console.warn('audioSession setting failed', e);
+}
+
 document.addEventListener('deviceready', async () => {
     console.log('device ready');
     const isDebug = BuildInfo.debug;
