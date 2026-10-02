@@ -454,12 +454,10 @@ document.addEventListener('deviceready', async () => {
     let platform = cordova.platformId;
     if (platform === 'android') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-1479927029413242/6298498855';
-        // TODO: AdMobコンソールでAndroid用リワード広告ユニットを作成し、本番IDに差し替える
-        rewardedUnitId = isDebug ? 'ca-app-pub-3940256099942544/5224354917' : 'ca-app-pub-1479927029413242/0000000000';
+        rewardedUnitId = isDebug ? 'ca-app-pub-3940256099942544/5224354917' : 'ca-app-pub-1479927029413242/1875493839';
     } else if (platform === 'ios') {
         unitId = isDebug ? 'ca-app-pub-3940256099942544/4411468910' : 'ca-app-pub-1479927029413242/1802112503';
-        // TODO: AdMobコンソールでiOS用リワード広告ユニットを作成し、本番IDに差し替える
-        rewardedUnitId = isDebug ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-1479927029413242/0000000000';
+        rewardedUnitId = isDebug ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-1479927029413242/3457002964';
     }
 
     adAppVersion = (typeof BuildInfo !== 'undefined' && BuildInfo.version) || 'unknown';
