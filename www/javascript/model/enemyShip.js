@@ -171,6 +171,17 @@ export class EnemyShip extends GameObject {
      */
     onHitTorpedo() {
         super.onHitTorpedo();
+
+        // コールバック(命中音)は音声の読み込み完了時に設定されるため、読み込み前・失敗時は未設定のことがある。
+        // 撃沈処理(広告表示・メッセージ表示等)で例外や中断が起きても鳴るよう、先に呼ぶ
+        if (typeof this.onHitTorpedoCallback === 'function') {
+            try {
+                this.onHitTorpedoCallback();
+            } catch (e) {
+                console.error('torpedo hit sound error', e);
+            }
+        }
+
         this.damage += 100;
         if (this.damage >= 50) {
             this.maxSpeed = 1;
@@ -181,11 +192,6 @@ export class EnemyShip extends GameObject {
             this.isEnabled = false;
             // 敵船撃沈時処理
             this.onSunk(this.tonnage, this.objectType);
-        }
-
-        // コールバック(命中音)は音声の読み込み完了時に設定されるため、読み込み前・失敗時は未設定のことがある
-        if (typeof this.onHitTorpedoCallback === 'function') {
-            this.onHitTorpedoCallback();
         }
     }
 

@@ -321,17 +321,33 @@ export class ThreeViewController {
                 torpedoHitSound.name = "torpedoHitSound";
                 torpedoHitSound.setBuffer(buffer);
                 torpedoHitSound.setRefDistance(20);
+                // 爆発音は遠距離の命中でも聞こえるよう減衰を緩やかにする
+                torpedoHitSound.setRolloffFactor(0.2);
                 torpedoHitSound.setVolume(5);
                 torpedoHitSound.setLoop(false);
                 this.audioObjects.push(torpedoHitSound);
 
-                const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + i);
-                if (otherShipObj) {
-                    otherShipObj.add(torpedoHitSound);
-                }
+                const shipIndex = i;
+                const attachToShip = () => {
+                    const otherShipObj = this.gameObjects.find(obj => obj.name === "otherShip" + shipIndex);
+                    if (otherShipObj && torpedoHitSound.parent !== otherShipObj) {
+                        otherShipObj.add(torpedoHitSound);
+                    }
+                };
+                attachToShip();
 
                 this.enemyShips[i].setOnHitTorpedoCallback(() => {
-                    torpedoHitSound.play()
+                    // 音声の方が先に読み込まれると船に付かず原点で鳴って聞こえないため、命中時に付け直す
+                    attachToShip();
+                    // iOSでは広告表示などでAudioContextが中断されたままになることがあるため再開する
+                    const context = torpedoHitSound.context;
+                    if (context.state !== 'running') {
+                        context.resume().catch(() => {});
+                    }
+                    if (torpedoHitSound.isPlaying) {
+                        torpedoHitSound.stop();
+                    }
+                    torpedoHitSound.play();
                 });
             }
         });

@@ -464,6 +464,11 @@ document.addEventListener('deviceready', async () => {
 
     adAppVersion = (typeof BuildInfo !== 'undefined' && BuildInfo.version) || 'unknown';
 
+    // iOS: 広告の読み込み前にトラッキング許可(ATT)を求める。admob-plusのJS APIに無いためネイティブを直接呼ぶ
+    if (platform === 'ios') {
+        await requestTrackingAuthorization();
+    }
+
     interstitial = new admob.InterstitialAd({
         adUnitId: unitId,
     })
@@ -490,6 +495,32 @@ document.addEventListener('deviceready', async () => {
     // 潜水艦3Dシミュレータ2への誘導ボタン
     initPromoSubmarine2(platform);
 }, false);
+
+/**
+ * iOSのトラッキング許可ダイアログを表示する(表示済みの場合は即座に結果が返る)
+ * @return {Promise<number|false>} ATTrackingManager.AuthorizationStatusの値。iOS14未満/失敗時はfalse
+ */
+const requestTrackingAuthorization = (retry = true) => {
+    return new Promise((resolve) => {
+        try {
+            cordova.exec((status) => {
+                // 起動直後でアプリがまだアクティブでないとダイアログが出ずnotDetermined(0)が返るため、1回だけ再試行する
+                if (status === 0 && retry) {
+                    setTimeout(() => requestTrackingAuthorization(false).then(resolve), 1000);
+                    return;
+                }
+                trackEvent('att_status', { status: String(status) }, false);
+                resolve(status);
+            }, (error) => {
+                console.error('ATT request failed:', error);
+                resolve(false);
+            }, 'AdMob', 'requestTrackingAuthorization', []);
+        } catch (e) {
+            console.error('ATT request error', e);
+            resolve(false);
+        }
+    });
+}
 
 // 潜水艦3Dシミュレータ2（Unity版）のストアURL
 const PROMO_SUBMARINE2_URL = {
@@ -840,7 +871,8 @@ const showRewardedAd = () => {
                 adShowing = false;
                 offReward();
                 offDismiss();
-                resolve(false);
+                // 在庫切れ等で広告を出せなかった場合はユーザーの責任ではないため、再挑戦は許可する
+                resolve(true);
             });
     });
 }
