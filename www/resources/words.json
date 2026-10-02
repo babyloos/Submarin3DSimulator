@@ -1693,5 +1693,20 @@
     "id": "Lewati",
     "th": "ข้าม",
     "vi": "Bỏ qua"
+  },
+  "RES_PlayInSilentMode": {
+    "en": "Play sound in silent mode (for headphones)",
+    "ja": "消音モードでも音を鳴らす（イヤホン向け）",
+    "zh": "静音模式下也播放声音（耳机用）",
+    "zh-TW": "靜音模式下也播放聲音（耳機用）",
+    "ko": "무음 모드에서도 소리 재생 (이어폰용)",
+    "de": "Ton auch im Stumm-Modus (für Kopfhörer)",
+    "fr": "Son même en mode silencieux (écouteurs)",
+    "es": "Sonido también en modo silencio (auriculares)",
+    "pt": "Som também no modo silencioso (fones)",
+    "ru": "Звук в беззвучном режиме (для наушников)",
+    "id": "Putar suara saat mode senyap (untuk earphone)",
+    "th": "เล่นเสียงในโหมดเงียบ (สำหรับหูฟัง)",
+    "vi": "Phát âm thanh khi ở chế độ im lặng (tai nghe)"
   }
 }

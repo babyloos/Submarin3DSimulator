@@ -496,6 +496,11 @@
                     <option value="th">ไทย</option>
                     <option value="vi">Tiếng Việt</option>
                 </select>
+                <!-- iOSのみ: 消音スイッチがオンでも音を鳴らす(イヤホン向け)。既定はオフ(消音スイッチに従う) -->
+                <div class="form-check form-switch m-3 silentModeSettingRow hiddenPage">
+                    <input class="form-check-input" type="checkbox" role="switch" id="playInSilentModeToggle">
+                    <label class="form-check-label" for="playInSilentModeToggle" glot-model='RES_PlayInSilentMode'>消音モードでも音を鳴らす（イヤホン向け）</label>
+                </div>
             </div>
         </div>
     </div>

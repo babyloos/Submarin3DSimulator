@@ -23,6 +23,7 @@ export class Main {
         // ゲーム画面からトップ画面に戻った際にすべてのイベントをリセットするため毎回ここで設定する
         // 言語切り替え時動作設定
         initUpdateLanguage();
+        initSilentModeSetting();
 
         // B群のみ: 今日の任務カードを表示(タイトル画面表示のたびに更新する)
         showDailyMissionTitleCard();
@@ -444,14 +445,45 @@ let interstitial;
 let rewarded;
 let adAppVersion = 'unknown'; // 広告イベント計測用のアプリバージョン(deviceready時にBuildInfoから取得)
 
-// iOSのWeb Audio(環境音・命中音など)は消音スイッチ(マナーモード)で無音になる一方、<audio>要素(号令音声など)は鳴るため、
-// 音声セッションを<audio>と同じplaybackにして揃える(iOS 16.4以降のAudio Session API。未対応環境では何もしない)
-try {
-    if (navigator.audioSession) {
-        navigator.audioSession.type = 'playback';
+// iOSの消音スイッチ(マナーモード)への追従設定。
+// 既定は消音スイッチに従う(ambient: Web Audioも<audio>要素も無音、他アプリの音楽は止めない)。
+// 設定「消音モードでも音を鳴らす」がオンならplayback(消音スイッチを無視して鳴らす。イヤホンで遊びたい人向け)。
+// iOSではアプリから消音スイッチ・出力先を判定できないため、ユーザーに選んでもらう。
+// (iOS 16.4以降のAudio Session API。未対応環境では何もしない)
+const PLAY_IN_SILENT_MODE_KEY = 'playInSilentMode';
+
+const getPlayInSilentMode = () => {
+    try {
+        return window.localStorage.getItem(PLAY_IN_SILENT_MODE_KEY) === '1';
+    } catch (e) {
+        return false;
     }
-} catch (e) {
-    console.warn('audioSession setting failed', e);
+}
+
+const applyAudioSession = () => {
+    try {
+        if (navigator.audioSession) {
+            navigator.audioSession.type = getPlayInSilentMode() ? 'playback' : 'ambient';
+        }
+    } catch (e) {
+        console.warn('audioSession setting failed', e);
+    }
+}
+applyAudioSession();
+
+// 消音モード設定トグル(タイトル画面表示のたびに$('*').off()で外れるため、毎回設定し直す)
+const initSilentModeSetting = () => {
+    const toggle = $('#playInSilentModeToggle');
+    toggle.prop('checked', getPlayInSilentMode());
+    toggle.off('change').on('change', function () {
+        try {
+            window.localStorage.setItem(PLAY_IN_SILENT_MODE_KEY, this.checked ? '1' : '0');
+        } catch (e) {
+            console.warn('playInSilentMode save failed', e);
+        }
+        applyAudioSession();
+        trackEvent('setting_play_in_silent_mode', { enabled: this.checked ? 1 : 0 }, false);
+    });
 }
 
 document.addEventListener('deviceready', async () => {
@@ -502,6 +534,11 @@ document.addEventListener('deviceready', async () => {
 
     // 潜水艦3Dシミュレータ2への誘導ボタン
     initPromoSubmarine2(platform);
+
+    // 消音スイッチがあるのはiOSのみのため、設定トグルはiOSでだけ表示する
+    if (platform === 'ios') {
+        $('.silentModeSettingRow').removeClass('hiddenPage');
+    }
 }, false);
 
 /**
